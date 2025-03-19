@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -6,8 +7,10 @@ import {
   Navigate,
 } from "react-router-dom";
 
+import { useQuery } from "@tanstack/react-query";
+import { getAllStations } from "../services";
 // Mock Auth Function (Replace with real cookie check)
-const isAuthenticated = () => document.cookie.includes("auth_token");
+const isAuthenticated = () => document.cookie.includes("access_token");
 
 // ✅ Private Route (Protects Home)
 const PrivateRoute = () => {
@@ -25,6 +28,12 @@ const SignUp = () => <h1>Sign Up</h1>;
 const NotFound = () => <h1>404 - Not Found</h1>;
 
 export default function AppRouter() {
+  const { data } = useQuery({
+    queryKey: ["reject-reasons"],
+    queryFn: () => getAllStations(),
+  });
+
+  console.log("data", data);
   return (
     <Router>
       <Routes>
