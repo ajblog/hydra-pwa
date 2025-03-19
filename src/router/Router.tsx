@@ -24,7 +24,7 @@ const SignIn = () => <h1>Sign In</h1>;
 const SignUp = () => <h1>Sign Up</h1>;
 const NotFound = () => <h1>404 - Not Found</h1>;
 
-export default function App() {
+export default function AppRouter() {
   return (
     <Router>
       <Routes>
