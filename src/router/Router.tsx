@@ -9,12 +9,13 @@ import {
 
 import { useQuery } from "@tanstack/react-query";
 import { getAllStations } from "../services";
+import { Intro } from "../views";
 // Mock Auth Function (Replace with real cookie check)
 const isAuthenticated = () => document.cookie.includes("access_token");
 
 // ✅ Private Route (Protects Home)
 const PrivateRoute = () => {
-  return isAuthenticated() ? <Outlet /> : <Navigate to="/sign-up" replace />;
+  return isAuthenticated() ? <Outlet /> : <Navigate to="/sign-in" replace />;
 };
 
 // ✅ Public Route (Redirects auth users away from /sign-in or /sign-up)
@@ -28,12 +29,12 @@ const SignUp = () => <h1>Sign Up</h1>;
 const NotFound = () => <h1>404 - Not Found</h1>;
 
 export default function AppRouter() {
-  const { data } = useQuery({
-    queryKey: ["reject-reasons"],
-    queryFn: () => getAllStations(),
-  });
+  // const { data } = useQuery({
+  //   queryKey: ["reject-reasons"],
+  //   queryFn: () => getAllStations(),
+  // });
 
-  console.log("data", data);
+  // console.log("data", data);
   return (
     <Router>
       <Routes>
@@ -46,6 +47,7 @@ export default function AppRouter() {
         <Route element={<PublicRoute />}>
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/intro" element={<Intro />} />
         </Route>
 
         {/* Catch-All 404 */}
