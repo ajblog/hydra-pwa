@@ -6,6 +6,7 @@ import {
   Drawer,
   DrawerContent,
   Header,
+  Oval,
   Stepper,
 } from "../../components";
 import Intro1 from "../../assets/images/Intro-1.png";
@@ -32,10 +33,10 @@ export function Intro() {
   const imageJsx = () => {
     const images = [Intro1, Intro2, Intro3, Intro4];
     const positions = [
-      "bottom-[316px]",
-      "bottom-0",
-      "bottom-0",
-      "bottom-[316px]",
+      "bottom-[300px]",
+      "bottom-[-60px]",
+      "bottom-[-20px]",
+      "bottom-[290px]",
     ];
 
     return (
@@ -103,40 +104,88 @@ export function Intro() {
     );
   };
 
-  return (
-    <div>
-      <div className="pt-8">
-        <Header isLoggedIn={false} />
-      </div>
-      <div className="mt-20">
-        <Drawer dismissible={false} open={true}>
-          <DrawerContent>
-            {imageJsx()}
-            <div className="px-8 pt-30">
-              {contentJsx()}
-              <div className="my-2 flex items-center justify-between pt-2">
-                <Stepper totalSteps={4} activeStep={step} />
-                <motion.div
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ duration: 0.1 }}
-                  className="z-50 w-[65%] py-6 sm:w-[50%]"
-                >
-                  <Button
-                    onClick={() => {
-                      if (step === 3) navigate("/sign-in");
-                      setStep((prev) => prev + 1);
-                    }}
-                    className="w-full py-6"
-                    variant="default"
-                  >
-                    {step === 0 ? "بزن بریم" : "بعدی"}
-                  </Button>
-                </motion.div>
-              </div>
+  const ovalJsx = () => {
+    return (
+      <AnimatePresence mode="wait">
+        <motion.div key={step} initial="hidden" animate="visible" exit="exit">
+          {step < 2 ? (
+            <div dir="ltr" className="fixed top-[-20%] right-[-110%]">
+              <Oval width={780} height={480} />
             </div>
-          </DrawerContent>
-        </Drawer>
+          ) : (
+            <div
+              dir="ltr"
+              className="fixed top-[55%] left-1/2 translate-x-[-50%] translate-y-[-50%]"
+            >
+              <Oval width={600} height={480} />
+            </div>
+          )}
+        </motion.div>
+      </AnimatePresence>
+    );
+  };
+
+  const titleJsx = () => {
+    const contents = ["", "شروع سفر", "قابلیت‌ها", "تیمِ ما"];
+
+    return (
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          variants={textVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="fixed top-[18vh] right-6 text-[40px] font-bold text-white"
+        >
+          {contents[step]}
+        </motion.div>
+      </AnimatePresence>
+    );
+  };
+
+  return (
+    <>
+      {titleJsx()}
+      {ovalJsx()}
+      <div className="flex min-h-screen flex-col">
+        <div className="z-[100] pt-8">
+          <Header
+            showBackButton={step > 0}
+            onBackButton={() => setStep(step - 1)}
+            isLoggedIn={false}
+          />
+        </div>
+        <div className="mt-20">
+          <Drawer dismissible={false} open={true}>
+            <DrawerContent className="flex max-h-[60vh] flex-col justify-between">
+              {imageJsx()}
+              <div className="px-8 pt-30">
+                {contentJsx()}
+                <div className="my-2 flex items-center justify-between pt-2">
+                  <Stepper totalSteps={4} activeStep={step} />
+                  <motion.div
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.1 }}
+                    className="z-50 w-[65%] py-6 sm:w-[50%]"
+                  >
+                    <Button
+                      onClick={() => {
+                        if (step === 3) navigate("/sign-in");
+                        setStep((prev) => prev + 1);
+                      }}
+                      className="w-full py-6"
+                      variant="default"
+                    >
+                      {step === 0 ? "بزن بریم" : "بعدی"}
+                    </Button>
+                  </motion.div>
+                </div>
+              </div>
+            </DrawerContent>
+          </Drawer>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
