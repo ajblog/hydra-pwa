@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -7,9 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import { useQuery } from "@tanstack/react-query";
-import { getAllStations } from "../services";
-import { Intro } from "../views";
+import { Intro, SignIn } from "../views";
 // Mock Auth Function (Replace with real cookie check)
 const isAuthenticated = () => document.cookie.includes("access_token");
 
@@ -24,7 +21,6 @@ const PublicRoute = () => {
 };
 
 const Home = () => <h1>Home - Protected</h1>;
-const SignIn = () => <h1>Sign In</h1>;
 const SignUp = () => <h1>Sign Up</h1>;
 const NotFound = () => <h1>404 - Not Found</h1>;
 

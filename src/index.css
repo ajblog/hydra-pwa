@@ -15,4 +15,11 @@ body {
 * {
   direction: rtl;
   font-family: "IranSans", sans-serif;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Hide scrollbar for Chrome, Safari and Edge */
+::-webkit-scrollbar {
+  display: none;
 }

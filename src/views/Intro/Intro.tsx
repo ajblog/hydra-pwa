@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Button,
   Drawer,
+  DrawerTitle,
   DrawerContent,
   Header,
   Oval,
@@ -158,6 +159,7 @@ export function Intro() {
         </div>
         <div className="mt-20">
           <Drawer dismissible={false} open={true}>
+            <DrawerTitle></DrawerTitle>
             <DrawerContent className="flex max-h-[60vh] flex-col justify-between">
               {imageJsx()}
               <div className="px-8 pt-30">
