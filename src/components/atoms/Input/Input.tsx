@@ -15,8 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         <input
           type={type}
           className={cn(
-            "flex h-9 w-full rounded-full border-[#DBDBDB] border-1 bg-transparent px-3 py-6 text-base shadow-sm transition-colors placeholder:text-[#DBDBDB] focus-visible:outline-none focus-visible:border-amber-100 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
-            icon ? "pr-13" : "", // Adjust padding if icon is present
+            "flex h-9 w-full rounded-full border-[#DBDBDB] border-1 bg-transparent px-3 py-6 text-base text-center shadow-sm transition-colors placeholder:text-[#DBDBDB] placeholder:text-center focus-visible:outline-none focus-visible:border-amber-100 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
             className
           )}
           ref={ref}

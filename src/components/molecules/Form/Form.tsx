@@ -1,6 +1,7 @@
 import { useForm, FieldValues, Path } from "react-hook-form";
 import { motion } from "framer-motion";
-import { Button, Input } from "../../atoms";
+import { Button, Input, showErrorToast } from "../../atoms";
+import React, { useEffect } from "react";
 
 interface Field {
   name: string;
@@ -16,7 +17,7 @@ interface FormProps<T extends FieldValues> {
   submitText?: string;
 }
 
-export function Form<T extends FieldValues>({
+export const Form = React.memo(function Form<T extends FieldValues>({
   fields,
   onSubmit,
   submitText = "ثبت",
@@ -24,11 +25,36 @@ export function Form<T extends FieldValues>({
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<T>();
+    formState: { errors, isSubmitted },
+  } = useForm<T>({ mode: "onSubmit" });
+
+  const handleFormSubmit = (data: T) => {
+    onSubmit(data);
+  };
+
+  const handleFormError = () => {
+    Object.values(errors).forEach((error) => {
+      if (error?.message) {
+        showErrorToast(error.message as string);
+      }
+    });
+  };
+
+   useEffect(() => {
+     if (isSubmitted && Object.keys(errors).length > 0) {
+       Object.values(errors).forEach((error) => {
+         if (error?.message) {
+           showErrorToast(error.message as string);
+         }
+       });
+     }
+   }, [errors, isSubmitted]);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 px-6 py-4">
+    <form
+      onSubmit={handleSubmit(handleFormSubmit, handleFormError)}
+      className="space-y-4 px-6 py-4"
+    >
       {fields.map((field, index) => (
         <motion.div
           key={field.name}
@@ -42,11 +68,7 @@ export function Form<T extends FieldValues>({
             icon={field.icon}
             {...register(field.name as Path<T>, field.validation)}
           />
-          {errors[field.name] && (
-            <p className="text-red-500 text-sm">
-              {(errors[field.name]?.message as string) || "خطای نامشخص"}
-            </p>
-          )}
+
         </motion.div>
       ))}
 
@@ -61,4 +83,4 @@ export function Form<T extends FieldValues>({
       </motion.div>
     </form>
   );
-}
+});
