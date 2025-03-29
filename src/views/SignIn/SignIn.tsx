@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Button, Header, Input, Oval } from "../../components";
+import { Button, Form, Header, Oval } from "../../components";
 import LoginImage from "../../assets/images/Login-People.png";
 import { FingerPrintIcon, LoginTextIcon, UsernameIcon } from "../../assets";
 
@@ -14,6 +14,25 @@ const ovalJsx = () => {
 };
 
 export function SignIn() {
+  const fields = [
+    {
+      name: "username",
+      type: "text",
+      placeholder: "نام کاربری",
+      validation: { required: "نام کاربری الزامی است" },
+      icon: <UsernameIcon />,
+    },
+    {
+      name: "password",
+      type: "password",
+      placeholder: "رمز عبور",
+      validation: {
+        required: "رمز عبور الزامی است",
+        minLength: { value: 6, message: "حداقل 6 کاراکتر وارد کنید" },
+      },
+      icon: <FingerPrintIcon />,
+    },
+  ];
   return (
     <>
       {ovalJsx()}
@@ -39,39 +58,11 @@ export function SignIn() {
           </motion.div>
 
           <div className="my-6 px-10 space-y-2">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-            >
-              <Input
-                type="text"
-                placeholder="نام کاربری"
-                icon={<UsernameIcon />}
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
-              <Input
-                type="password"
-                placeholder="رمز عبور"
-                icon={<FingerPrintIcon />}
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: 0.5 }}
-            >
-              <Button size="lg" variant="secondary" className="w-full">
-                ورود
-              </Button>
-            </motion.div>
-
+            <Form
+              submitText="ورود"
+              onSubmit={(e) => console.log(e)}
+              fields={fields}
+            />
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
