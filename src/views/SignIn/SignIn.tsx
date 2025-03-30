@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Button, Form, Header, Oval } from "../../components";
 import LoginImage from "../../assets/images/Login-People.png";
 import { FingerPrintIcon, LoginTextIcon, UsernameIcon } from "../../assets";
+import { useNavigate } from "react-router-dom";
 
 const ovalJsx = () => {
   return (
@@ -14,7 +15,8 @@ const ovalJsx = () => {
 };
 
 export function SignIn() {
-  const fields = [
+const navigate = useNavigate()
+  const signInFields = [
     {
       name: "username",
       type: "text",
@@ -61,7 +63,7 @@ export function SignIn() {
             <Form
               submitText="ورود"
               onSubmit={(e) => console.log(e)}
-              fields={fields}
+              fields={signInFields}
             />
             <motion.div
               initial={{ opacity: 0 }}
@@ -79,7 +81,7 @@ export function SignIn() {
             className="mt-6 flex justify-center items-center"
           >
             <p className="text-black">ثبت نام نکرده‌اید؟</p>
-            <Button className="text-[#EEC124]" variant="link">
+            <Button onClick={() => navigate('/sign-up')} className="text-[#EEC124]" variant="link">
               ایجاد حساب کاربری
             </Button>
           </motion.div>

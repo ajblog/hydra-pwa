@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import { Intro, SignIn } from "../views";
+import { Intro, SignIn, SignUp } from "../views";
 // Mock Auth Function (Replace with real cookie check)
 const isAuthenticated = () => document.cookie.includes("access_token");
 
@@ -21,7 +21,6 @@ const PublicRoute = () => {
 };
 
 const Home = () => <h1>Home - Protected</h1>;
-const SignUp = () => <h1>Sign Up</h1>;
 const NotFound = () => <h1>404 - Not Found</h1>;
 
 export default function AppRouter() {
