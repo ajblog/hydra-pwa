@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Form } from "../../components";
 import { PasswordIcon, PhoneIcon } from "../../assets";
-import { ChevronLeft, Grid, MailCheck } from "lucide-react";
+import { ChevronLeft, Grid } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -88,7 +88,7 @@ const ForgetPassword = () => {
           <Form
             fields={resetPassFields}
             onSubmit={(e) => {
-              console.log(e);
+              console.log(e, phoneNumber);
             }}
             submitText="ثبت"
           />
