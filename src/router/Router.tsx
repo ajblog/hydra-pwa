@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 
 import { Intro, SignIn, SignUp } from "../views";
+import { ForgetPassword } from "../views/ForgetPassword/ForgetPassword";
 // Mock Auth Function (Replace with real cookie check)
 const isAuthenticated = () => document.cookie.includes("access_token");
 
@@ -43,6 +44,7 @@ export default function AppRouter() {
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/intro" element={<Intro />} />
+          <Route path="/forget-password" element={<ForgetPassword />} />
         </Route>
 
         {/* Catch-All 404 */}

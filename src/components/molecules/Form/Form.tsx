@@ -52,7 +52,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit, handleFormError)}
-      className="space-y-4 px-6 py-4"
+      className="space-y-4 px-6 py-4 w-full"
     >
       {fields.map((field, index) =>
         !field.invisible ? (

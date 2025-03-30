@@ -70,7 +70,7 @@ const navigate = useNavigate()
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
             >
-              <Button variant="link">فراموشی رمز عبور</Button>
+              <Button variant="link" onClick={() => navigate('/forget-password')}>فراموشی رمز عبور</Button>
             </motion.div>
           </div>
 
