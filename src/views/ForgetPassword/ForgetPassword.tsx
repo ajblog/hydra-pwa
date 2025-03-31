@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Form } from "../../components";
+import {
+  Button,
+  Form,
+  showErrorToast,
+  showSuccessToast,
+} from "../../components";
 import { PasswordIcon, PhoneIcon } from "../../assets";
 import { ChevronLeft, Grid } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -91,6 +96,50 @@ const ForgetPassword = () => {
               console.log(e, phoneNumber);
             }}
             submitText="ثبت"
+            customButtons={({ handleSubmit, formState: { errors } }) => (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
+                className="flex items-center justify-center w-full gap-5 mt-8"
+              >
+                <Button
+                  type="submit"
+                  className="w-full py-6"
+                  variant={"secondary"}
+                  onClick={handleSubmit(
+                    (data) => {
+                      console.log(data, phoneNumber);
+                      showSuccessToast("رمزعبور با موفقیت تغییر یافت.");
+                      navigate("/sign-in");
+                    },
+                    () => {
+                      Object.values(errors).forEach((error) => {
+                        if (error?.message) {
+                          showErrorToast(error.message as string);
+                        }
+                      });
+                    }
+                  )}
+                >
+                  ثبت تغییرات
+                </Button>
+                <Button
+                  className="w-full py-6 text-[#EEC124]"
+                  variant={"secondary"}
+                  onClick={handleSubmit(
+                    () => {
+                      navigate("/sign-in");
+                    },
+                    () => {
+                      navigate("/sign-in");
+                    }
+                  )}
+                >
+                  انصراف
+                </Button>
+              </motion.div>
+            )}
           />
         </div>
       )}

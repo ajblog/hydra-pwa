@@ -12,12 +12,15 @@ export const Form = React.memo(function Form<T extends FieldValues>({
   hideButton = false,
   inputTheme = "light",
   buttonTheme = "secondary",
+  customButtons,
 }: FormProps<T>) {
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitted },
+    formState, 
   } = useForm<T>({ mode: "onSubmit" });
+
+  const { errors, isSubmitted } = formState; 
 
   const [visiblePasswords, setVisiblePasswords] = useState<{
     [key: string]: boolean;
@@ -88,27 +91,31 @@ export const Form = React.memo(function Form<T extends FieldValues>({
               </button>
             )}
           </motion.div>
-        ) : (
-          <></>
-        )
+        ) : null
       )}
 
-      {!hideButton && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.4, delay: 0.5 }}
-        >
-          <Button
-            type="submit"
-            size="lg"
-            variant={buttonTheme}
-            className="w-full"
+      {!hideButton &&
+        (customButtons ? (
+          customButtons({
+            handleSubmit,
+            formState,
+          })
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.4, delay: 0.5 }}
           >
-            {submitText}
-          </Button>
-        </motion.div>
-      )}
+            <Button
+              type="submit"
+              size="lg"
+              variant={buttonTheme}
+              className="w-full"
+            >
+              {submitText}
+            </Button>
+          </motion.div>
+        ))}
     </form>
   );
 });

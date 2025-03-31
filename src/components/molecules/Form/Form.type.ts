@@ -1,4 +1,5 @@
-import { FieldValues } from "react-hook-form";
+import { ReactNode } from "react";
+import { FieldValues, UseFormHandleSubmit, UseFormStateReturn } from "react-hook-form";
 
 interface Field {
   name: string;
@@ -22,6 +23,10 @@ interface FormProps<T extends FieldValues> {
     | "link"
     | "ghost"
     | "destructive";
+  customButtons?: (params: {
+    handleSubmit: UseFormHandleSubmit<T>;
+    formState: UseFormStateReturn<T>;
+  }) => ReactNode;
 }
 
 export type {Field , FormProps}
