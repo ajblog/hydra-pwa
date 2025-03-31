@@ -6,7 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import { Home, Intro, Profile, SignIn, SignUp } from "../views";
+import { Home, Intro, Profile, ResetPassword, SignIn, SignUp } from "../views";
 import { ForgetPassword } from "../views/ForgetPassword/ForgetPassword";
 // Mock Auth Function (Replace with real cookie check)
 const isAuthenticated = () => document.cookie.includes("access_token");
@@ -38,6 +38,8 @@ export default function AppRouter() {
         <Route path="/" element={<PrivateRoute />}>
           <Route index element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+
         </Route>
 
         {/* Public Routes: Redirect if already authenticated */}

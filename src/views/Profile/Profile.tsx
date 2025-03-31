@@ -108,9 +108,12 @@ const Profile = () => {
           transition={{ duration: 0.8, delay: 0.9, ease: "easeIn" }}
           className="translate-y-[-20px]"
         >
-          <span className="text-[#EEC124] font-bold text-lg">
+          <a
+            href="/reset-password"
+            className="text-[#EEC124] font-bold text-lg"
+          >
             تغییر رمز عبور
-          </span>
+          </a>
         </motion.div>
       </motion.div>
       <Form
