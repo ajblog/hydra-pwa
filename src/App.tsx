@@ -1,3 +1,4 @@
+import { ToastProvider } from "./components";
 import AppRouter from "./router/Router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -7,6 +8,7 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
+        <ToastProvider />
         <AppRouter />
       </QueryClientProvider>
     </>

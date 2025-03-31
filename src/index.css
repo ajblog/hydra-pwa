@@ -23,3 +23,15 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
+.dynamic-toast {
+  min-width: 200px !important;
+  max-width: fit-content !important;
+  white-space: nowrap;
+  text-align: center;
+  padding: 10px 20px;
+  margin: 8px;
+  border-radius: 16px;
+}
+.leaflet-control-zoom {
+  display: none;
+}

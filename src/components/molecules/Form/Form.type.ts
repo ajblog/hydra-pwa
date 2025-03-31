@@ -1,0 +1,32 @@
+import { ReactNode } from "react";
+import { FieldValues, UseFormHandleSubmit, UseFormStateReturn } from "react-hook-form";
+
+interface Field {
+  name: string;
+  type: string;
+  placeholder: string;
+  validation?: object;
+  icon?: React.ReactNode;
+  invisible?: boolean;
+}
+
+interface FormProps<T extends FieldValues> {
+  fields: Field[];
+  onSubmit: (data: T) => void;
+  submitText?: string;
+  hideButton?: boolean;
+  inputTheme?: "dark" | "light";
+  buttonTheme?:
+    | "secondary"
+    | "default"
+    | "outline"
+    | "link"
+    | "ghost"
+    | "destructive";
+  customButtons?: (params: {
+    handleSubmit: UseFormHandleSubmit<T>;
+    formState: UseFormStateReturn<T>;
+  }) => ReactNode;
+}
+
+export type {Field , FormProps}

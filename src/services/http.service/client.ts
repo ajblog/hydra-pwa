@@ -37,9 +37,7 @@ export const apiClient = async ({
       : {};
 
     if (tokenRequired) {
-      const userToken = Cookies.get("user_access_token");
-      const operatorToken = Cookies.get("operator_access_token");
-      const accessToken = userToken || operatorToken; // Retrieve token from cookies
+      const accessToken = Cookies.get("access_token"); // Retrieve token from cookies
       if (accessToken) {
         headers.Authorization = `Bearer ${accessToken}`;
       }

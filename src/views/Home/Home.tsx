@@ -1,3 +1,11 @@
+import { EasyAccess } from "../../components";
+import FullScreenMap from "../../components/organs/FullScreenMap";
+
 export function Home() {
-  return <div>Intro</div>;
+  return (
+    <div>
+      <EasyAccess />
+      <FullScreenMap />
+    </div>
+  );
 }

@@ -11,8 +11,8 @@ export function LogoIcon({ height, width }: SVGPropTypes) {
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
       <rect
-        width={width || "61"}
-        height={height || "74"}
+        width={ "61"}
+        height={ "74"}
         fill="url(#pattern0_1530_2044)"
       />
       <defs>
