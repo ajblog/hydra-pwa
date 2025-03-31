@@ -9,7 +9,7 @@ const MenuIcon = ({ width, height }: SVGPropTypes) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_860_4839)">
+      <g clipPath="url(#clip0_860_4839)">
         <mask
           id="mask0_860_4839"
           maskUnits="userSpaceOnUse"
