@@ -1,5 +1,9 @@
 import { ReactNode } from "react";
-import { FieldValues, UseFormHandleSubmit, UseFormStateReturn } from "react-hook-form";
+import {
+  FieldValues,
+  UseFormHandleSubmit,
+  UseFormStateReturn,
+} from "react-hook-form";
 
 interface Field {
   name: string;
@@ -8,6 +12,8 @@ interface Field {
   validation?: object;
   icon?: React.ReactNode;
   invisible?: boolean;
+  column?: "full" | "half";
+  defaultValue?: string;
 }
 
 interface FormProps<T extends FieldValues> {
@@ -29,4 +35,4 @@ interface FormProps<T extends FieldValues> {
   }) => ReactNode;
 }
 
-export type {Field , FormProps}
+export type { Field, FormProps };

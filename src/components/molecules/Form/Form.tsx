@@ -17,6 +17,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
   const {
     register,
     handleSubmit,
+    
     formState, 
   } = useForm<T>({ mode: "onSubmit" });
 
@@ -55,7 +56,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit, handleFormError)}
-      className="space-y-4 px-6 py-4 w-full"
+      className="space-y-4 px-6 py-4 w-full grid grid-cols-2 gap-x-4"
     >
       {fields.map((field, index) =>
         !field.invisible ? (
@@ -64,7 +65,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 * index }}
-            className="relative"
+            className={`relative ${field.column === 'half' ? 'col-span-1' : 'col-span-full'}`}
           >
             <Input
               theme={inputTheme}
@@ -74,6 +75,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
                   : field.type
               }
               placeholder={field.placeholder}
+              defaultValue={field.defaultValue}
               icon={field.icon}
               {...register(field.name as Path<T>, field.validation)}
             />
@@ -110,7 +112,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
               type="submit"
               size="lg"
               variant={buttonTheme}
-              className="w-full"
+              className="w-full col-span-full"
             >
               {submitText}
             </Button>

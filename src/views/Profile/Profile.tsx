@@ -17,15 +17,18 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../components";
+import { Field } from "../../components/molecules/Form/Form.type";
 const Profile = () => {
   const navigate = useNavigate();
-  const profileFields = [
+  const profileFields: Field[] = [
     {
       name: "firstName",
       type: "text",
       placeholder: "نام",
       validation: { required: "نام الزامی است" },
       icon: <NameIcon />,
+      column: "half",
+      defaultValue: "عرفان",
     },
     {
       name: "lastName",
@@ -33,6 +36,8 @@ const Profile = () => {
       placeholder: "نام خانوادگی",
       validation: { required: "نام خانوادگی الزامی است" },
       icon: <LastNameIcon />,
+      column: "half",
+      defaultValue: "فاضل",
     },
     {
       name: "email",
@@ -40,6 +45,7 @@ const Profile = () => {
       placeholder: " آدرس ایمیل",
       validation: { required: "ایمیل الزامی است" },
       icon: <EmailIcon />,
+      defaultValue: "erfanfazel@gmail.com",
     },
     {
       name: "phone",
@@ -47,6 +53,7 @@ const Profile = () => {
       placeholder: "شماره تماس",
       validation: { required: "شماره تماس الزامی است" },
       icon: <PhoneIcon />,
+      defaultValue: "091222565478",
     },
     {
       name: "organizationName",
@@ -54,6 +61,7 @@ const Profile = () => {
       placeholder: "نام سازمان",
       validation: { required: "نام سازمان الزامی است" },
       icon: <OrganizationIcon />,
+      defaultValue: "فلات",
     },
     {
       name: "username",
@@ -61,6 +69,7 @@ const Profile = () => {
       placeholder: "نام کاربری",
       validation: { required: "نام کاربری الزامی است" },
       icon: <UsernameIcon />,
+      defaultValue: "erfan",
     },
   ];
   return (
@@ -68,7 +77,7 @@ const Profile = () => {
       <motion.div
         initial={{ y: -200 }}
         animate={{ y: 0 }}
-        className="bg-gradient-to-b from-[#4b10c9] to-[#5b55ed] rounded-b-[40px] p-7 flex flex-col items-center"
+        className="bg-gradient-to-b from-[#4b10c9] to-[#5b55ed] rounded-b-[40px] p-7 flex flex-col items-center mb-5"
       >
         <div className="flex items-center justify-between w-full">
           <LogoIcon />
@@ -113,7 +122,7 @@ const Profile = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.5 }}
-            className="flex items-center justify-center w-full gap-5 mt-6"
+            className="flex items-center justify-center w-full gap-5 mt-6 col-span-full"
           >
             <Button
               type="submit"
@@ -122,8 +131,7 @@ const Profile = () => {
               onClick={handleSubmit(
                 (data) => {
                   console.log(data);
-                  showSuccessToast("رمزعبور با موفقیت تغییر یافت.");
-                  navigate("/sign-in");
+                  showSuccessToast("اطلاعات با موفقیت تغییر یافت.");
                 },
                 () => {
                   Object.values(errors).forEach((error) => {
@@ -139,14 +147,7 @@ const Profile = () => {
             <Button
               variant={"default"}
               className="w-full py-6 text-base font-bold"
-              onClick={handleSubmit(
-                () => {
-                  navigate("/sign-in");
-                },
-                () => {
-                  navigate("/sign-in");
-                }
-              )}
+              onClick={() => {}}
             >
               انصراف
             </Button>
