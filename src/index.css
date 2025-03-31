@@ -32,3 +32,6 @@ body {
   margin: 8px;
   border-radius: 16px;
 }
+.leaflet-control-zoom {
+  display: none;
+}

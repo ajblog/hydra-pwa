@@ -3,6 +3,7 @@ import { Button, Form, Header, Oval } from "../../components";
 import LoginImage from "../../assets/images/Login-People.png";
 import { FingerPrintIcon, LoginTextIcon, UsernameIcon } from "../../assets";
 import { useNavigate } from "react-router-dom";
+import { setCookie } from "../../utils";
 
 const ovalJsx = () => {
   return (
@@ -62,7 +63,11 @@ const navigate = useNavigate()
           <div className="my-6 px-10 space-y-2">
             <Form
               submitText="ورود"
-              onSubmit={(e) => console.log(e)}
+              onSubmit={(e) => {
+                console.log(e);
+                setCookie("access_token", "sjflkdjsflkjslkdjlkjsdkjf");
+                navigate('/')
+              }}
               fields={signInFields}
             />
             <motion.div
