@@ -1,4 +1,4 @@
-import { EasyAccess } from "../../components";
+import { EasyAccess, NavigationDrawer } from "../../components";
 import FullScreenMap from "../../components/organs/FullScreenMap";
 import { motion } from "framer-motion";
 import profilePhoto from "../../assets/images/profile.png";
@@ -26,6 +26,7 @@ export function Home() {
       <ProfileData />
       <EasyAccess />
       <FullScreenMap />
+      <NavigationDrawer />
     </div>
   );
 }

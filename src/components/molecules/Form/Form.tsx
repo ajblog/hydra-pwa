@@ -17,11 +17,11 @@ export const Form = React.memo(function Form<T extends FieldValues>({
   const {
     register,
     handleSubmit,
-    
-    formState, 
+
+    formState,
   } = useForm<T>({ mode: "onSubmit" });
 
-  const { errors, isSubmitted } = formState; 
+  const { errors, isSubmitted } = formState;
 
   const [visiblePasswords, setVisiblePasswords] = useState<{
     [key: string]: boolean;
@@ -65,7 +65,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 * index }}
-            className={`relative ${field.column === 'half' ? 'col-span-1' : 'col-span-full'}`}
+            className={`relative ${field.column === "half" ? "col-span-1" : "col-span-full"}`}
           >
             <Input
               theme={inputTheme}
@@ -107,12 +107,13 @@ export const Form = React.memo(function Form<T extends FieldValues>({
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.5 }}
+            className=" col-span-full"
           >
             <Button
               type="submit"
               size="lg"
               variant={buttonTheme}
-              className="w-full col-span-full"
+              className="w-full"
             >
               {submitText}
             </Button>

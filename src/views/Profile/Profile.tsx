@@ -73,7 +73,7 @@ const Profile = () => {
     },
   ];
   return (
-    <div className="bg-white h-screen">
+    <div className="bg-white h-full">
       <motion.div
         initial={{ y: -200 }}
         animate={{ y: 0 }}

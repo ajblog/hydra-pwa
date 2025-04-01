@@ -68,11 +68,11 @@ const ForgetPassword = () => {
   };
 
   return (
-    <div className="h-screen">
+    <div className="h-full flex flex-col items-center">
       {ovalJsx()}
       <div className="flex items-center justify-between m-auto mt-6 w-[90%]">
         <LogoIcon />
-          <ChevronLeft onClick={backStepHandler} size={"28px"} color="#fff" />
+        <ChevronLeft onClick={backStepHandler} size={"28px"} color="#fff" className="z-[1000]" />
       </div>
 
       <motion.h1
@@ -111,17 +111,18 @@ const ForgetPassword = () => {
             onSubmit={(e) => {
               console.log(e, phoneNumber);
             }}
+            inputTheme="white"
             submitText="ثبت"
             customButtons={({ handleSubmit, formState: { errors } }) => (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.5 }}
-                className="flex items-center justify-center w-full gap-5 mt-8"
+                className="flex items-center justify-center w-full gap-5 mt-8 col-span-full"
               >
                 <Button
                   type="submit"
-                  className="w-full py-6"
+                  className="w-full py-6 text-[#EEC124]"
                   variant={"secondary"}
                   onClick={handleSubmit(
                     (data) => {
@@ -160,12 +161,12 @@ const ForgetPassword = () => {
         </div>
       )}
       <motion.img
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3, ease: "easeIn" }}
         alt="forget password photo"
         src={forgetPassPhoto}
-        className="absolute bottom-0 right-[50%] translate-x-[50%] h-[340px] w-[230px]"
+        className=" h-[340px] w-[230px]"
       />
     </div>
   );

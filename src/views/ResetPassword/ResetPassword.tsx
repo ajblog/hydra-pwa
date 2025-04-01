@@ -29,7 +29,7 @@ const resetPassFields = [
     validation: {
       required: "رمز عبور الزامی است",
     },
-    icon: <PasswordIcon />,
+    icon: <PasswordIcon color="#434343" />,
   },
   {
     name: "newPassword",
@@ -39,7 +39,7 @@ const resetPassFields = [
       required: "رمز عبور الزامی است",
       minLength: { value: 6, message: "رمز عبور باید حداقل ۶ کاراکتر باشد" },
     },
-    icon: <PasswordIcon />,
+    icon: <PasswordIcon color="#434343" />,
   },
   {
     name: "repeatPassword",
@@ -50,7 +50,7 @@ const resetPassFields = [
       validate: (value: string, formValues: Record<string, string>) =>
         value === formValues.newPassword || "رمز عبور مطابقت ندارد",
     },
-    icon: <PasswordIcon />,
+    icon: <PasswordIcon color="#434343" />,
   },
 ];
 
@@ -62,11 +62,11 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="h-screen">
+    <div className="h-full flex flex-col items-center">
       {ovalJsx()}
       <div className="flex items-center justify-between m-auto mt-6 w-[90%]">
         <LogoIcon />
-        <ChevronLeft onClick={backStepHandler} size={"28px"} color="#fff" />
+        <ChevronLeft onClick={backStepHandler} size={"28px"} color="#fff" className="z-[1000]"/>
       </div>
 
       <motion.h1
@@ -84,17 +84,18 @@ const ResetPassword = () => {
             onSubmit={(e) => {
               console.log(e);
             }}
+            inputTheme="white"
             submitText="ثبت"
             customButtons={({ handleSubmit, formState: { errors } }) => (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.5 }}
-                className="flex items-center justify-center w-full gap-5 mt-8 col-span-full"
+                className="flex items-center justify-center w-full gap-5 mt-4 col-span-full"
               >
                 <Button
                   type="submit"
-                  className="w-full py-6"
+                  className="w-full py-6 text-[#EEC124] text-base"
                   variant={"secondary"}
                   onClick={handleSubmit(
                     (data) => {
@@ -113,7 +114,7 @@ const ResetPassword = () => {
                   ثبت تغییرات
                 </Button>
                 <Button
-                  className="w-full py-6 text-[#EEC124]"
+                  className="w-full py-6 text-[#EEC124] text-base"
                   variant={"secondary"}
                   onClick={handleSubmit(
                     () => {
@@ -132,12 +133,12 @@ const ResetPassword = () => {
         </div>
       }
       <motion.img
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3, ease: "easeIn" }}
         alt="forget password photo"
         src={resetPassPhoto}
-        className="absolute bottom-[7%] right-[50%] translate-x-[50%] h-[280px] w-[330px]"
+        className=" h-[280px] w-[330px]"
       />
     </div>
   );
