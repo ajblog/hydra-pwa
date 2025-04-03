@@ -6,3 +6,4 @@ export * from "./Toast/ToastService";
 export * from "./Radio/Radio";
 export * from "./Tab/Tab";
 export * from "./WeatherInfoCard/WeatherInfoCard";
+export * from "./Chart/Chart";

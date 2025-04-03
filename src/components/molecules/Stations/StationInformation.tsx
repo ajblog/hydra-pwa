@@ -5,12 +5,14 @@ import { useState } from "react";
 import wave from "../../../assets/images/wave-icon.png";
 import temp from "../../../assets/images/temp-Icon.png";
 import wind from "../../../assets/images/Wind-Icon.png";
+import { CustomChart } from "../CustomChart/CustomChart";
 
 const StationInformation = ({
   selectedStation,
   setStep,
 }: StationInformationPropTypes) => {
   const [isSelected, setIsSelected] = useState("موج");
+  const [selectedDay, setSelectedDay] = useState("شنبه");
   const weekData = [
     {
       title: "شنبه",
@@ -52,7 +54,7 @@ const StationInformation = ({
     <div className="mt-3">
       <div className="flex items-center justify-between border-b-[4px] border-b-[#EAEAEA] pb-5">
         <span className="font-bold text-xl text-[#5B55ED]">
-          {selectedStation}
+          ایستگاه {selectedStation}
         </span>
         <ChevronLeft onClick={() => setStep("selection")} color="#A6A6A6" />
       </div>
@@ -73,8 +75,13 @@ const StationInformation = ({
             data={item.data}
             title={item.title}
             icon={item.icon}
+            isSelected={selectedDay === item.title}
+            setSelectedDay={setSelectedDay}
           />
         ))}
+      </div>
+      <div>
+        <CustomChart />
       </div>
     </div>
   );

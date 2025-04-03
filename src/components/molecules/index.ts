@@ -6,4 +6,5 @@ export * from "./EasyAccess/EasyAccess";
 export * from "./ExitModal/ExitModal";
 export * from "./navigatopn/NavigationDrawer";
 export * from "./Stations/Stations";
-export * from './Stations/StationInformation'
+export * from "./Stations/StationInformation";
+export * from "./CustomChart/CustomChart";
