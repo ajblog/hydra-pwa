@@ -11,16 +11,19 @@ import { ForgetPassword } from "../views/ForgetPassword/ForgetPassword";
 // Mock Auth Function (Replace with real cookie check)
 const isAuthenticated = () => document.cookie.includes("access_token");
 
+const hasVisitedBefore = () => localStorage.getItem("hasVisited");
+
+const PublicRoute = () => {
+  if (!isAuthenticated() && !hasVisitedBefore()) {
+    return <Navigate to="/intro" replace />;
+  }
+  return isAuthenticated() ? <Navigate to="/" replace /> : <Outlet />;
+};
+
 // ✅ Private Route (Protects Home)
 const PrivateRoute = () => {
   return isAuthenticated() ? <Outlet /> : <Navigate to="/sign-in" replace />;
 };
-
-// ✅ Public Route (Redirects auth users away from /sign-in or /sign-up)
-const PublicRoute = () => {
-  return isAuthenticated() ? <Navigate to="/" replace /> : <Outlet />;
-};
-
 
 const NotFound = () => <h1>404 - Not Found</h1>;
 
