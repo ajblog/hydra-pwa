@@ -1,19 +1,33 @@
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMapEvent } from "react-leaflet";
+import { useState } from "react";
 import { LatLngExpression, LatLngTuple } from "leaflet";
 import L from "leaflet";
+import loadingWheel from "../../assets/images/loading.gif";
 
 const customIcon = new L.DivIcon({
   html: `<div class="w-4 h-4 rounded-full border-[2px] border-red-500 flex items-center justify-center">
            <div class="w-2 h-2 rounded-full bg-red-500"></div>
          </div>`,
-  className: "bg-transparent", // Avoid Leaflet default styles
-  iconSize: [24, 24], // Adjust size
-  iconAnchor: [12, 12], // Center the icon correctly
+  className: "bg-transparent",
+  iconSize: [24, 24],
+  iconAnchor: [12, 12],
 });
 
+const TileLoader = ({
+  setLoading,
+}: {
+  setLoading: (loading: boolean) => void;
+}) => {
+  useMapEvent("tileloadstart", () => setLoading(true));
+  useMapEvent("tileload", () => setLoading(false));
+  return null;
+};
+
 const FullScreenMap = () => {
-  const center: LatLngExpression = [26.045226, 55.161312]; // persian gulf
-  const zoom = 8; // Set the initial zoom level
+  const [loading, setLoading] = useState(true);
+
+  const center: LatLngExpression = [26.045226, 55.161312]; // Persian Gulf
+  const zoom = 8;
 
   const locations: { id: number; name: string; coords: LatLngTuple }[] = [
     { id: 1, name: "Farsi Island, Iran", coords: [27.9948, 50.1747] },
@@ -30,11 +44,17 @@ const FullScreenMap = () => {
 
   return (
     <div className="relative w-screen h-screen">
+      {loading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm z-[399]">
+          <img alt="loading" src={loadingWheel} />
+        </div>
+      )}
       <MapContainer
         center={center}
         zoom={zoom}
         className="absolute inset-0 w-full h-full"
       >
+        <TileLoader setLoading={setLoading} />
         <TileLayer
           url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
           minZoom={0}
