@@ -18,6 +18,7 @@ interface Field {
 
 interface FormProps<T extends FieldValues> {
   fields: Field[];
+  className?: string;
   onSubmit: (data: T) => void;
   submitText?: string;
   hideButton?: boolean;

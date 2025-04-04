@@ -1,5 +1,5 @@
-import { MapContainer, Marker, TileLayer, useMapEvent } from "react-leaflet";
-import { useState } from "react";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { useEffect, useState } from "react";
 import { LatLngExpression, LatLngTuple } from "leaflet";
 import L from "leaflet";
 import loadingWheel from "../../assets/images/loading.gif";
@@ -12,16 +12,6 @@ const customIcon = new L.DivIcon({
   iconSize: [24, 24],
   iconAnchor: [12, 12],
 });
-
-const TileLoader = ({
-  setLoading,
-}: {
-  setLoading: (loading: boolean) => void;
-}) => {
-  useMapEvent("tileloadstart", () => setLoading(true));
-  useMapEvent("tileload", () => setLoading(false));
-  return null;
-};
 
 const FullScreenMap = () => {
   const [loading, setLoading] = useState(true);
@@ -42,6 +32,10 @@ const FullScreenMap = () => {
     { id: 10, name: "Hendijan Oil Field, Iran", coords: [28.04, 49.44] },
   ];
 
+  useEffect(() => {
+    console.log("Loading state:", loading);
+  }, [loading]);
+
   return (
     <div className="relative w-screen h-screen">
       {loading && (
@@ -54,12 +48,15 @@ const FullScreenMap = () => {
         zoom={zoom}
         className="absolute inset-0 w-full h-full"
       >
-        <TileLoader setLoading={setLoading} />
         <TileLayer
           url="https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png"
           minZoom={0}
           maxZoom={20}
           attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          eventHandlers={{
+            loading: () => setLoading(true), // When tile loading starts
+            load: () => setLoading(false), // When all tiles have loaded
+          }}
         />
         {locations.map((loc) => (
           <Marker key={loc.id} position={loc.coords} icon={customIcon}></Marker>

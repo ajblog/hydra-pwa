@@ -73,7 +73,7 @@ const Profile = () => {
     },
   ];
   return (
-    <div className="bg-white h-full">
+    <div className="bg-white h-screen">
       <motion.div
         initial={{ y: -200 }}
         animate={{ y: 0 }}
@@ -117,6 +117,7 @@ const Profile = () => {
         </motion.div>
       </motion.div>
       <Form
+        className="bg-white"
         fields={profileFields}
         onSubmit={(e) => console.log(e)}
         inputTheme="dark"

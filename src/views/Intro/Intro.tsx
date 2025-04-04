@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -17,6 +17,8 @@ import Intro4 from "../../assets/images/Intro-4.png";
 
 export function Intro() {
   const [step, setStep] = useState<number>(0);
+  const hasVisited: boolean =
+    localStorage.getItem("hasVisited") === "true" ? true : false;
   const navigate = useNavigate();
 
   const imageVariants = {
@@ -144,6 +146,10 @@ export function Intro() {
       </AnimatePresence>
     );
   };
+
+  useEffect(() => {
+    if (hasVisited) navigate("/sign-in");
+  }, []);
 
   return (
     <>

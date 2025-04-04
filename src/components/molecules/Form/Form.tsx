@@ -4,6 +4,7 @@ import { Button, Input, showErrorToast } from "../../atoms";
 import React, { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { FormProps } from "./Form.type";
+import { cn } from "../../../utils";
 
 export const Form = React.memo(function Form<T extends FieldValues>({
   fields,
@@ -13,6 +14,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
   inputTheme = "light",
   buttonTheme = "secondary",
   customButtons,
+  className,
 }: FormProps<T>) {
   const {
     register,
@@ -56,7 +58,10 @@ export const Form = React.memo(function Form<T extends FieldValues>({
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit, handleFormError)}
-      className="space-y-4 px-6 py-4 w-full grid grid-cols-2 gap-x-4"
+      className={cn(
+        "space-y-4 px-6 py-4 w-full grid grid-cols-2 gap-x-4",
+        className
+      )}
     >
       {fields.map((field, index) =>
         !field.invisible ? (
