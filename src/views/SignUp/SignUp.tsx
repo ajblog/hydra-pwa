@@ -28,7 +28,6 @@ export const SignUp = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    localStorage.setItem("hasVisited", "true"); // Mark that the user has visited
     const handleFocus = (event: FocusEvent) => {
       if (event.target instanceof HTMLInputElement) {
         setFocusedElement(true);
@@ -111,6 +110,7 @@ export const SignUp = () => {
   const handleSubmit = (e: FieldValues) => {
     console.log(e);
     setCookie("access_token", "sjflkdjsflkjslkdjlkjsdkjf");
+    localStorage.setItem("hasVisited", "true"); // Mark that the user has visited
     setIsLoggedIn(true);
   };
   if (isLoggedIn) return <SuccessLoginPage />;

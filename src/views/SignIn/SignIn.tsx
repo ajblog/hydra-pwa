@@ -16,7 +16,7 @@ const ovalJsx = () => {
 };
 
 export function SignIn() {
-const navigate = useNavigate()
+  const navigate = useNavigate();
   const signInFields = [
     {
       name: "username",
@@ -66,7 +66,8 @@ const navigate = useNavigate()
               onSubmit={(e) => {
                 console.log(e);
                 setCookie("access_token", "sjflkdjsflkjslkdjlkjsdkjf");
-                navigate('/')
+                localStorage.setItem("hasVisited", "true"); // Mark that the user has visited
+                navigate("/");
               }}
               fields={signInFields}
             />
@@ -75,7 +76,12 @@ const navigate = useNavigate()
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
             >
-              <Button variant="link" onClick={() => navigate('/forget-password')}>فراموشی رمز عبور</Button>
+              <Button
+                variant="link"
+                onClick={() => navigate("/forget-password")}
+              >
+                فراموشی رمز عبور
+              </Button>
             </motion.div>
           </div>
 
@@ -86,7 +92,11 @@ const navigate = useNavigate()
             className="mt-6 flex justify-center items-center"
           >
             <p className="text-black">ثبت نام نکرده‌اید؟</p>
-            <Button onClick={() => navigate('/sign-up')} className="text-[#EEC124]" variant="link">
+            <Button
+              onClick={() => navigate("/sign-up")}
+              className="text-[#EEC124]"
+              variant="link"
+            >
               ایجاد حساب کاربری
             </Button>
           </motion.div>

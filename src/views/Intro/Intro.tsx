@@ -173,7 +173,11 @@ export function Intro() {
                   >
                     <Button
                       onClick={() => {
-                        if (step === 3) navigate("/sign-in");
+                        if (step === 3) {
+                          localStorage.setItem("hasVisited", "true"); // Mark that the user has visited
+
+                          navigate("/sign-in");
+                        }
                         setStep((prev) => prev + 1);
                       }}
                       className="w-full py-6"
