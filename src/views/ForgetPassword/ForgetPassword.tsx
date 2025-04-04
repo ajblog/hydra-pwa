@@ -72,7 +72,12 @@ const ForgetPassword = () => {
       {ovalJsx()}
       <div className="flex items-center justify-between m-auto mt-6 w-[90%]">
         <LogoIcon />
-        <ChevronLeft onClick={backStepHandler} size={"28px"} color="#fff" className="z-[1000]" />
+        <ChevronLeft
+          onClick={backStepHandler}
+          size={"28px"}
+          color="#fff"
+          className="z-[1000]"
+        />
       </div>
 
       <motion.h1
@@ -90,7 +95,7 @@ const ForgetPassword = () => {
               {
                 name: "phone",
                 placeholder: "شماره موبایل",
-                type: "text",
+                type: "onlyNumber",
                 validation: {
                   required: "شماره موبایل الزامی است",
                 },
