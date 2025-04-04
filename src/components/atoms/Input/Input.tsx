@@ -3,7 +3,7 @@ import { cn } from "../../../utils";
 
 interface InputProps extends React.ComponentProps<"input"> {
   icon?: React.ReactNode;
-  theme?  : 'dark' | 'light'
+  theme?  : 'dark' | 'light' | 'white'
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -20,7 +20,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
             theme === "dark"
               ? "border-[#7D7D7D] placeholder:text-[#7D7D7D]"
-              : "border-[#DBDBDB] placeholder:text-[#DBDBDB]",
+              : theme === "light"
+                ? "border-[#DBDBDB] placeholder:text-[#DBDBDB] "
+                : "border-none bg-white placeholder:text-[#434343]",
             className
           )}
           ref={ref}

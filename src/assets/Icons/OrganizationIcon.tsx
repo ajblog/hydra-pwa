@@ -9,7 +9,7 @@ const OrganizationIcon = ({ width, height }: SVGPropTypes) => {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_840_290)">
+      <g clipPath="url(#clip0_840_290)">
         <mask
           id="mask0_840_290"
           maskUnits="userSpaceOnUse"
@@ -22,8 +22,8 @@ const OrganizationIcon = ({ width, height }: SVGPropTypes) => {
         </mask>
         <g mask="url(#mask0_840_290)">
           <path
-            fill-rule="evenodd"
-            clip-rule="evenodd"
+            fillRule="evenodd"
+            clipRule="evenodd"
             d="M15.98 0C24.77 0 31.96 7.19 31.96 15.98C31.96 24.77 24.77 31.96 15.98 31.96C7.19 31.96 0 24.77 0 15.98C0 7.19 7.19 0 15.98 0ZM15.98 1.18C7.84 1.18 1.18 7.84 1.18 15.98C1.18 24.12 7.84 30.78 15.98 30.78C24.12 30.78 30.78 24.12 30.78 15.98C30.78 7.84 24.12 1.18 15.98 1.18Z"
             fill="#A6A6A6"
           />
@@ -85,14 +85,14 @@ const OrganizationIcon = ({ width, height }: SVGPropTypes) => {
           fill="#A6A6A6"
         />
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M12.58 22.88C12.75 22.88 12.88 22.74 12.88 22.58C12.88 22.42 12.74 22.27 12.58 22.27C12.42 22.27 12.27 22.41 12.27 22.58C12.27 22.75 12.41 22.88 12.58 22.88Z"
           fill="#A6A6A6"
         />
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M20.56 22.88C20.73 22.88 20.86 22.74 20.86 22.58C20.86 22.42 20.72 22.27 20.56 22.27C20.4 22.27 20.25 22.41 20.25 22.58C20.25 22.75 20.39 22.88 20.56 22.88Z"
           fill="#A6A6A6"
         />

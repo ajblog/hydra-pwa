@@ -3,13 +3,13 @@ import { SVGPropTypes } from "../../types";
 const EmailIcon = ({ width, height }: SVGPropTypes) => {
   return (
     <svg
-      width={width || '30'}
-      height={height ||"30"}
+      width={width || "30"}
+      height={height || "30"}
       viewBox="0 0 30 30"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_840_288)">
+      <g clipPath="url(#clip0_840_288)">
         <path
           d="M5.80005 21.76H24.24V8.28999H5.80005V21.76ZM6.84005 20.72V9.89999L15.02 15.66L23.21 9.89999V20.72H6.84005ZM7.83005 9.32999H22.22L15.02 14.39L7.83005 9.32999Z"
           fill="#A6A6A6"

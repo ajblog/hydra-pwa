@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Button,
   Form,
@@ -6,11 +5,11 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../components";
-import { LogoIcon, PasswordIcon, PhoneIcon } from "../../assets";
-import { ChevronLeft, Grid } from "lucide-react";
+import { LogoIcon, PasswordIcon } from "../../assets";
+import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import forgetPassPhoto from "../../assets/images/forget-pass.png";
+import resetPassPhoto from "../../assets/images/reset-pass.png";
 
 const ovalJsx = () => {
   return (
@@ -24,23 +23,23 @@ const ovalJsx = () => {
 
 const resetPassFields = [
   {
-    name: "code",
-    type: "text",
-    placeholder: "کد ارسال شده",
+    name: "password",
+    type: "password",
+    placeholder: "رمز عبور فعلی",
     validation: {
-      required: " وارد کردن کد الزامی است",
+      required: "رمز عبور الزامی است",
     },
-    icon: <Grid color="gray" />,
+    icon: <PasswordIcon color="#434343" />,
   },
   {
-    name: "password",
+    name: "newPassword",
     type: "password",
     placeholder: "رمز عبور جدید",
     validation: {
       required: "رمز عبور الزامی است",
       minLength: { value: 6, message: "رمز عبور باید حداقل ۶ کاراکتر باشد" },
     },
-    icon: <PasswordIcon />,
+    icon: <PasswordIcon color="#434343" />,
   },
   {
     name: "repeatPassword",
@@ -49,22 +48,17 @@ const resetPassFields = [
     validation: {
       required: "تکرار رمز عبور الزامی است",
       validate: (value: string, formValues: Record<string, string>) =>
-        value === formValues.password || "رمز عبور مطابقت ندارد",
+        value === formValues.newPassword || "رمز عبور مطابقت ندارد",
     },
-    icon: <PasswordIcon />,
+    icon: <PasswordIcon color="#434343" />,
   },
 ];
 
-const ForgetPassword = () => {
-  const [step, setStep] = useState<"phone-number" | "reset">("phone-number");
-  const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+const ResetPassword = () => {
   const navigate = useNavigate();
 
-  console.log(step);
-
   const backStepHandler = () => {
-    if (step === "reset") setStep("phone-number");
-    else navigate("/sign-in");
+    navigate("/profile");
   };
 
   return (
@@ -72,7 +66,7 @@ const ForgetPassword = () => {
       {ovalJsx()}
       <div className="flex items-center justify-between m-auto mt-6 w-[90%]">
         <LogoIcon />
-        <ChevronLeft onClick={backStepHandler} size={"28px"} color="#fff" className="z-[1000]" />
+        <ChevronLeft onClick={backStepHandler} size={"28px"} color="#fff" className="z-[1000]"/>
       </div>
 
       <motion.h1
@@ -81,35 +75,14 @@ const ForgetPassword = () => {
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         className="font-bold text-4xl text-[#EEC124] text-center py-5 mt-[10%] mb-10"
       >
-        بازنشانی رمزعبور
+        تغییر رمـــز عبــور
       </motion.h1>
-      {step === "phone-number" ? (
-        <div className="w-[90%] h-[70%]  m-auto flex flex-col items-center">
-          <Form
-            fields={[
-              {
-                name: "phone",
-                placeholder: "شماره موبایل",
-                type: "text",
-                validation: {
-                  required: "شماره موبایل الزامی است",
-                },
-                icon: <PhoneIcon />,
-              },
-            ]}
-            onSubmit={(e) => {
-              setPhoneNumber(e.phone);
-              setStep("reset");
-            }}
-            submitText="ادامه"
-          />
-        </div>
-      ) : (
+      {
         <div className="w-[90%] h-[70%]  m-auto flex flex-col items-center">
           <Form
             fields={resetPassFields}
             onSubmit={(e) => {
-              console.log(e, phoneNumber);
+              console.log(e);
             }}
             inputTheme="white"
             submitText="ثبت"
@@ -118,17 +91,16 @@ const ForgetPassword = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.5 }}
-                className="flex items-center justify-center w-full gap-5 mt-8 col-span-full"
+                className="flex items-center justify-center w-full gap-5 mt-4 col-span-full"
               >
                 <Button
                   type="submit"
-                  className="w-full py-6 text-[#EEC124]"
+                  className="w-full py-6 text-[#EEC124] text-base"
                   variant={"secondary"}
                   onClick={handleSubmit(
                     (data) => {
-                      console.log(data, phoneNumber);
+                      console.log(data);
                       showSuccessToast("رمزعبور با موفقیت تغییر یافت.");
-                      navigate("/sign-in");
                     },
                     () => {
                       Object.values(errors).forEach((error) => {
@@ -142,14 +114,14 @@ const ForgetPassword = () => {
                   ثبت تغییرات
                 </Button>
                 <Button
-                  className="w-full py-6 text-[#EEC124]"
+                  className="w-full py-6 text-[#EEC124] text-base"
                   variant={"secondary"}
                   onClick={handleSubmit(
                     () => {
-                      navigate("/sign-in");
+                      navigate("/profile");
                     },
                     () => {
-                      navigate("/sign-in");
+                      navigate("/profile");
                     }
                   )}
                 >
@@ -159,17 +131,17 @@ const ForgetPassword = () => {
             )}
           />
         </div>
-      )}
+      }
       <motion.img
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3, ease: "easeIn" }}
         alt="forget password photo"
-        src={forgetPassPhoto}
-        className=" h-[340px] w-[230px]"
+        src={resetPassPhoto}
+        className=" h-[280px] w-[330px]"
       />
     </div>
   );
 };
 
-export { ForgetPassword };
+export { ResetPassword };
