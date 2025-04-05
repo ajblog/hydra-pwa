@@ -1,6 +1,6 @@
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
-import { useState } from "react";
-import { LatLngExpression } from "leaflet";
+import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { useEffect, useState } from "react";
+import { LatLngExpression, LatLngTuple } from "leaflet";
 import L from "leaflet";
 import loadingWheel from "../../assets/images/loading.gif";
 import { stationsInfo } from "../../constants";
@@ -31,6 +31,28 @@ const selectedIcon = new L.DivIcon({
   iconSize: [40, 40],
   iconAnchor: [20, 20],
 });
+
+const RecenterMap = ({ coords }: { coords: LatLngTuple }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (coords) {
+      // Convert latlng to pixel point
+      const targetPoint = map.project(coords, map.getZoom());
+      // Offset it upward (e.g. 100px)
+      const offsetY = 150;
+      const offsetPoint = L.point(targetPoint.x, targetPoint.y + offsetY);
+      const offsetLatLng = map.unproject(offsetPoint, map.getZoom());
+
+      map.setView(offsetLatLng, map.getZoom(), {
+        animate: true,
+      });
+    }
+  }, [coords, map]);
+
+  return null;
+};
+
 
 const FullScreenMap = () => {
   const [loading, setLoading] = useState(true);
@@ -66,6 +88,14 @@ const FullScreenMap = () => {
             load: () => setLoading(false), // When all tiles have loaded
           }}
         />
+        {selectedStationContext && (
+          <RecenterMap
+            coords={
+              stationsInfo.find((s) => s.name === selectedStationContext)
+                ?.coords ?? center
+            }
+          />
+        )}
         {stationsInfo.map((loc) => (
           <Marker
             eventHandlers={{
