@@ -2,6 +2,7 @@ import { RadioGroup, RadioGroupItem } from "../../atoms";
 import { ChevronLeft } from "lucide-react";
 import { StationSelectionPropTypes } from "./StationSelection.type";
 import { stationsInfo } from "../../../constants";
+import { useStationContext } from "../../../contexts/stationContext";
 
 const StationSelection = ({
   selectedStation,
@@ -9,6 +10,7 @@ const StationSelection = ({
   setStationType,
   title,
 }: StationSelectionPropTypes) => {
+  const {setSelectedStationContext} = useStationContext()
  
   return (
     <div className="mt-3">
@@ -28,6 +30,7 @@ const StationSelection = ({
             <RadioGroupItem
               onClick={(e) => {
                 setSelectedStation(e.currentTarget.value);
+                setSelectedStationContext(e.currentTarget.value);
                  setStationType(null);
                
               }}

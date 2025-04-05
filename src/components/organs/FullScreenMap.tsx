@@ -1,6 +1,6 @@
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
-import { useState } from "react";
-import { LatLngExpression } from "leaflet";
+import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { useEffect, useState } from "react";
+import { LatLngExpression, LatLngTuple } from "leaflet";
 import L from "leaflet";
 import loadingWheel from "../../assets/images/loading.gif";
 import { stationsInfo } from "../../constants";
@@ -32,13 +32,35 @@ const selectedIcon = new L.DivIcon({
   iconAnchor: [20, 20],
 });
 
+const RecenterMap = ({ coords }: { coords: LatLngTuple }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (coords) {
+      // Convert latlng to pixel point
+      const targetPoint = map.project(coords, map.getZoom());
+      // Offset it upward (e.g. 100px)
+      const offsetY = 200;
+      const offsetPoint = L.point(targetPoint.x, targetPoint.y + offsetY);
+      const offsetLatLng = map.unproject(offsetPoint, map.getZoom());
+
+      map.setView(offsetLatLng, map.getZoom(), {
+        animate: true,
+      });
+    }
+  }, [coords, map]);
+
+  return null;
+};
+
+
 const FullScreenMap = () => {
   const [loading, setLoading] = useState(true);
   const { selectedStationContext, setSelectedStationContext } =
     useStationContext();
 
-  const center: LatLngExpression = [26.045226, 55.161312]; // Persian Gulf
-  const zoom = 8;
+  const center: LatLngExpression = [27.10664, 51.271204]; // Persian Gulf
+  const zoom = 7;
 
   const handleMarkerClick = (station: string) => {
     setSelectedStationContext(station);
@@ -47,7 +69,7 @@ const FullScreenMap = () => {
   return (
     <div className="relative w-screen h-screen">
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm z-[399]">
+        <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm z-[500]">
           <img alt="loading" src={loadingWheel} />
         </div>
       )}
@@ -66,6 +88,14 @@ const FullScreenMap = () => {
             load: () => setLoading(false), // When all tiles have loaded
           }}
         />
+        {selectedStationContext && (
+          <RecenterMap
+            coords={
+              stationsInfo.find((s) => s.name === selectedStationContext)
+                ?.coords ?? center
+            }
+          />
+        )}
         {stationsInfo.map((loc) => (
           <Marker
             eventHandlers={{

@@ -13,8 +13,8 @@ const NavigationDrawer = () => {
   const { selectedStationContext } = useStationContext();
 
   useEffect(() => {
-    if (selectedStationContext) setNavigationType("STATION");
-  }, [selectedStationContext]);
+    if (selectedStationContext && !navigationType) setNavigationType("STATION");
+  }, [selectedStationContext , navigationType]);
   return (
     <>
       <motion.div

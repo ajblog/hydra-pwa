@@ -14,4 +14,6 @@ export interface DirectionOverviewPropTypes {
 export interface DirectionStationsPropTypes {
   originStation: string;
   destinationStation: string;
+  showMore: boolean;
+  setShowMore: React.Dispatch<SetStateAction<boolean>>;
 }
