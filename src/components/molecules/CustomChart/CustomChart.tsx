@@ -10,12 +10,11 @@ import {
 } from "../../atoms";
 
 const chartData = [
-  { month: "January", desktop: Math.random() },
-  { month: "February", desktop: Math.random()},
-  { month: "March", desktop: Math.random() },
-  { month: "April", desktop: Math.random()},
-  { month: "May", desktop: Math.random() },
-  { month: "June", desktop: Math.random() },
+  { time: "10:00", desktop: Math.random() },
+  { time: "12:00", desktop: Math.random() },
+  { time: "14:30", desktop: Math.random() },
+  { time: "18:00", desktop: Math.random() },
+  { time: "20:30", desktop: Math.random() },
 ];
 
 const chartConfig = {
@@ -32,18 +31,20 @@ export function CustomChart() {
         accessibilityLayer
         data={chartData}
         margin={{
-          left: 12,
-          right: 12,
+          left: 32,
+          right: 18,
         }}
       >
         <CartesianGrid vertical={false} />
         <XAxis
-          dataKey="month"
+          dataKey="time"
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)}
+          interval={0}
+          tickFormatter={(value) => value.slice(0, 5)}
         />
+
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <defs>
           <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
