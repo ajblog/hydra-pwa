@@ -10,6 +10,7 @@ const DirectionOverview = ({
   destinationStation,
   setDestinationStation,
   setOriginStation,
+  setDirectionStep,
 }: DirectionOverviewPropTypes) => {
   const handleSwitchStations = () => {
     setDestinationStation(originStation);
@@ -17,7 +18,11 @@ const DirectionOverview = ({
   };
   return (
     <div className="flex flex-col ">
-      <ChevronLeft color="#A6A6A6" className="self-end mb-2" />
+      <ChevronLeft
+        color="#A6A6A6"
+        className="self-end mb-2"
+        onClick={() => setDirectionStep("selection")}
+      />
 
       <div className="flex flex-col gap-2 mt-3 px-3">
         <SelectLocationBox

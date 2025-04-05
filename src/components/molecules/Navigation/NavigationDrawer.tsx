@@ -1,14 +1,20 @@
 import { motion } from "framer-motion";
 import { Button } from "../../atoms";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Stations } from "../Stations/Stations";
 import { Direction } from "../Direction/Direction";
+import { useStationContext } from "../../../contexts/stationContext";
 
 const NavigationDrawer = () => {
   const [navigationType, setNavigationType] = useState<
     "STATION" | "ROUTE" | null
   >(null);
   const [hideButtons, setHideButtons] = useState(false);
+  const { selectedStationContext } = useStationContext();
+
+  useEffect(() => {
+    if (selectedStationContext) setNavigationType("STATION");
+  }, [selectedStationContext]);
   return (
     <>
       <motion.div

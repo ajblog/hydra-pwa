@@ -8,6 +8,7 @@ export interface DirectionOverviewPropTypes {
   setOriginStation: React.Dispatch<SetStateAction<string>>;
   originStation: string;
   destinationStation: string;
+  setDirectionStep: React.Dispatch<SetStateAction<"selection" | "overview">>;
 }
 
 export interface DirectionStationsPropTypes {
