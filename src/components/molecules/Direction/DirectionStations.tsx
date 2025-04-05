@@ -84,7 +84,8 @@ const DirectionStations = ({
 
   useEffect(() => {
     setSelectedStationContext(data[activeStationIndex].name);
-  }, [activeStationIndex, data, setSelectedStationContext]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeStationIndex, setSelectedStationContext]);
 
   return (
     <>
