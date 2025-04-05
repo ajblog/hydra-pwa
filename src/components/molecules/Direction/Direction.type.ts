@@ -9,3 +9,8 @@ export interface DirectionOverviewPropTypes {
   originStation: string;
   destinationStation: string;
 }
+
+export interface DirectionStationsPropTypes {
+  originStation: string;
+  destinationStation: string;
+}

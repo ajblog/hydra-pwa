@@ -16,10 +16,10 @@ const DirectionOverview = ({
     setOriginStation(destinationStation);
   };
   return (
-    <div className="flex flex-col px-5">
+    <div className="flex flex-col ">
       <ChevronLeft color="#A6A6A6" className="self-end mb-2" />
 
-      <div className="flex flex-col gap-2 mt-3">
+      <div className="flex flex-col gap-2 mt-3 px-3">
         <SelectLocationBox
           onClick={() => setStationType("origin")}
           title={originStation}
@@ -34,7 +34,10 @@ const DirectionOverview = ({
           selected
         />
       </div>
-      <DirectionStations />
+      <DirectionStations
+        originStation={originStation}
+        destinationStation={destinationStation}
+      />
     </div>
   );
 };
