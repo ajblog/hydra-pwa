@@ -8,13 +8,13 @@ import { useStationContext } from "../../../contexts/stationContext";
 const NavigationDrawer = () => {
   const [navigationType, setNavigationType] = useState<
     "STATION" | "ROUTE" | null
-  >(null);
+  >("STATION");
   const [hideButtons, setHideButtons] = useState(false);
   const { selectedStationContext } = useStationContext();
 
   useEffect(() => {
     if (selectedStationContext && !navigationType) setNavigationType("STATION");
-  }, [selectedStationContext , navigationType]);
+  }, [selectedStationContext, navigationType]);
   return (
     <>
       <motion.div
@@ -28,14 +28,18 @@ const NavigationDrawer = () => {
             <Button
               onClick={() => setNavigationType("STATION")}
               variant={"default"}
-              className="w-full text-xl py-6"
+              className={`w-full text-xl py-6 ${
+                navigationType !== "STATION" && "text-white bg-[#A6A6A6]"
+              }`}
             >
               ایستگاه
             </Button>
             <Button
               onClick={() => setNavigationType("ROUTE")}
               variant={"default"}
-              className="w-full text-white bg-[#A6A6A6] text-xl py-6"
+              className={`w-full text-xl py-6 ${
+                navigationType !== "ROUTE" && "text-white bg-[#A6A6A6]"
+              }`}
             >
               مسیر
             </Button>
