@@ -80,7 +80,7 @@ const StationInformation = ({
           />
         ))}
       </div>
-      <div>
+      <div className="mt-4">
         <CustomChart />
       </div>
     </div>

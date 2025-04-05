@@ -2,6 +2,7 @@ import { EasyAccess, NavigationDrawer } from "../../components";
 import FullScreenMap from "../../components/organs/FullScreenMap";
 import { motion } from "framer-motion";
 import profilePhoto from "../../assets/images/profile.png";
+import { StationProvider } from "../../contexts/stationContext";
 const ProfileData = () => {
   return (
     <motion.div
@@ -25,8 +26,10 @@ export function Home() {
     <div>
       <ProfileData />
       <EasyAccess />
-      <FullScreenMap />
-      <NavigationDrawer />
+      <StationProvider>
+        <FullScreenMap />
+        <NavigationDrawer />
+      </StationProvider>
     </div>
   );
 }

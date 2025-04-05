@@ -1,8 +1,10 @@
 import { MapContainer, Marker, TileLayer } from "react-leaflet";
-import { useEffect, useState } from "react";
-import { LatLngExpression, LatLngTuple } from "leaflet";
+import { useState } from "react";
+import { LatLngExpression } from "leaflet";
 import L from "leaflet";
 import loadingWheel from "../../assets/images/loading.gif";
+import { stationsInfo } from "../../constants";
+import { useStationContext } from "../../contexts/stationContext";
 
 const customIcon = new L.DivIcon({
   html: `<div class="w-4 h-4 rounded-full border-[2px] border-red-500 flex items-center justify-center">
@@ -13,28 +15,34 @@ const customIcon = new L.DivIcon({
   iconAnchor: [12, 12],
 });
 
+const selectedIcon = new L.DivIcon({
+  html: `
+    <div class="relative w-8 h-8 flex items-center justify-center">
+      <!-- Outer ripple layers -->
+      <div class="absolute w-full h-full rounded-full border-2 border-red-500 animate-ping"></div>
+      <div class="absolute w-full h-full rounded-full border-2 border-red-500 animate-ping [animation-delay:200ms]"></div>
+      <div class="absolute w-full h-full rounded-full border-2 border-red-500 animate-ping [animation-delay:400ms]"></div>
+
+      <!-- Inner dot -->
+      <div class="w-4 h-4 rounded-full bg-red-500 z-10"></div>
+    </div>
+  `,
+  className: "bg-transparent",
+  iconSize: [40, 40],
+  iconAnchor: [20, 20],
+});
+
 const FullScreenMap = () => {
   const [loading, setLoading] = useState(true);
+  const { selectedStationContext, setSelectedStationContext } =
+    useStationContext();
 
   const center: LatLngExpression = [26.045226, 55.161312]; // Persian Gulf
   const zoom = 8;
 
-  const locations: { id: number; name: string; coords: LatLngTuple }[] = [
-    { id: 1, name: "Farsi Island, Iran", coords: [27.9948, 50.1747] },
-    { id: 2, name: "Lavan Island, Iran", coords: [26.8133, 53.3522] },
-    { id: 3, name: "Sirri Island, Iran", coords: [25.9, 54.55] },
-    { id: 4, name: "Abu Musa Island, Iran/UAE", coords: [25.8675, 55.0311] },
-    { id: 5, name: "Halul Island, Qatar", coords: [25.6744, 52.4061] },
-    { id: 6, name: "Kharg Island, Iran", coords: [29.2536, 50.3146] },
-    { id: 7, name: "Marjan Oil Field, Saudi Arabia", coords: [26.28, 50.1] },
-    { id: 8, name: "Safa Oil Field, Kuwait", coords: [27.95, 48.45] },
-    { id: 9, name: "Nowruz Oil Field, Iran", coords: [28.1, 49.9] },
-    { id: 10, name: "Hendijan Oil Field, Iran", coords: [28.04, 49.44] },
-  ];
-
-  useEffect(() => {
-    console.log("Loading state:", loading);
-  }, [loading]);
+  const handleMarkerClick = (station: string) => {
+    setSelectedStationContext(station);
+  };
 
   return (
     <div className="relative w-screen h-screen">
@@ -58,8 +66,17 @@ const FullScreenMap = () => {
             load: () => setLoading(false), // When all tiles have loaded
           }}
         />
-        {locations.map((loc) => (
-          <Marker key={loc.id} position={loc.coords} icon={customIcon}></Marker>
+        {stationsInfo.map((loc) => (
+          <Marker
+            eventHandlers={{
+              click: () => handleMarkerClick(loc.name), // Handle click event
+            }}
+            key={loc.id}
+            position={loc.coords}
+            icon={
+              selectedStationContext === loc.name ? selectedIcon : customIcon
+            }
+          ></Marker>
         ))}
       </MapContainer>
     </div>

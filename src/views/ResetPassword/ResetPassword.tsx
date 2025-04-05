@@ -3,13 +3,14 @@ import {
   Form,
   Oval,
   showErrorToast,
-  showSuccessToast,
+  SuccessLoginPage,
 } from "../../components";
 import { LogoIcon, PasswordIcon } from "../../assets";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import resetPassPhoto from "../../assets/images/reset-pass.png";
+import { useState } from "react";
 
 const ovalJsx = () => {
   return (
@@ -55,18 +56,26 @@ const resetPassFields = [
 ];
 
 const ResetPassword = () => {
+  const [isSuccess, setIsSuccess] = useState(false);
   const navigate = useNavigate();
 
   const backStepHandler = () => {
     navigate("/profile");
   };
 
+  if (isSuccess)
+    return <SuccessLoginPage title="رمزعبور با موفقیت تغییر یافت." />;
   return (
     <div className="h-full flex flex-col items-center">
       {ovalJsx()}
       <div className="flex items-center justify-between m-auto mt-6 w-[90%]">
         <LogoIcon />
-        <ChevronLeft onClick={backStepHandler} size={"28px"} color="#fff" className="z-[1000]"/>
+        <ChevronLeft
+          onClick={backStepHandler}
+          size={"28px"}
+          color="#fff"
+          className="z-[1000]"
+        />
       </div>
 
       <motion.h1
@@ -100,7 +109,7 @@ const ResetPassword = () => {
                   onClick={handleSubmit(
                     (data) => {
                       console.log(data);
-                      showSuccessToast("رمزعبور با موفقیت تغییر یافت.");
+                      setIsSuccess(true);
                     },
                     () => {
                       Object.values(errors).forEach((error) => {
@@ -114,16 +123,12 @@ const ResetPassword = () => {
                   ثبت تغییرات
                 </Button>
                 <Button
+                  type="button"
                   className="w-full py-6 text-[#EEC124] text-base"
                   variant={"secondary"}
-                  onClick={handleSubmit(
-                    () => {
-                      navigate("/profile");
-                    },
-                    () => {
-                      navigate("/profile");
-                    }
-                  )}
+                  onClick={() => {
+                    navigate("/profile");
+                  }}
                 >
                   انصراف
                 </Button>

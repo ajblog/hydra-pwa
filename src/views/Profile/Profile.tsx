@@ -149,9 +149,10 @@ const Profile = () => {
               ثبت تغییرات
             </Button>
             <Button
+            type="button"
               variant={"default"}
               className="w-full py-6 text-base font-bold"
-              onClick={() => {}}
+              onClick={() => navigate('/')}
             >
               انصراف
             </Button>

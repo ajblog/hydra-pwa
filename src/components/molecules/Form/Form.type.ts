@@ -7,7 +7,7 @@ import {
 
 interface Field {
   name: string;
-  type: string;
+  type: string | "onlyNumber";
   placeholder: string;
   validation?: object;
   icon?: React.ReactNode;

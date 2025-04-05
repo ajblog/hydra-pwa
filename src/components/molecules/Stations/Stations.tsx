@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "../../atoms";
 import { StationInformation } from "./StationInformation";
 import { StationsPropTypes } from "./station.type";
+import { useStationContext } from "../../../contexts/stationContext";
 
 const stationsInfo = [
   { name: "بوشهر" },
@@ -16,12 +17,22 @@ const stationsInfo = [
 
 const Stations = ({ setHideButtons }: StationsPropTypes) => {
   const [step, setStep] = useState<"selection" | "information">("selection");
-  const [selectedStation, setSelectedStation] = useState<string>("");
+  const { selectedStationContext, setSelectedStationContext } =
+    useStationContext();
+
+  useEffect(() => {
+    if (selectedStationContext) {
+      setStep("information");
+    }
+  }, [selectedStationContext]);
 
   if (step === "information") {
     setHideButtons(true);
     return (
-      <StationInformation selectedStation={selectedStation} setStep={setStep} />
+      <StationInformation
+        selectedStation={selectedStationContext}
+        setStep={setStep}
+      />
     );
   } else {
     setHideButtons(false);
@@ -33,7 +44,7 @@ const Stations = ({ setHideButtons }: StationsPropTypes) => {
         ایستگاه موردنظر خود را از لیست زیر انتخاب کنید.
       </span>
       <RadioGroup
-        defaultValue={selectedStation}
+        defaultValue={selectedStationContext}
         className="grid grid-cols-2 gap-0 mt-4"
       >
         {stationsInfo.map((item, index) => (
@@ -43,7 +54,7 @@ const Stations = ({ setHideButtons }: StationsPropTypes) => {
           >
             <RadioGroupItem
               onClick={(e) => {
-                setSelectedStation(e.currentTarget.value);
+                setSelectedStationContext(e.currentTarget.value);
                 setStep("information");
               }}
               value={item.name}

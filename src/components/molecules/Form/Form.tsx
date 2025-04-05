@@ -77,13 +77,33 @@ export const Form = React.memo(function Form<T extends FieldValues>({
               type={
                 field.type === "password" && visiblePasswords[field.name]
                   ? "text"
-                  : field.type
+                  : field.type === "onlyNumber"
+                    ? "text"
+                    : field.type
               }
               placeholder={field.placeholder}
               defaultValue={field.defaultValue}
               icon={field.icon}
               {...register(field.name as Path<T>, field.validation)}
+              onInput={
+                field.type === "onlyNumber"
+                  ? (e) => {
+                      let value = e.currentTarget.value;
+
+                      // Convert Persian digits (۰–۹) to English digits (0–9)
+                      value = value.replace(/[\u06F0-\u06F9]/g, (d) =>
+                        String.fromCharCode(d.charCodeAt(0) - 1728)
+                      );
+
+                      // Remove any non-digit characters
+                      value = value.replace(/[^\d]/g, "");
+
+                      e.currentTarget.value = value;
+                    }
+                  : undefined
+              }
             />
+
             {field.type === "password" && (
               <button
                 type="button"

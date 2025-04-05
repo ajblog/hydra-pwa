@@ -113,7 +113,7 @@ export const SignUp = () => {
     localStorage.setItem("hasVisited", "true"); // Mark that the user has visited
     setIsLoggedIn(true);
   };
-  if (isLoggedIn) return <SuccessLoginPage />;
+  if (isLoggedIn) return <SuccessLoginPage title=" ثبت نام با موفقیت انجام شد" />;
   return (
     <div>
       <div className="pr-10 pt-10 flex flex-col justify-between h-full">
