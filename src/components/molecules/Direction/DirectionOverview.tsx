@@ -3,6 +3,7 @@ import { SelectLocationBox } from "../../atoms";
 import { DirectionOverviewPropTypes } from "./Direction.type";
 import { SwitchIcon } from "../../../assets";
 import { DirectionStations } from "./DirectionStations";
+import { useState } from "react";
 
 const DirectionOverview = ({
   setStationType,
@@ -12,6 +13,7 @@ const DirectionOverview = ({
   setOriginStation,
   setDirectionStep,
 }: DirectionOverviewPropTypes) => {
+  const [showMore, setShowMore] = useState(false);
   const handleSwitchStations = () => {
     setDestinationStation(originStation);
     setOriginStation(destinationStation);
@@ -21,7 +23,10 @@ const DirectionOverview = ({
       <ChevronLeft
         color="#A6A6A6"
         className="self-end mb-2"
-        onClick={() => setDirectionStep("selection")}
+        onClick={() => {
+          if (showMore) setShowMore(false);
+          else setDirectionStep("selection");
+        }}
       />
 
       <div className="flex flex-col gap-2 mt-3 px-3">
@@ -40,6 +45,8 @@ const DirectionOverview = ({
         />
       </div>
       <DirectionStations
+        setShowMore={setShowMore}
+        showMore={showMore}
         originStation={originStation}
         destinationStation={destinationStation}
       />

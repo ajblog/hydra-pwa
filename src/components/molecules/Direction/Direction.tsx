@@ -31,7 +31,13 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
     if (isSelectedDestination && isSelectedOrigin) setDirectionStep("overview");
   }, [setHideButtons, originStation, destinationStation]);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (directionStep === "selection") {
+      setHideButtons(false);
+    } else {
+      setHideButtons(true);
+    }
+  }, [setHideButtons, directionStep]);
 
   if (stationType === "origin") {
     setHideButtons(true);

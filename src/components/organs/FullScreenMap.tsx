@@ -40,7 +40,7 @@ const RecenterMap = ({ coords }: { coords: LatLngTuple }) => {
       // Convert latlng to pixel point
       const targetPoint = map.project(coords, map.getZoom());
       // Offset it upward (e.g. 100px)
-      const offsetY = 150;
+      const offsetY = 200;
       const offsetPoint = L.point(targetPoint.x, targetPoint.y + offsetY);
       const offsetLatLng = map.unproject(offsetPoint, map.getZoom());
 
@@ -59,8 +59,8 @@ const FullScreenMap = () => {
   const { selectedStationContext, setSelectedStationContext } =
     useStationContext();
 
-  const center: LatLngExpression = [26.045226, 55.161312]; // Persian Gulf
-  const zoom = 8;
+  const center: LatLngExpression = [27.10664, 51.271204]; // Persian Gulf
+  const zoom = 7;
 
   const handleMarkerClick = (station: string) => {
     setSelectedStationContext(station);
@@ -69,7 +69,7 @@ const FullScreenMap = () => {
   return (
     <div className="relative w-screen h-screen">
       {loading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm z-[399]">
+        <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm z-[500]">
           <img alt="loading" src={loadingWheel} />
         </div>
       )}
