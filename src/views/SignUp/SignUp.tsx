@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { setCookie } from "../../utils";
 import { FieldValues } from "react-hook-form";
+import { signupApi } from "../../services";
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -41,14 +42,14 @@ export const SignUp = () => {
   }, []);
   const signUpFields = [
     {
-      name: "firstName",
+      name: "firstname",
       type: "text",
       placeholder: "نام",
       validation: { required: "نام الزامی است" },
       icon: <NameIcon />,
     },
     {
-      name: "lastName",
+      name: "lastname",
       type: "text",
       placeholder: "نام خانوادگی",
       validation: { required: "نام خانوادگی الزامی است" },
@@ -62,14 +63,14 @@ export const SignUp = () => {
       icon: <EmailIcon />,
     },
     {
-      name: "phone",
-      type: "text",
+      name: "phonenumber",
+      type: "onlyNumber",
       placeholder: "شماره تماس",
       validation: { required: "شماره تماس الزامی است" },
       icon: <PhoneIcon />,
     },
     {
-      name: "organizationName",
+      name: "organizationname",
       type: "text",
       placeholder: "نام سازمان",
       validation: { required: "نام سازمان الزامی است" },
@@ -94,7 +95,7 @@ export const SignUp = () => {
       invisible: !focusedElement,
     },
     {
-      name: "repeatPassword",
+      name: "confirm_password",
       type: "password",
       placeholder: "تکرار رمز عبور",
       validation: {
@@ -107,13 +108,22 @@ export const SignUp = () => {
     },
   ];
 
-  const handleSubmit = (e: FieldValues) => {
+  const handleSubmit = async (e: FieldValues) => {
+    if ("phonenumber" in e) {
+      e.phonenumber = `+98${e.phonenumber}`;
+    }
     console.log(e);
-    setCookie("access_token", "sjflkdjsflkjslkdjlkjsdkjf");
-    localStorage.setItem("hasVisited", "true"); // Mark that the user has visited
-    setIsLoggedIn(true);
+    const res = await signupApi(e);
+    console.log(res, "api response");
+    if (res.token) {
+      setCookie("access_token", res.token.access);
+      setCookie("refresh_token", res.token.refresh);
+      setIsLoggedIn(true);
+    }
+    localStorage.setItem("hasVisited", "true");
   };
-  if (isLoggedIn) return <SuccessLoginPage title=" ثبت نام با موفقیت انجام شد" />;
+  if (isLoggedIn)
+    return <SuccessLoginPage title=" ثبت نام با موفقیت انجام شد" />;
   return (
     <div>
       <div className="pr-10 pt-10 flex flex-col justify-between h-full">
