@@ -21,7 +21,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
     handleSubmit,
 
     formState,
-  } = useForm<T>({ mode: "onSubmit" });
+  } = useForm<T>({ mode: "onSubmit" } );
 
   const { errors, isSubmitted } = formState;
 

@@ -6,7 +6,7 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../components";
-import { LogoIcon, PasswordIcon, PhoneIcon } from "../../assets";
+import { EmailIcon, LogoIcon, PasswordIcon } from "../../assets";
 import { ChevronLeft, Grid } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
@@ -93,13 +93,17 @@ const ForgetPassword = () => {
           <Form
             fields={[
               {
-                name: "phone",
-                placeholder: "شماره موبایل",
-                type: "onlyNumber",
+                name: "email",
+                type: "text",
+                placeholder: " آدرس ایمیل",
                 validation: {
-                  required: "شماره موبایل الزامی است",
+                  required: "ایمیل الزامی است",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "فرمت ایمیل صحیح نیست",
+                  },
                 },
-                icon: <PhoneIcon />,
+                icon: <EmailIcon />,
               },
             ]}
             onSubmit={(e) => {

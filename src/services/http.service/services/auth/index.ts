@@ -44,3 +44,21 @@ export const refreshTokenApi = async (data: any) => {
     data: data,
   });
 };
+
+export const changePasswordApi = async (data: any) => {
+  return await apiClient({
+    endpoint: "/auth/changepassword/",
+    method: "POST",
+    tokenRequired: true,
+    data: data,
+  });
+};
+
+export const updateProfileApi = async (data: any) => {
+  return await apiClient({
+    endpoint: "/auth/profile/update/",
+    method: "PUT",
+    tokenRequired: true,
+    data: data,
+  });
+};
