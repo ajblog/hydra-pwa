@@ -62,3 +62,21 @@ export const updateProfileApi = async (data: any) => {
     data: data,
   });
 };
+
+export const resetPasswordRequestApi = async (data: any) => {
+  return await apiClient({
+    endpoint: "/auth/resetpassword/request/",
+    method: "POST",
+    tokenRequired: false,
+    data: data,
+  });
+};
+
+export const resetPasswordConfirmApi = async (data: any) => {
+  return await apiClient({
+    endpoint: "/auth/resetpassword/confirm/",
+    method: "POST",
+    tokenRequired: false,
+    data: data,
+  });
+};
