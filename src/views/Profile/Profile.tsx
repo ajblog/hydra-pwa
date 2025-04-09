@@ -18,26 +18,32 @@ import {
   showSuccessToast,
 } from "../../components";
 import { Field } from "../../components/molecules/Form/Form.type";
+import { useQuery } from "@tanstack/react-query";
+import { getProfileApi } from "../../services";
 const Profile = () => {
   const navigate = useNavigate();
+  const { data: profileData } = useQuery({
+    queryKey: ["profile"],
+    queryFn: () => getProfileApi(),
+  });
   const profileFields: Field[] = [
     {
-      name: "firstName",
+      name: "firstname",
       type: "text",
       placeholder: "نام",
       validation: { required: "نام الزامی است" },
       icon: <NameIcon />,
       column: "half",
-      defaultValue: "عرفان",
+      defaultValue: profileData?.data.firstname,
     },
     {
-      name: "lastName",
+      name: "lastname",
       type: "text",
       placeholder: "نام خانوادگی",
       validation: { required: "نام خانوادگی الزامی است" },
       icon: <LastNameIcon />,
       column: "half",
-      defaultValue: "فاضل",
+      defaultValue: profileData?.data.lastname,
     },
     {
       name: "email",
@@ -45,23 +51,23 @@ const Profile = () => {
       placeholder: " آدرس ایمیل",
       validation: { required: "ایمیل الزامی است" },
       icon: <EmailIcon />,
-      defaultValue: "erfanfazel@gmail.com",
+      defaultValue: profileData?.data.email,
     },
     {
-      name: "phone",
+      name: "phonenumber",
       type: "text",
       placeholder: "شماره تماس",
       validation: { required: "شماره تماس الزامی است" },
       icon: <PhoneIcon />,
-      defaultValue: "091222565478",
+      defaultValue: profileData?.data.phonenumber,
     },
     {
-      name: "organizationName",
+      name: "organizationname",
       type: "text",
       placeholder: "نام سازمان",
       validation: { required: "نام سازمان الزامی است" },
       icon: <OrganizationIcon />,
-      defaultValue: "فلات",
+      defaultValue: profileData?.data.organizationname,
     },
     {
       name: "username",
@@ -69,7 +75,7 @@ const Profile = () => {
       placeholder: "نام کاربری",
       validation: { required: "نام کاربری الزامی است" },
       icon: <UsernameIcon />,
-      defaultValue: "erfan",
+      defaultValue: profileData?.data.username,
     },
   ];
   return (
@@ -100,7 +106,9 @@ const Profile = () => {
           className="flex items-center gap-2 translate-y-[-32px]"
         >
           <User2 color="white" />
-          <h1 className="text-3xl text-white font-bold">کاپیتان عرفان</h1>
+          <h1 className="text-3xl text-white font-bold">
+            کاپیتان {profileData?.data.username}
+          </h1>
         </motion.div>
         <motion.div
           initial={{ opacity: 0 }}
@@ -149,10 +157,10 @@ const Profile = () => {
               ثبت تغییرات
             </Button>
             <Button
-            type="button"
+              type="button"
               variant={"default"}
               className="w-full py-6 text-base font-bold"
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
             >
               انصراف
             </Button>

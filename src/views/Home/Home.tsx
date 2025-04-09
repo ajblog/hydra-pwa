@@ -3,7 +3,14 @@ import FullScreenMap from "../../components/organs/FullScreenMap";
 import { motion } from "framer-motion";
 import profilePhoto from "../../assets/images/profile.png";
 import { StationProvider } from "../../contexts/stationContext";
+import { useQuery } from "@tanstack/react-query";
+import { getProfileApi } from "../../services";
 const ProfileData = () => {
+  const { data } = useQuery({
+    queryKey: ["profile"],
+    queryFn: () => getProfileApi(),
+  });
+  console.log(data);
   return (
     <motion.div
       initial={{ x: 250 }}
@@ -16,7 +23,7 @@ const ProfileData = () => {
         alt="profile photo "
         className="h-[77px] w-[66px]"
       />
-      <span className="text-sm">کاپیتان عرفان</span>
+      {data && <span className="text-sm">کاپیتان {data.data.username}</span>}
     </motion.div>
   );
 };

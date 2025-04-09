@@ -59,7 +59,13 @@ export const SignUp = () => {
       name: "email",
       type: "text",
       placeholder: " آدرس ایمیل",
-      validation: { required: "ایمیل الزامی است" },
+      validation: {
+        required: "ایمیل الزامی است",
+        pattern: {
+          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+          message: "فرمت ایمیل صحیح نیست",
+        },
+      },
       icon: <EmailIcon />,
     },
     {
@@ -112,13 +118,15 @@ export const SignUp = () => {
     if ("phonenumber" in e) {
       e.phonenumber = `+98${e.phonenumber}`;
     }
-    console.log(e);
-    const res = await signupApi(e);
-    console.log(res, "api response");
-    if (res.token) {
-      setCookie("access_token", res.token.access);
-      setCookie("refresh_token", res.token.refresh);
-      setIsLoggedIn(true);
+    try {
+      const res = await signupApi(e);
+      if (res.token) {
+        setCookie("access_token", res.token.access);
+        setCookie("refresh_token", res.token.refresh);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.log(error);
     }
     localStorage.setItem("hasVisited", "true");
   };

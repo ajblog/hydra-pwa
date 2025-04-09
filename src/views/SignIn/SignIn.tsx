@@ -1,9 +1,11 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { Button, Form, Header, Oval } from "../../components";
+import { Button, Form, Header, Oval, showErrorToast } from "../../components";
 import LoginImage from "../../assets/images/Login-People.png";
 import { FingerPrintIcon, LoginTextIcon, UsernameIcon } from "../../assets";
 import { useNavigate } from "react-router-dom";
 import { setCookie } from "../../utils";
+import { FieldValues } from "react-hook-form";
+import { loginApi } from "../../services";
 
 const ovalJsx = () => {
   return (
@@ -36,6 +38,20 @@ export function SignIn() {
       icon: <FingerPrintIcon />,
     },
   ];
+  const handleLogin = async (e: FieldValues) => {
+    try {
+      const res = await loginApi(e);
+      if (res) {
+        setCookie("access_token", res.access);
+        setCookie("refresh_token", res.refresh);
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error);
+      showErrorToast("رمزعبور یا نام کاربری اشتباه است");
+    }
+    localStorage.setItem("hasVisited", "true");
+  };
   return (
     <>
       {ovalJsx()}
@@ -63,12 +79,7 @@ export function SignIn() {
           <div className="my-6 px-10 space-y-2">
             <Form
               submitText="ورود"
-              onSubmit={(e) => {
-                console.log(e);
-                setCookie("access_token", "sjflkdjsflkjslkdjlkjsdkjf");
-                localStorage.setItem("hasVisited", "true"); // Mark that the user has visited
-                navigate("/");
-              }}
+              onSubmit={handleLogin}
               fields={signInFields}
             />
             <motion.div
