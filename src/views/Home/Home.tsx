@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import profilePhoto from "../../assets/images/profile.png";
 import { StationProvider } from "../../contexts/stationContext";
 import { useQuery } from "@tanstack/react-query";
-import { getProfileApi } from "../../services";
+import { getAllStations, getProfileApi } from "../../services";
 const ProfileData = () => {
   const { data } = useQuery({
     queryKey: ["profile"],
@@ -29,12 +29,17 @@ const ProfileData = () => {
 };
 
 export function Home() {
+  const { data: stations } = useQuery({
+    queryKey: ["stations"],
+    queryFn: () => getAllStations(),
+  });
+  console.log(stations, "stations data points");
   return (
     <div>
       <ProfileData />
       <EasyAccess />
       <StationProvider>
-        <FullScreenMap />
+        <FullScreenMap data={stations} />
         <NavigationDrawer />
       </StationProvider>
     </div>

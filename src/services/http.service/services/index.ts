@@ -3,16 +3,16 @@ import { apiClient } from "../client";
 
 export const getAllStations = async () => {
   return await apiClient({
-    endpoint: "/all-stations",
+    endpoint: "/data/stations/",
     method: "GET",
-    tokenRequired: false,
+    tokenRequired: true,
   });
 };
 
-export const getSingleStationDetails = async (data: any) => {
+export const getSingleStationDetails = async (data: Record<string,string>) => {
   return await apiClient({
-    endpoint: `/station-test${objectToQueryString(data, true)}`,
+    endpoint: `/data/station-data/${objectToQueryString(data, true)}`,
     method: "GET",
-    tokenRequired: false,
+    tokenRequired: true,
   });
 };

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChevronLeft } from "lucide-react";
 import { StationInformationPropTypes } from "./station.type";
 import { Tab, WeatherInfoCard } from "../../atoms";
@@ -6,6 +7,9 @@ import wave from "../../../assets/images/wave-icon.png";
 import temp from "../../../assets/images/temp-Icon.png";
 import wind from "../../../assets/images/Wind-Icon.png";
 import { CustomChart } from "../CustomChart/CustomChart";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { getSingleStationDetails } from "../../../services";
+import { StationsTypes } from "../../../types";
 
 const StationInformation = ({
   selectedStation,
@@ -13,43 +17,25 @@ const StationInformation = ({
 }: StationInformationPropTypes) => {
   const [isSelected, setIsSelected] = useState("موج");
   const [selectedDay, setSelectedDay] = useState("شنبه");
-  const weekData = [
-    {
-      title: "شنبه",
-      icon: isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp,
-      data: "12 (m/s)",
-    },
-    {
-      title: "یکشنبه",
-      icon: isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp,
-      data: "12 (m/s)",
-    },
-    {
-      title: "دوشنبه",
-      icon: isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp,
-      data: "12 (m/s)",
-    },
-    {
-      title: "سه شنبه",
-      icon: isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp,
-      data: "12 (m/s)",
-    },
-    {
-      title: "چهارشنبه",
-      icon: isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp,
-      data: "12 (m/s)",
-    },
-    {
-      title: "پنج شنبه",
-      icon: isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp,
-      data: "12 (m/s)",
-    },
-    {
-      title: "جمعه",
-      icon: isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp,
-      data: "12 (m/s)",
-    },
-  ];
+
+  const query = useQueryClient();
+  const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
+    "stations",
+  ]);
+  const selectedStationName = stationsInfo?.filter(
+    (item) => item.display_name === selectedStation
+  );
+  const { data, isLoading } = useQuery({
+    queryKey: ["station-detail", selectedStation],
+    queryFn: () =>
+      getSingleStationDetails({ station_name: selectedStationName![0].name }),
+  });
+
+  const selectedDayDetail = data?.weather_data![0].days.filter(
+    (item: any) => item.day_name === selectedDay
+  );
+
+  if (isLoading) return <p> Loading...</p>;
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between border-b-[4px] border-b-[#EAEAEA] pb-5">
@@ -69,19 +55,27 @@ const StationInformation = ({
         ))}
       </div>
       <div className="flex items-center gap-1 w-full mt-7">
-        {weekData.map((item, index) => (
+        {data?.weather_data![0].days.map((item: any, index: number) => (
           <WeatherInfoCard
             key={index}
-            data={item.data}
-            title={item.title}
-            icon={item.icon}
-            isSelected={selectedDay === item.title}
+            data={
+              isSelected === "موج"
+                ? item.weather_info[0].wave.hmax + "m"
+                : isSelected === "باد"
+                  ? item.weather_info[0].wind.wind_speed + "m/s"
+                  : item.weather_info[0].temperature.temperature + "°c"
+            }
+            title={item.day_name}
+            icon={
+              isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp
+            }
+            isSelected={selectedDay === item.day_name}
             setSelectedDay={setSelectedDay}
           />
         ))}
       </div>
       <div className="mt-4">
-        <CustomChart />
+        <CustomChart chartData={selectedDayDetail[0].weather_info} />
       </div>
     </div>
   );

@@ -9,22 +9,15 @@ import {
   ChartTooltipContent,
 } from "../../atoms";
 
-const chartData = [
-  { time: "10:00", desktop: Math.random() },
-  { time: "12:00", desktop: Math.random() },
-  { time: "14:30", desktop: Math.random() },
-  { time: "18:00", desktop: Math.random() },
-  { time: "20:30", desktop: Math.random() },
-];
-
 const chartConfig = {
   desktop: {
-    label: "Desktop",
+    label: "wave",
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
 
-export function CustomChart() {
+export function CustomChart({ chartData }: { chartData: object[] }) {
+  console.log(chartData, "cart data");
   return (
     <ChartContainer config={chartConfig}>
       <AreaChart
