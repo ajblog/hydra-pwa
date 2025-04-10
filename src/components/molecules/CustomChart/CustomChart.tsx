@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
-
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
@@ -11,34 +11,69 @@ import {
 
 const chartConfig = {
   desktop: {
-    label: "wave",
+    label: "wave", // can change dynamically
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
 
-export function CustomChart({ chartData }: { chartData: object[] }) {
-  console.log(chartData, "cart data");
+type ChartType = "wave" | "wind" | "temperature";
+
+interface Props {
+  chartData: any[];
+  type: ChartType;
+}
+
+export function CustomChart({ chartData, type }: Props) {
+  // Format the data based on the selected type
+  const formattedData = chartData.map((item, index) => {
+    const time = `${index.toString().padStart(2, "0")}:00`;
+
+    switch (type) {
+      case "wave":
+        return { time, desktop: item.wave.hs };
+      case "wind":
+        return { time, desktop: item.wind.wind_speed };
+      case "temperature":
+        return { time, desktop: item.temperature.temperature };
+      default:
+        return { time, desktop: 0 };
+    }
+  });
+
+  // Limit XAxis to max 5 ticks
+
   return (
     <ChartContainer config={chartConfig}>
       <AreaChart
         accessibilityLayer
-        data={chartData}
-        margin={{
-          left: 32,
-          right: 18,
-        }}
+        data={formattedData}
+        margin={{ left: 0, right: 18 }}
       >
         <CartesianGrid vertical={false} />
+
         <XAxis
           dataKey="time"
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          interval={0}
           tickFormatter={(value) => value.slice(0, 5)}
         />
 
+        <YAxis
+          label={{
+            value:
+              type === "temperature" ? "°c" : type === "wave" ? "متر" : "m/s",
+            angle: -90,
+            position: "insideLeft",
+          }}
+          axisLine={false}
+          tickLine={false}
+          tickMargin={8}
+          width={40}
+        />
+
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+
         <defs>
           <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
             <stop

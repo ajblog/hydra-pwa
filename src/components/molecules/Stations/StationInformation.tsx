@@ -44,7 +44,7 @@ const StationInformation = ({
         </span>
         <ChevronLeft onClick={() => setStep("selection")} color="#A6A6A6" />
       </div>
-      <div className="flex items-center px-5 gap-9 mt-3.5">
+      <div className="flex items-center justify-center px-5 gap-9 mt-3.5">
         {["موج", "باد", "دما"].map((item, index) => (
           <Tab
             setIsSelected={setIsSelected}
@@ -75,7 +75,16 @@ const StationInformation = ({
         ))}
       </div>
       <div className="mt-4">
-        <CustomChart chartData={selectedDayDetail[0].weather_info} />
+        <CustomChart
+          chartData={selectedDayDetail[0].weather_info}
+          type={
+            isSelected === "موج"
+              ? "wave"
+              : isSelected === "باد"
+                ? "wind"
+                : "temperature"
+          }
+        />
       </div>
     </div>
   );
