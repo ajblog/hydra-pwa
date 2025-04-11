@@ -23,7 +23,7 @@ export const useTokenRefresher = () => {
       }
     };
 
-    const interval = setInterval(refresh, 1 * 60 * 1000); // every 15 minutes
+    const interval = setInterval(refresh, 14   * 60 * 1000); // every 15 minutes
 
     return () => clearInterval(interval);
   }, []);
