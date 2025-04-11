@@ -13,6 +13,7 @@ import {
   Drawer,
   DrawerContent,
   Form,
+  showErrorToast,
   SuccessLoginPage,
 } from "../../components";
 import signupPeople from "../../assets/images/signup-people.png";
@@ -121,12 +122,18 @@ export const SignUp = () => {
     try {
       const res = await signupApi(e);
       if (res.token) {
-        setCookie("access_token", res.token.access);
-        setCookie("refresh_token", res.token.refresh);
+        setCookie("access_token", res.token.access, { minutes: 15 });
+        setCookie("refresh_token", res.refresh, { days: 7 });
         setIsLoggedIn(true);
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      Object.values(error.response.data as any[]).forEach((err) => {
+        if (err.length) {
+          err.forEach((insideErr: string) => {
+            showErrorToast(insideErr);
+          });
+        }
+      });
     }
     localStorage.setItem("hasVisited", "true");
   };

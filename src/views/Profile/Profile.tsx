@@ -170,8 +170,16 @@ const Profile = () => {
                     if (res) {
                       setShowSuccessPage(true);
                     }
-                  } catch (error) {
-                    console.log(error);
+                  } catch (error: any) {
+                    Object.values(error.response.data as any[]).forEach(
+                      (err) => {
+                        if (err.length) {
+                          err.forEach((insideErr: string) => {
+                            showErrorToast(insideErr);
+                          });
+                        }
+                      }
+                    );
                   }
                 },
                 () => {

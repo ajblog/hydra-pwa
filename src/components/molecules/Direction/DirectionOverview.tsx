@@ -18,6 +18,7 @@ const DirectionOverview = ({
 }: DirectionOverviewPropTypes) => {
   const [showMore, setShowMore] = useState(false);
   const handleSwitchStations = () => {
+    console.log("switiching");
     setDestinationStation(originStation);
     setOriginStation(destinationStation);
   };
@@ -40,7 +41,7 @@ const DirectionOverview = ({
       }),
   });
 
-  console.log(data , 'routes');
+  console.log(data, "routes");
   return (
     <div className="flex flex-col ">
       <ChevronLeft

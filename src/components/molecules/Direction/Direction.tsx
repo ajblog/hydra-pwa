@@ -27,7 +27,6 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
   ]);
 
   useEffect(() => {
-    setHideButtons(false);
     const isSelectedOrigin = stationsInfo?.some(
       (item) => item.display_name === originStation
     );

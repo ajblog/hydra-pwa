@@ -2,10 +2,12 @@
 import { ChevronLeft } from "lucide-react";
 import { StationInformationPropTypes } from "./station.type";
 import { Tab, WeatherInfoCard } from "../../atoms";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import wave from "../../../assets/images/wave-icon.png";
 import temp from "../../../assets/images/temp-Icon.png";
 import wind from "../../../assets/images/Wind-Icon.png";
+import loadingGif from "../../../assets/images/loading.gif";
+
 import { CustomChart } from "../CustomChart/CustomChart";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSingleStationDetails } from "../../../services";
@@ -35,7 +37,24 @@ const StationInformation = ({
     (item: any) => item.day_name === selectedDay
   );
 
-  if (isLoading) return <p> Loading...</p>;
+  // useEffect(() => {
+  //   return () => {
+  //     setSelectedDay(data?.weather_data![0].days[0].day_name);
+  //   };
+  // }, []);
+
+  if (isLoading)
+    return (
+      <div className="flex my-4 items-center justify-center">
+        <img
+          alt="loading"
+          src={loadingGif}
+          width={160}
+          height={350}
+          className="w-[160px] h-[360px] m-auto"
+        />{" "}
+      </div>
+    );
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between border-b-[4px] border-b-[#EAEAEA] pb-5">

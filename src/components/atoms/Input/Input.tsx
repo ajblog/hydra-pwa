@@ -3,7 +3,7 @@ import { cn } from "../../../utils";
 
 interface InputProps extends React.ComponentProps<"input"> {
   icon?: React.ReactNode;
-  theme?  : 'dark' | 'light' | 'white'
+  theme?: "dark" | "light" | "white";
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(

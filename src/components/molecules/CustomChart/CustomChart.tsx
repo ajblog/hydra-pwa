@@ -9,13 +9,6 @@ import {
   ChartTooltipContent,
 } from "../../atoms";
 
-const chartConfig = {
-  desktop: {
-    label: "wave", // can change dynamically
-    color: "hsl(var(--chart-1))",
-  },
-} satisfies ChartConfig;
-
 type ChartType = "wave" | "wind" | "temperature";
 
 interface Props {
@@ -24,6 +17,12 @@ interface Props {
 }
 
 export function CustomChart({ chartData, type }: Props) {
+  const chartConfig = {
+    desktop: {
+      label: type, // can change dynamically
+      color: "hsl(var(--chart-1))",
+    },
+  } satisfies ChartConfig;
   // Format the data based on the selected type
   const formattedData = chartData.map((item, index) => {
     const time = `${index.toString().padStart(2, "0")}:00`;

@@ -1,40 +1,36 @@
-interface CookieOptions {
-  /**
-   * Number of days until the cookie expires
-   */
-  days?: number;
-  /**
-   * Path where the cookie is valid
-   */
-  path?: string;
-  /**
-   * Domain where the cookie is valid
-   */
-  domain?: string;
-  /**
-   * Whether the cookie should only be transmitted over HTTPS
-   */
-  secure?: boolean;
-  /**
-   * Controls when the cookie is sent in cross-site requests
-   */
-  sameSite?: "Strict" | "Lax" | "None";
-}
-
 /**
  * Sets a cookie with the given name, value, and options
  * @param name The name of the cookie
  * @param value The value to store
  * @param options Cookie configuration options
  */
+type CookieOptions = {
+  days?: number;
+  minutes?: number;
+  path?: string;
+  domain?: string;
+  secure?: boolean;
+  sameSite?: "lax" | "strict" | "none";
+};
+
 function setCookie(name: string, value: string, options?: CookieOptions): void {
   const cookieParts = [
     `${encodeURIComponent(name)}=${encodeURIComponent(value)}`,
   ];
 
-  if (options?.days) {
+  if (options?.days || options?.minutes) {
     const date = new Date();
-    date.setTime(date.getTime() + options.days * 24 * 60 * 60 * 1000);
+    let expiresInMs = 0;
+
+    if (options.days) {
+      expiresInMs += options.days * 24 * 60 * 60 * 1000;
+    }
+
+    if (options.minutes) {
+      expiresInMs += options.minutes * 60 * 1000;
+    }
+
+    date.setTime(date.getTime() + expiresInMs);
     cookieParts.push(`expires=${date.toUTCString()}`);
   }
 
@@ -79,4 +75,15 @@ function getCookie(name: string): string | null {
   return null;
 }
 
-export { getCookie, setCookie };
+function isTokenExpired(token: string): boolean {
+  try {
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const currentTime = Math.floor(Date.now() / 1000);
+    return payload.exp < currentTime;
+  } catch (error) {
+    console.error("Invalid token format:", error);
+    return true; // Treat as expired if invalid
+  }
+}
+
+export { getCookie, setCookie, isTokenExpired };

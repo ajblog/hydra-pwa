@@ -42,8 +42,8 @@ export function SignIn() {
     try {
       const res = await loginApi(e);
       if (res) {
-        setCookie("access_token", res.access);
-        setCookie("refresh_token", res.refresh);
+        setCookie("access_token", res.access, { minutes: 15 });
+        setCookie("refresh_token", res.refresh, { days: 7 });
         navigate("/");
       }
     } catch (error) {
