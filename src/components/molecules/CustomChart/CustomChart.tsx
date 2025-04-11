@@ -53,6 +53,8 @@ export function CustomChart({ chartData, type }: Props) {
 
         <XAxis
           dataKey="time"
+          allowDataOverflow={false} // default, but good to be explicit
+          type="category"
           tickLine={false}
           axisLine={false}
           tickMargin={8}
@@ -66,6 +68,7 @@ export function CustomChart({ chartData, type }: Props) {
             angle: -90,
             position: "insideLeft",
           }}
+          domain={["dataMin - 1", "dataMax + 1"]}
           axisLine={false}
           tickLine={false}
           tickMargin={8}

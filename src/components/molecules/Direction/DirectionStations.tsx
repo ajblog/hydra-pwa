@@ -5,6 +5,7 @@ import { Tab, WeatherInfoCard } from "../../atoms";
 import wave from "../../../assets/images/wave-icon.png";
 import temp from "../../../assets/images/temp-Icon.png";
 import wind from "../../../assets/images/Wind-Icon.png";
+import loadingWheel from "../../../assets/images/loading.gif";
 import { CustomChart } from "../CustomChart/CustomChart";
 import { DirectionStationsPropTypes } from "./Direction.type";
 import { useStationContext } from "../../../contexts/stationContext";
@@ -31,8 +32,12 @@ const DirectionStations = ({
   const destinationStationName = stationsInfo?.filter(
     (item) => item.display_name === destinationStation
   );
-  const { data: routesData } = useQuery({
-    queryKey: ["routes" , originStation],
+  const {
+    data: routesData,
+    isLoading: routeIsLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: ["routes", originStation],
     queryFn: () =>
       getRoutesInformation({
         start: originStationName![0].name,
@@ -41,15 +46,10 @@ const DirectionStations = ({
     enabled: !!stationsInfo,
   });
 
-  const data = [
-    { name: originStation },
-    { name: "متاف" },
-    { name: "بوالخیر" },
-    { name: destinationStation },
-  ];
   const { setSelectedStationContext } = useStationContext();
   const [dashCounts, setDashCounts] = useState<number[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
+  const dotRef = useRef<HTMLDivElement>(null);
   const [activeStationIndex, setActiveStationIndex] = useState<number>(0); // Now storing the index
   const [isSelected, setIsSelected] = useState("موج");
   const [selectedDay, setSelectedDay] = useState("شنبه");
@@ -57,7 +57,7 @@ const DirectionStations = ({
   const getNextStation = (direction: "left" | "right") => {
     const currentIndex = activeStationIndex;
     if (direction === "left") {
-      if (currentIndex < data.length - 1) {
+      if (currentIndex < routesData.route.length - 1) {
         return currentIndex + 1; // Move to the next station
       }
     } else if (direction === "right") {
@@ -82,42 +82,54 @@ const DirectionStations = ({
   });
 
   useEffect(() => {
-    setSelectedStationContext(data[activeStationIndex].name);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeStationIndex, setSelectedStationContext]);
+    if (routesData) {
+      setSelectedStationContext(
+        routesData.route[activeStationIndex].display_name
+      );
+    }
+  }, [activeStationIndex, setSelectedStationContext, routesData]);
 
   useEffect(() => {
-    const updateDashCounts = () => {
-      if (!containerRef.current) return;
+    const timer = setTimeout(() => {
+      if (!containerRef.current || !dotRef.current) return;
 
       const containerWidth = containerRef.current.offsetWidth;
-      const totalStations = data.length;
+      const dotWidth = dotRef.current.offsetWidth;
+      const totalStations = routesData ? routesData.route.length - 1 : 8;
       const gaps = totalStations - 1;
 
-      const dashWidth = 2; // width of a single dash in px
-      const dashGap = 3; // space between dashes
+      const dashWidth = 2;
+      const dashGap = 3;
       const dashTotal = dashWidth + dashGap;
 
-      const availableWidth = containerWidth - totalStations * 40; // subtract dot widths
-      const dashPerGap = Math.floor(availableWidth / gaps / dashTotal);
+      const availableWidth = containerWidth - totalStations * dotWidth;
+      const dashPerGap = Math.max(
+        1,
+        Math.floor(availableWidth / gaps / dashTotal)
+      );
 
       setDashCounts(Array(gaps).fill(dashPerGap));
-    };
+    }, 0);
 
-    updateDashCounts();
-    window.addEventListener("resize", updateDashCounts);
-
-    return () => {
-      window.removeEventListener("resize", updateDashCounts);
-    };
-  }, [data.length]);
+    return () => clearTimeout(timer);
+  }, [routesData]);
 
   const selectedDayDetail = stationDetail?.weather_data![0].days.filter(
     (item: any) => item.day_name === selectedDay
   );
 
-  console.log(routesData, "reouts data");
-  if (isLoading) return <p>Loading</p>;
+  if (isLoading || routeIsLoading || isFetching)
+    return (
+      <img
+        alt="loading"
+        src={loadingWheel}
+        width={160}
+        height={350}
+        className="w-[160px] h-[300px] m-auto"
+      />
+    );
+
+  console.log(dashCounts, "dasheeeees");
 
   return (
     <>
@@ -132,23 +144,28 @@ const DirectionStations = ({
               className="flex flex-col items-center cursor-pointer"
               onClick={() => setActiveStationIndex(index)}
             >
-              <div className="w-5 h-5 border border-black rounded-full flex items-center justify-center">
+              <div
+                ref={dotRef}
+                className={`${routesData.route.length < 6 ? "w-5 h-5 " : "w-4 h-4 "} border border-black rounded-full flex items-center justify-center`}
+              >
                 <div
-                  className={`w-3 h-3 rounded-full ${
+                  className={` ${routesData.route.length < 6 ? "w-3 h-3 " : "w-2 h-2 "} rounded-full ${
                     activeStationIndex === index
                       ? "bg-[#EDB232]"
                       : "bg-[#522FD9]"
                   }`}
                 />
               </div>
-              <div className="mt-2 text-[10px] text-gray-700 text-center w-max">
-                {station.display_name}
-              </div>
+              {routesData.route.length < 7 && (
+                <div className="mt-2 text-[10px] text-gray-700 text-center w-max">
+                  {station.display_name}
+                </div>
+              )}
             </div>
 
             {/* Dashes */}
-            {index < data.length - 1 && (
-              <div className="flex-1 flex gap-[3px] -translate-y-3 justify-between px-2">
+            {index < routesData.route.length - 1 && (
+              <div className="flex-1 flex gap-[3px] justify-between px-2">
                 {Array.from({ length: dashCounts[index] || 0 }).map(
                   (_, dashIndex) => (
                     <div
@@ -169,7 +186,7 @@ const DirectionStations = ({
           onClick={() => handleChevronClick("right")}
         />
         <h4 className="text-[#5B55ED] font-bold text-lg">
-          ایستگاه {data[activeStationIndex].name}{" "}
+          ایستگاه {routesData.route[activeStationIndex].display_name}
           {/* Show the station name based on index */}
         </h4>
         <ChevronLeft
@@ -191,7 +208,7 @@ const DirectionStations = ({
         </div>
 
         <div className="flex items-center gap-1 w-full mt-7">
-          {stationDetail?.weather_data[0].days.map(
+          {stationDetail.weather_data[0].days.map(
             (item: any, index: number) => (
               <WeatherInfoCard
                 key={index}

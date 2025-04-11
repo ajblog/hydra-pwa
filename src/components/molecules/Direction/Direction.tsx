@@ -21,10 +21,10 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
     "selection"
   );
 
-   const query = useQueryClient();
-   const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
-     "stations",
-   ]);
+  const query = useQueryClient();
+  const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
+    "stations",
+  ]);
 
   useEffect(() => {
     setHideButtons(false);
@@ -35,18 +35,16 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
       (item) => item.display_name === destinationStation
     );
     if (isSelectedDestination && isSelectedOrigin) setDirectionStep("overview");
-  }, [setHideButtons, originStation, destinationStation,stationsInfo]);
+  }, [setHideButtons, originStation, destinationStation, stationsInfo]);
 
   useEffect(() => {
-    if (directionStep === "selection") {
-      setHideButtons(false);
-    } else {
-      setHideButtons(true);
-    }
-  }, [setHideButtons, directionStep]);
+    // Show buttons only when user is on selection step and not choosing a specific station
+    const shouldShowButtons =
+      directionStep === "selection" && stationType === null;
+    setHideButtons(!shouldShowButtons);
+  }, [directionStep, stationType, setHideButtons]);
 
   if (stationType === "origin") {
-    setHideButtons(true);
     return (
       <StationSelection
         title="ایستگاه مبدا موردنظر خود را از لیست زیر انتخاب کنید."
@@ -56,7 +54,6 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
       />
     );
   } else if (stationType === "destination") {
-    setHideButtons(true);
     return (
       <StationSelection
         title="ایستگاه مقصد موردنظر خود را از لیست زیر انتخاب کنید."
@@ -68,7 +65,6 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
   }
 
   if (directionStep === "overview") {
-    setHideButtons(true);
     return (
       <DirectionOverview
         destinationStation={destinationStation}
