@@ -6,11 +6,15 @@ import {
   showErrorToast,
   showSuccessToast,
 } from "../../components";
-import { LogoIcon, PasswordIcon, PhoneIcon } from "../../assets";
+import { EmailIcon, LogoIcon, PasswordIcon } from "../../assets";
 import { ChevronLeft, Grid } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import forgetPassPhoto from "../../assets/images/forget-pass.png";
+import {
+  resetPasswordConfirmApi,
+  resetPasswordRequestApi,
+} from "../../services";
 
 const ovalJsx = () => {
   return (
@@ -33,7 +37,7 @@ const resetPassFields = [
     icon: <Grid color="gray" />,
   },
   {
-    name: "password",
+    name: "new_password",
     type: "password",
     placeholder: "رمز عبور جدید",
     validation: {
@@ -43,27 +47,26 @@ const resetPassFields = [
     icon: <PasswordIcon />,
   },
   {
-    name: "repeatPassword",
+    name: "confirm_new_password",
     type: "password",
     placeholder: "تکرار رمز عبور جدید",
     validation: {
       required: "تکرار رمز عبور الزامی است",
       validate: (value: string, formValues: Record<string, string>) =>
-        value === formValues.password || "رمز عبور مطابقت ندارد",
+        value === formValues.new_password || "رمز عبور مطابقت ندارد",
     },
     icon: <PasswordIcon />,
   },
 ];
 
 const ForgetPassword = () => {
-  const [step, setStep] = useState<"phone-number" | "reset">("phone-number");
-  const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+  const [step, setStep] = useState<"email" | "reset">("email");
   const navigate = useNavigate();
 
   console.log(step);
 
   const backStepHandler = () => {
-    if (step === "reset") setStep("phone-number");
+    if (step === "reset") setStep("email");
     else navigate("/sign-in");
   };
 
@@ -88,23 +91,32 @@ const ForgetPassword = () => {
       >
         بازنشانی رمزعبور
       </motion.h1>
-      {step === "phone-number" ? (
+      {step === "email" ? (
         <div className="w-[90%] h-[70%]  m-auto flex flex-col items-center">
           <Form
             fields={[
               {
-                name: "phone",
-                placeholder: "شماره موبایل",
-                type: "onlyNumber",
+                name: "email",
+                type: "text",
+                placeholder: " آدرس ایمیل",
                 validation: {
-                  required: "شماره موبایل الزامی است",
+                  required: "ایمیل الزامی است",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "فرمت ایمیل صحیح نیست",
+                  },
                 },
-                icon: <PhoneIcon />,
+                icon: <EmailIcon />,
               },
             ]}
-            onSubmit={(e) => {
-              setPhoneNumber(e.phone);
-              setStep("reset");
+            onSubmit={async (e) => {
+              try {
+                await resetPasswordRequestApi(e);
+                setStep("reset");
+              } catch (error) {
+                console.log(error);
+                showErrorToast("کاربری با این ایمیل پیدا نشد");
+              }
             }}
             submitText="ادامه"
           />
@@ -113,9 +125,7 @@ const ForgetPassword = () => {
         <div className="w-[90%] h-[70%]  m-auto flex flex-col items-center">
           <Form
             fields={resetPassFields}
-            onSubmit={(e) => {
-              console.log(e, phoneNumber);
-            }}
+            onSubmit={() => {}}
             inputTheme="white"
             submitText="ثبت"
             customButtons={({ handleSubmit, formState: { errors } }) => (
@@ -130,10 +140,15 @@ const ForgetPassword = () => {
                   className="w-full py-6 text-[#EEC124]"
                   variant={"secondary"}
                   onClick={handleSubmit(
-                    (data) => {
-                      console.log(data, phoneNumber);
-                      showSuccessToast("رمزعبور با موفقیت تغییر یافت.");
-                      navigate("/sign-in");
+                    async (data) => {
+                      try {
+                        await resetPasswordConfirmApi(data);
+                        showSuccessToast("رمزعبور با موفقیت تغییر یافت.");
+                        navigate("/sign-in");
+                      } catch (error) {
+                        console.log(error)
+                        showErrorToast('کد وارد شده معتبر نمی باشد')
+                      }
                     },
                     () => {
                       Object.values(errors).forEach((error) => {
@@ -147,6 +162,7 @@ const ForgetPassword = () => {
                   ثبت تغییرات
                 </Button>
                 <Button
+                  type="button"
                   className="w-full py-6 text-[#EEC124]"
                   variant={"secondary"}
                   onClick={handleSubmit(

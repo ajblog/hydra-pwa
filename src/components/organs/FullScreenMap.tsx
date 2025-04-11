@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { LatLngExpression, LatLngTuple } from "leaflet";
 import L from "leaflet";
 import loadingWheel from "../../assets/images/loading.gif";
-import { stationsInfo } from "../../constants";
 import { useStationContext } from "../../contexts/stationContext";
+import { StationsTypes } from "../../types";
 
 const customIcon = new L.DivIcon({
   html: `<div class="w-4 h-4 rounded-full border-[2px] border-red-500 flex items-center justify-center">
@@ -53,11 +53,13 @@ const RecenterMap = ({ coords }: { coords: LatLngTuple }) => {
   return null;
 };
 
-
-const FullScreenMap = () => {
+const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
   const [loading, setLoading] = useState(true);
   const { selectedStationContext, setSelectedStationContext } =
     useStationContext();
+  const [stationsInfo, setStationsInfo] = useState<
+    { id: number; name: string; display_name: string; coords: LatLngTuple }[]
+  >([]);
 
   const center: LatLngExpression = [27.10664, 51.271204]; // Persian Gulf
   const zoom = 7;
@@ -65,6 +67,20 @@ const FullScreenMap = () => {
   const handleMarkerClick = (station: string) => {
     setSelectedStationContext(station);
   };
+
+  useEffect(() => {
+    const fetchStations = async () => {
+      const mapped = data.map((station, index) => ({
+        id: index + 1,
+        name: station.name,
+        display_name: station.display_name,
+        coords: [station.lat, station.lon] as LatLngTuple,
+      }));
+      setStationsInfo(mapped);
+    };
+
+    fetchStations();
+  }, [data]);
 
   return (
     <div className="relative w-screen h-screen">
@@ -91,7 +107,7 @@ const FullScreenMap = () => {
         {selectedStationContext && (
           <RecenterMap
             coords={
-              stationsInfo.find((s) => s.name === selectedStationContext)
+              stationsInfo.find((s) => s.display_name === selectedStationContext)
                 ?.coords ?? center
             }
           />
@@ -99,12 +115,14 @@ const FullScreenMap = () => {
         {stationsInfo.map((loc) => (
           <Marker
             eventHandlers={{
-              click: () => handleMarkerClick(loc.name), // Handle click event
+              click: () => handleMarkerClick(loc.display_name), // Handle click event
             }}
             key={loc.id}
             position={loc.coords}
             icon={
-              selectedStationContext === loc.name ? selectedIcon : customIcon
+              selectedStationContext === loc.display_name
+                ? selectedIcon
+                : customIcon
             }
           ></Marker>
         ))}

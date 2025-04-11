@@ -21,7 +21,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
     handleSubmit,
 
     formState,
-  } = useForm<T>({ mode: "onSubmit" });
+  } = useForm<T>({ mode: "onSubmit" } );
 
   const { errors, isSubmitted } = formState;
 
@@ -72,37 +72,77 @@ export const Form = React.memo(function Form<T extends FieldValues>({
             transition={{ duration: 0.5, delay: 0.2 * index }}
             className={`relative ${field.column === "half" ? "col-span-1" : "col-span-full"}`}
           >
-            <Input
-              theme={inputTheme}
-              type={
-                field.type === "password" && visiblePasswords[field.name]
-                  ? "text"
-                  : field.type === "onlyNumber"
-                    ? "text"
-                    : field.type
-              }
-              placeholder={field.placeholder}
-              defaultValue={field.defaultValue}
-              icon={field.icon}
-              {...register(field.name as Path<T>, field.validation)}
-              onInput={
-                field.type === "onlyNumber"
-                  ? (e) => {
-                      let value = e.currentTarget.value;
+            {field.name === "phonenumber" ? (
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+                  98+
+                </span>
+                <Input
+                  theme={inputTheme}
+                  type="text"
+                  placeholder={field.placeholder}
+                  defaultValue={field.defaultValue}
+                  maxLength={10}
+                  icon={field.icon}
+                  // className="pl-16 pr-4"
+                  {...register(field.name as Path<T>, {
+                    ...field.validation,
+                    validate: (value) => {
+                      if (!/^[1-9][0-9]{9}$/.test(value)) {
+                        return "شماره موبایل خود را بدون صفر وارد کنید";
+                      }
+                      return true;
+                    },
+                  })}
+                  onInput={(e) => {
+                    let value = e.currentTarget.value;
 
-                      // Convert Persian digits (۰–۹) to English digits (0–9)
-                      value = value.replace(/[\u06F0-\u06F9]/g, (d) =>
-                        String.fromCharCode(d.charCodeAt(0) - 1728)
-                      );
+                    // Convert Persian numbers to English
+                    value = value.replace(/[\u06F0-\u06F9]/g, (d) =>
+                      String.fromCharCode(d.charCodeAt(0) - 1728)
+                    );
 
-                      // Remove any non-digit characters
-                      value = value.replace(/[^\d]/g, "");
+                    // Remove non-digit characters
+                    value = value.replace(/[^\d]/g, "");
 
-                      e.currentTarget.value = value;
+                    // Limit to 10 digits
+                    if (value.length > 10) {
+                      value = value.slice(0, 10);
                     }
-                  : undefined
-              }
-            />
+
+                    // Set the cleaned value back
+                    e.currentTarget.value = value;
+                  }}
+                />
+              </div>
+            ) : (
+              <Input
+                theme={inputTheme}
+                type={
+                  field.type === "password" && visiblePasswords[field.name]
+                    ? "text"
+                    : field.type === "onlyNumber"
+                      ? "text"
+                      : field.type
+                }
+                placeholder={field.placeholder}
+                defaultValue={field.defaultValue}
+                icon={field.icon}
+                {...register(field.name as Path<T>, field.validation)}
+                onInput={
+                  field.type === "onlyNumber"
+                    ? (e) => {
+                        let value = e.currentTarget.value;
+                        value = value.replace(/[\u06F0-\u06F9]/g, (d) =>
+                          String.fromCharCode(d.charCodeAt(0) - 1728)
+                        );
+                        value = value.replace(/[^\d]/g, "");
+                        e.currentTarget.value = value;
+                      }
+                    : undefined
+                }
+              />
+            )}
 
             {field.type === "password" && (
               <button

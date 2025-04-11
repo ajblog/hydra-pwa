@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import resetPassPhoto from "../../assets/images/reset-pass.png";
 import { useState } from "react";
+import { changePasswordApi } from "../../services";
 
 const ovalJsx = () => {
   return (
@@ -24,7 +25,7 @@ const ovalJsx = () => {
 
 const resetPassFields = [
   {
-    name: "password",
+    name: "old_password",
     type: "password",
     placeholder: "رمز عبور فعلی",
     validation: {
@@ -33,7 +34,7 @@ const resetPassFields = [
     icon: <PasswordIcon color="#434343" />,
   },
   {
-    name: "newPassword",
+    name: "new_password",
     type: "password",
     placeholder: "رمز عبور جدید",
     validation: {
@@ -43,13 +44,13 @@ const resetPassFields = [
     icon: <PasswordIcon color="#434343" />,
   },
   {
-    name: "repeatPassword",
+    name: "confirm_new_password",
     type: "password",
     placeholder: "تکرار رمز عبور جدید",
     validation: {
       required: "تکرار رمز عبور الزامی است",
       validate: (value: string, formValues: Record<string, string>) =>
-        value === formValues.newPassword || "رمز عبور مطابقت ندارد",
+        value === formValues.new_password || "رمز عبور مطابقت ندارد",
     },
     icon: <PasswordIcon color="#434343" />,
   },
@@ -107,9 +108,15 @@ const ResetPassword = () => {
                   className="w-full py-6 text-[#EEC124] text-base"
                   variant={"secondary"}
                   onClick={handleSubmit(
-                    (data) => {
+                    async (data) => {
                       console.log(data);
-                      setIsSuccess(true);
+                      try {
+                        await changePasswordApi(data);
+                        setIsSuccess(true);
+                      } catch (error) {
+                        console.log(error);
+                        showErrorToast("مشکلی پیش آمده است");
+                      }
                     },
                     () => {
                       Object.values(errors).forEach((error) => {

@@ -3,7 +3,8 @@ import { SelectLocationBox } from "../../atoms";
 import { StationSelection } from "../Navigation/StationSelection";
 import { StationsPropTypes } from "../Stations/station.type";
 import { DirectionOverview } from "./DirectionOverview";
-import { stationsInfo } from "../../../constants";
+import { useQueryClient } from "@tanstack/react-query";
+import { StationsTypes } from "../../../types";
 
 const Direction = ({ setHideButtons }: StationsPropTypes) => {
   const [originStation, setOriginStation] = useState<string>(
@@ -20,27 +21,30 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
     "selection"
   );
 
+  const query = useQueryClient();
+  const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
+    "stations",
+  ]);
+
   useEffect(() => {
     setHideButtons(false);
-    const isSelectedOrigin = stationsInfo.some(
-      (item) => item.name === originStation
+    const isSelectedOrigin = stationsInfo?.some(
+      (item) => item.display_name === originStation
     );
-    const isSelectedDestination = stationsInfo.some(
-      (item) => item.name === destinationStation
+    const isSelectedDestination = stationsInfo?.some(
+      (item) => item.display_name === destinationStation
     );
     if (isSelectedDestination && isSelectedOrigin) setDirectionStep("overview");
-  }, [setHideButtons, originStation, destinationStation]);
+  }, [setHideButtons, originStation, destinationStation, stationsInfo]);
 
   useEffect(() => {
-    if (directionStep === "selection") {
-      setHideButtons(false);
-    } else {
-      setHideButtons(true);
-    }
-  }, [setHideButtons, directionStep]);
+    // Show buttons only when user is on selection step and not choosing a specific station
+    const shouldShowButtons =
+      directionStep === "selection" && stationType === null;
+    setHideButtons(!shouldShowButtons);
+  }, [directionStep, stationType, setHideButtons]);
 
   if (stationType === "origin") {
-    setHideButtons(true);
     return (
       <StationSelection
         title="ایستگاه مبدا موردنظر خود را از لیست زیر انتخاب کنید."
@@ -50,7 +54,6 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
       />
     );
   } else if (stationType === "destination") {
-    setHideButtons(true);
     return (
       <StationSelection
         title="ایستگاه مقصد موردنظر خود را از لیست زیر انتخاب کنید."
@@ -62,7 +65,6 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
   }
 
   if (directionStep === "overview") {
-    setHideButtons(true);
     return (
       <DirectionOverview
         destinationStation={destinationStation}

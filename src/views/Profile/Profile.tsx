@@ -9,59 +9,82 @@ import {
   UsernameIcon,
 } from "../../assets";
 import { ChevronLeft, User2 } from "lucide-react";
+import loadingWheel from "../../assets/images/loading.gif";
 import { useNavigate } from "react-router-dom";
 import profilePhoto from "../../assets/images/profile.png";
 import {
   Button,
   Form,
   showErrorToast,
-  showSuccessToast,
+  SuccessLoginPage,
 } from "../../components";
 import { Field } from "../../components/molecules/Form/Form.type";
+import { useQuery } from "@tanstack/react-query";
+import { getProfileApi, updateProfileApi } from "../../services";
+import { useState } from "react";
 const Profile = () => {
   const navigate = useNavigate();
+  const [showSuccessPage, setShowSuccessPage] = useState(false);
+  const { data: profileData, isLoading } = useQuery({
+    queryKey: ["profile"],
+    queryFn: () => getProfileApi(),
+  });
+  if (isLoading)
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-white/60 backdrop-blur-sm z-[500]">
+        <img alt="loading" src={loadingWheel} />
+      </div>
+    );
   const profileFields: Field[] = [
     {
-      name: "firstName",
+      name: "firstname",
       type: "text",
       placeholder: "نام",
       validation: { required: "نام الزامی است" },
       icon: <NameIcon />,
       column: "half",
-      defaultValue: "عرفان",
+      defaultValue: profileData?.data.firstname,
     },
     {
-      name: "lastName",
+      name: "lastname",
       type: "text",
       placeholder: "نام خانوادگی",
       validation: { required: "نام خانوادگی الزامی است" },
       icon: <LastNameIcon />,
       column: "half",
-      defaultValue: "فاضل",
+      defaultValue: profileData?.data.lastname,
     },
     {
       name: "email",
       type: "text",
       placeholder: " آدرس ایمیل",
-      validation: { required: "ایمیل الزامی است" },
+      validation: {
+        required: "ایمیل الزامی است",
+        pattern: {
+          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+          message: "فرمت ایمیل صحیح نیست",
+        },
+      },
       icon: <EmailIcon />,
-      defaultValue: "erfanfazel@gmail.com",
+      defaultValue: profileData?.data.email,
     },
     {
-      name: "phone",
+      name: "phonenumber",
       type: "text",
       placeholder: "شماره تماس",
       validation: { required: "شماره تماس الزامی است" },
       icon: <PhoneIcon />,
-      defaultValue: "091222565478",
+      defaultValue: profileData?.data.phonenumber
+        ?.replace(/^\+98\s?/, "")
+        .replace(/\s+/g, ""),
     },
     {
-      name: "organizationName",
+      name: "organizationname",
       type: "text",
       placeholder: "نام سازمان",
       validation: { required: "نام سازمان الزامی است" },
       icon: <OrganizationIcon />,
-      defaultValue: "فلات",
+      defaultValue: profileData?.data.organizationname,
     },
     {
       name: "username",
@@ -69,9 +92,11 @@ const Profile = () => {
       placeholder: "نام کاربری",
       validation: { required: "نام کاربری الزامی است" },
       icon: <UsernameIcon />,
-      defaultValue: "erfan",
+      defaultValue: profileData?.data.username,
     },
   ];
+  if (showSuccessPage)
+    return <SuccessLoginPage title="اطلاعات با موفقیت ویرایش شد." />;
   return (
     <div className="bg-white h-screen">
       <motion.div
@@ -100,7 +125,9 @@ const Profile = () => {
           className="flex items-center gap-2 translate-y-[-32px]"
         >
           <User2 color="white" />
-          <h1 className="text-3xl text-white font-bold">کاپیتان عرفان</h1>
+          <h1 className="text-3xl text-white font-bold">
+            کاپیتان {profileData?.data.username}
+          </h1>
         </motion.div>
         <motion.div
           initial={{ opacity: 0 }}
@@ -133,9 +160,19 @@ const Profile = () => {
               variant={"default"}
               className="w-full py-6 text-base font-bold"
               onClick={handleSubmit(
-                (data) => {
+                async (data) => {
                   console.log(data);
-                  showSuccessToast("اطلاعات با موفقیت تغییر یافت.");
+                  if ("phonenumber" in data) {
+                    data.phonenumber = `+98${data.phonenumber}`;
+                  }
+                  try {
+                    const res = await updateProfileApi(data);
+                    if (res) {
+                      setShowSuccessPage(true);
+                    }
+                  } catch (error) {
+                    console.log(error);
+                  }
                 },
                 () => {
                   Object.values(errors).forEach((error) => {
@@ -149,10 +186,10 @@ const Profile = () => {
               ثبت تغییرات
             </Button>
             <Button
-            type="button"
+              type="button"
               variant={"default"}
               className="w-full py-6 text-base font-bold"
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
             >
               انصراف
             </Button>

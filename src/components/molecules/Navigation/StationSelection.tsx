@@ -1,8 +1,9 @@
 import { RadioGroup, RadioGroupItem } from "../../atoms";
 import { ChevronLeft } from "lucide-react";
 import { StationSelectionPropTypes } from "./StationSelection.type";
-import { stationsInfo } from "../../../constants";
 import { useStationContext } from "../../../contexts/stationContext";
+import { useQueryClient } from "@tanstack/react-query";
+import { StationsTypes } from "../../../types";
 
 const StationSelection = ({
   selectedStation,
@@ -10,8 +11,12 @@ const StationSelection = ({
   setStationType,
   title,
 }: StationSelectionPropTypes) => {
-  const {setSelectedStationContext} = useStationContext()
- 
+  const { setSelectedStationContext } = useStationContext();
+
+  const query = useQueryClient();
+  const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
+    "stations",
+  ]);
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between">
@@ -22,7 +27,7 @@ const StationSelection = ({
         defaultValue={selectedStation}
         className="grid grid-cols-2 gap-0 mt-4"
       >
-        {stationsInfo.map((item, index) => (
+        {stationsInfo?.map((item, index) => (
           <div
             key={index}
             className={`flex items-center space-x-2 py-4 px-3 border-b-[4px] border-b-[#EAEAEA] ${index % 2 ? "" : "pl-0"} `}
@@ -31,17 +36,16 @@ const StationSelection = ({
               onClick={(e) => {
                 setSelectedStation(e.currentTarget.value);
                 setSelectedStationContext(e.currentTarget.value);
-                 setStationType(null);
-               
+                setStationType(null);
               }}
-              value={item.name}
+              value={item.display_name}
               id={index.toString()}
             />
             <label
               className={`w-full text-sm py-1 ${index % 2 ? "" : "border-l-[4px] border-l-[#EAEAEA]"}`}
               htmlFor={index.toString()}
             >
-              ایستگاه {item.name}
+              ایستگاه {item.display_name}
             </label>
           </div>
         ))}

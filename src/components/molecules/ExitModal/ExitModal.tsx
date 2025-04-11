@@ -4,6 +4,7 @@ import { SetStateAction } from "react";
 import { Button } from "../../atoms";
 import Cookie from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import { logoutApi } from "../../../services";
 
 const ExitModal = ({
   setIsOpen,
@@ -14,14 +15,14 @@ const ExitModal = ({
   return (
     <>
       <div
-        className="fixed inset-0 bg-black/50 backdrop-blur-md h-screen w-screen z-[3000]"
+        className="fixed inset-0 bg-black/50 backdrop-blur-md h-screen w-screen z-[5000]"
         onClick={() => setIsOpen(false)}
       ></div>
       <motion.div
-        initial={{ y: -200  }}
+        initial={{ y: -200 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="absolute bottom-[50%] right-[50%] translate-[50%] w-[70%] h-fit bg-[#D8D8D8] pb-3 pt-5 px-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] rounded-4xl flex flex-col items-center justify-center z-[4000]"
+        className="absolute bottom-[50%] right-[50%] translate-[50%] w-[70%] h-fit bg-[#D8D8D8] pb-3 pt-5 px-6 shadow-[0_4px_4px_0_rgba(0,0,0,0.25)] rounded-4xl flex flex-col items-center justify-center z-[6000]"
       >
         <LogOut />
         <motion.h1
@@ -40,8 +41,12 @@ const ExitModal = ({
             انصراف
           </Button>
           <Button
-            onClick={() => {
+            onClick={async () => {
+              await logoutApi({
+                Authorization: "Bearer " + Cookie.get("access_token"),
+              });
               Cookie.remove("access_token");
+              Cookie.remove("refresh_token");
               navigate("./sign-in");
             }}
             className="text-[#930000] bg-white px-3 py-1 text-sm w-full"

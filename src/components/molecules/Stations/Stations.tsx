@@ -3,22 +3,17 @@ import { RadioGroup, RadioGroupItem } from "../../atoms";
 import { StationInformation } from "./StationInformation";
 import { StationsPropTypes } from "./station.type";
 import { useStationContext } from "../../../contexts/stationContext";
-
-const stationsInfo = [
-  { name: "بوشهر" },
-  { name: "دلوار" },
-  { name: "بوالخیر" },
-  { name: "متاف" },
-  { name: "دیر" },
-  { name: "عسلویه " },
-  { name: "لاوان " },
-  { name: "کیش" },
-];
+import { useQueryClient } from "@tanstack/react-query";
+import { StationsTypes } from "../../../types";
 
 const Stations = ({ setHideButtons }: StationsPropTypes) => {
   const [step, setStep] = useState<"selection" | "information">("selection");
   const { selectedStationContext, setSelectedStationContext } =
     useStationContext();
+  const query = useQueryClient();
+  const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
+    "stations",
+  ]);
 
   useEffect(() => {
     if (selectedStationContext) {
@@ -47,7 +42,7 @@ const Stations = ({ setHideButtons }: StationsPropTypes) => {
         defaultValue={selectedStationContext}
         className="grid grid-cols-2 gap-0 mt-4"
       >
-        {stationsInfo.map((item, index) => (
+        {stationsInfo?.map((item, index) => (
           <div
             key={index}
             className={`flex items-center space-x-2 py-4 px-3 border-b-[4px] border-b-[#EAEAEA] ${index % 2 ? "" : "pl-0"} `}
@@ -57,14 +52,14 @@ const Stations = ({ setHideButtons }: StationsPropTypes) => {
                 setSelectedStationContext(e.currentTarget.value);
                 setStep("information");
               }}
-              value={item.name}
+              value={item.display_name}
               id={index.toString()}
             />
             <label
               className={`w-full text-sm py-1 ${index % 2 ? "" : "border-l-[4px] border-l-[#EAEAEA]"}`}
               htmlFor={index.toString()}
             >
-              ایستگاه {item.name}
+              ایستگاه {item.display_name}
             </label>
           </div>
         ))}

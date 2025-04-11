@@ -47,7 +47,7 @@ export const apiClient = async ({
       url: endpoint,
       method,
       data: requestData,
-      withCredentials: tokenRequired,
+      // withCredentials: tokenRequired,
       headers, // Pass headers with authorization if needed
     });
 

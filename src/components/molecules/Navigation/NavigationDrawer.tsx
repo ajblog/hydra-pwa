@@ -8,7 +8,7 @@ import { useStationContext } from "../../../contexts/stationContext";
 const NavigationDrawer = () => {
   const [navigationType, setNavigationType] = useState<
     "STATION" | "ROUTE" | null
-  >("STATION");
+  >(null);
   const [hideButtons, setHideButtons] = useState(false);
   const { selectedStationContext } = useStationContext();
 
