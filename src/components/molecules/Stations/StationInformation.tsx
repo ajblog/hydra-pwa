@@ -2,7 +2,7 @@
 import { ChevronLeft } from "lucide-react";
 import { StationInformationPropTypes } from "./station.type";
 import { Tab, WeatherInfoCard } from "../../atoms";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import wave from "../../../assets/images/wave-icon.png";
 import temp from "../../../assets/images/temp-Icon.png";
 import wind from "../../../assets/images/Wind-Icon.png";
