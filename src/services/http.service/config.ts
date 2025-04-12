@@ -5,6 +5,7 @@ import axios, {
   AxiosRequestConfig,
 } from "axios";
 import { getCookie, isTokenExpired, setCookie } from "../../utils";
+import { showErrorToast } from "../../components";
 
 // Base URL for API requests
 const BASE_URL =
@@ -98,6 +99,9 @@ axiosInstance.interceptors.response.use(
       switch (error.response.status) {
         case 403:
           console.error("Forbidden - insufficient permissions");
+          break;
+        case 429:
+          showErrorToast('"لطفاً چند لحظه صبر کنید."');
           break;
         case 500:
           console.error("Server error - try again later");

@@ -158,7 +158,7 @@ export const SignUp = () => {
           transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
         >
           {!focusedElement && (
-            <p className="text-white font-bold text-xl max-w-3xs mt-9 leading-16">
+            <p className="text-white font-bold text-xl max-w-3xs mt-4 leading-16">
               حساب کـــاربری
               <br /> خود را <br /> ایجاد کنید!
             </p>
@@ -172,7 +172,7 @@ export const SignUp = () => {
         className={`absolute  h-full right-0 w-full rounded-full bg-[#5b55edE6] -z-[10] ${focusedElement ? "top-[100%]" : "top-[200px]"}`}
       ></motion.div>
       <Drawer dismissible={false} open={true}>
-        <DrawerContent className="flex max-h-[80vh] flex-col justify-between py-8 px-8 pointer-events-auto overflow-visible transition-all duration-1000 ease-out">
+        <DrawerContent className="flex max-h-[80vh] flex-col justify-between pt-8 px-8 pointer-events-auto overflow-visible transition-all duration-1000 ease-out">
           <img
             src={signupPeople}
             alt="signup-sign"
