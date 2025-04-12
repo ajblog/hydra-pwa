@@ -4,34 +4,41 @@ import { VitePWA } from "vite-plugin-pwa";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  // server: {
-  //   host: true, // Enables access from LAN
-  //   https: {
-  //     key: fs.readFileSync(path.resolve(__dirname, "localhost-key.pem")),
-  //     cert: fs.readFileSync(path.resolve(__dirname, "localhost.pem")),
-  //   },
-  // },
   plugins: [
     react(),
     tailwindcss(),
     VitePWA({
       registerType: "autoUpdate",
       manifest: {
-        name: "Hydra PWA",
+        name: "Hydra",
         short_name: "Hydra",
-        description: "A PWA built with React and Vite",
+        description: "Your smart assistant on the seas",
         theme_color: "#ffffff",
         icons: [
+          // {
+          //   src: "/assets/Hydra-Logo-192.png", // Fallback PNG
+          //   sizes: "192x192",
+          //   type: "image/png",
+          //   purpose: "any",
+          // },
+          // {
+          //   src: "/assets/Hydra-Logo-512.png", // Fallback PNG
+          //   sizes: "512x512",
+          //   type: "image/png",
+          //   purpose: "any",
+          // },
           {
-            src: "/pwa-icon-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
+            src: "/assets/Hydra-Logo.svg", // SVG icon
+            sizes: "any", // SVGs are scalable
+            type: "image/svg+xml",
+            purpose: "any",
           },
-          {
-            src: "/pwa-icon-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
-          },
+          // {
+          //   src: "/assets/Hydra-Logo-Maskable.png", // Optional maskable icon
+          //   sizes: "512x512",
+          //   type: "image/png",
+          //   purpose: "maskable",
+          // },
         ],
       },
       devOptions: {
