@@ -158,7 +158,7 @@ export const SignUp = () => {
           transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
         >
           {!focusedElement && (
-            <p className="text-white font-bold text-3xl max-w-3xs mt-9 leading-16">
+            <p className="text-white font-bold text-xl max-w-3xs mt-9 leading-16">
               حساب کـــاربری
               <br /> خود را <br /> ایجاد کنید!
             </p>
@@ -172,11 +172,11 @@ export const SignUp = () => {
         className={`absolute  h-full right-0 w-full rounded-full bg-[#5b55edE6] -z-[10] ${focusedElement ? "top-[100%]" : "top-[200px]"}`}
       ></motion.div>
       <Drawer dismissible={false} open={true}>
-        <DrawerContent className="flex max-h-[80vh] flex-col justify-between py-14 px-14  pointer-events-none transition-all duration-1000 ease-out">
+        <DrawerContent className="flex max-h-[80vh] flex-col justify-between py-8 px-8 pointer-events-auto overflow-visible transition-all duration-1000 ease-out">
           <img
             src={signupPeople}
             alt="signup-sign"
-            className={`absolute top-[-146px]  w-fit transition-all duration-1000 ${focusedElement ? "-left-[100%]" : "left-[3%]"}`}
+            className={`absolute top-[-146px] z-[60] w-fit transition-all duration-1000 ${focusedElement ? "-left-[100%]" : "left-[3%]"}`}
           />
 
           <Form
@@ -186,24 +186,27 @@ export const SignUp = () => {
             buttonTheme="default"
             inputTheme="dark"
             submitText="ثبت نام"
+            className="overflow-y-auto"
+            customLink={
+              focusedElement && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.7 }}
+                  className="flex justify-center items-center col-span-full"
+                >
+                  <p className="text-black text-sm">قبلا ثبت نام کرده اید؟</p>
+                  <Button
+                    onClick={() => navigate("/sign-in")}
+                    className="font-bold text-black text-sm"
+                    variant="link"
+                  >
+                    وارد شوید.
+                  </Button>
+                </motion.div>
+              )
+            }
           />
-          {focusedElement && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-              className="flex justify-center items-center"
-            >
-              <p className="text-black text-sm">قبلا ثبت نام کرده اید؟</p>
-              <Button
-                onClick={() => navigate("/sign-in")}
-                className="font-bold text-black text-sm"
-                variant="link"
-              >
-                وارد شوید.
-              </Button>
-            </motion.div>
-          )}
         </DrawerContent>
       </Drawer>
     </div>

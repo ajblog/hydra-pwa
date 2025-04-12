@@ -15,13 +15,14 @@ export const Form = React.memo(function Form<T extends FieldValues>({
   buttonTheme = "secondary",
   customButtons,
   className,
+  customLink,
 }: FormProps<T>) {
   const {
     register,
     handleSubmit,
 
     formState,
-  } = useForm<T>({ mode: "onSubmit" } );
+  } = useForm<T>({ mode: "onSubmit" });
 
   const { errors, isSubmitted } = formState;
 
@@ -184,6 +185,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
             </Button>
           </motion.div>
         ))}
+      {customLink}
     </form>
   );
 });

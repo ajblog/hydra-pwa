@@ -34,6 +34,7 @@ interface FormProps<T extends FieldValues> {
     handleSubmit: UseFormHandleSubmit<T>;
     formState: UseFormStateReturn<T>;
   }) => ReactNode;
+  customLink?: ReactNode;
 }
 
 export type { Field, FormProps };

@@ -11,7 +11,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="relative flex items-center w-full">
         {icon && (
-          <span className="absolute right-3 text-muted-foreground">{icon}</span>
+          <span
+            className={`absolute right-3 text-muted-foreground  ${theme === "dark" ? "bg-white"  : ""}`}
+          >
+            {icon}
+          </span>
         )}
         <input
           type={type}
