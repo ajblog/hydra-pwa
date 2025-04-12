@@ -16,8 +16,14 @@ export default defineConfig({
         theme_color: "#ffffff",
         icons: [
           {
-            src: "/assets/Logo-png.png",
-            sizes: "61x74", // Small icon
+            src: "/assets/192.png",
+            sizes: "192x192", // Standard size for many devices
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/assets/512.png",
+            sizes: "512x512", // Larger icon for high-DPI displays
             type: "image/png",
             purpose: "any",
           },
