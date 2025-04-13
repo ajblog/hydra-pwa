@@ -14,6 +14,8 @@ export default defineConfig({
         short_name: "Hydra",
         description: "Your smart assistant on the seas",
         theme_color: "#ffffff",
+        display: "standalone", // important
+
         icons: [
           {
             src: "/assets/192.png",
