@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "../../atoms";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Stations } from "../Stations/Stations";
 import { Direction } from "../Direction/Direction";
 import { useStationContext } from "../../../contexts/stationContext";
@@ -10,14 +10,34 @@ const NavigationDrawer = () => {
     "STATION" | "ROUTE" | null
   >(null);
   const [hideButtons, setHideButtons] = useState(false);
-  const { selectedStationContext } = useStationContext();
+  const { selectedStationContext , setSelectedStationContext } = useStationContext();
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (selectedStationContext && !navigationType) setNavigationType("STATION");
   }, [selectedStationContext, navigationType]);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        navigationType &&
+        drawerRef.current &&
+        !drawerRef.current.contains(e.target as Node)
+      ) {
+        setNavigationType(null);
+        setSelectedStationContext('');
+        setHideButtons(false); // optional: show buttons again on close
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [navigationType , setSelectedStationContext]);
+
   return (
     <>
       <motion.div
+      ref={drawerRef}
         initial={{ y: 200 }}
         animate={{ y: 0 }}
         transition={{ bounce: 0.6, duration: 0.5, ease: "easeIn" }}

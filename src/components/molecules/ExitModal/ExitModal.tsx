@@ -36,7 +36,7 @@ const ExitModal = ({
         <div className="my-3 flex items-center gap-5 w-full">
           <Button
             onClick={() => setIsOpen(false)}
-            className=" text-[#263DD3] bg-[#858585] px-3 py-1 text-sm w-full"
+            className=" text-[#263DD3] bg-white px-3 py-1 text-sm w-full"
           >
             انصراف
           </Button>
