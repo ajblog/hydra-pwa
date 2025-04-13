@@ -122,6 +122,7 @@ export const SignUp = () => {
       if (res.token) {
         setCookie("access_token", res.token.access, { minutes: 15 });
         setCookie("refresh_token", res.refresh, { days: 7 });
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
         setIsLoggedIn(true);
       }
     } catch (error: any) {
@@ -167,13 +168,17 @@ export const SignUp = () => {
         initial={{ opacity: 0.5, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.7 }}
-        className={`absolute h-[calc(100%-200px)] right-0 w-full rounded-full bg-[#5b55edE6] -z-[10] ${focusedElement ? "top-[100%]" : "top-[200px]"}`}
+        className={`absolute h-[calc(100%-200px)] right-0 w-full rounded-full bg-[#5b55edE6] -z-[10] ${
+          focusedElement ? "top-[100%]" : "top-[200px]"
+        }`}
       ></motion.div>
       <div className="bg-white fixed inset-x-0 bottom-0 rounded-t-4xl flex max-h-[80vh] flex-col justify-between pt-8 px-8 pointer-events-auto overflow-visible transition-all duration-1000 ease-out">
         <img
           src={signupPeople}
           alt="signup-sign"
-          className={`absolute top-[-146px] z-[60] w-fit transition-all duration-1000 ${focusedElement ? "-left-[100%]" : "left-[3%]"}`}
+          className={`absolute top-[-146px] z-[60] w-fit transition-all duration-1000 ${
+            focusedElement ? "-left-[100%]" : "left-[3%]"
+          }`}
         />
 
         <Form

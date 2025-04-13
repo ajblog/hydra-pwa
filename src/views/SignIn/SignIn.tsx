@@ -48,6 +48,7 @@ export function SignIn() {
       if (res) {
         setCookie("access_token", res.access, { minutes: 15 });
         setCookie("refresh_token", res.refresh, { days: 7 });
+        window.scrollTo({ top: 0, left: 0, behavior: "auto" });
         navigate("/");
       }
     } catch (error) {
