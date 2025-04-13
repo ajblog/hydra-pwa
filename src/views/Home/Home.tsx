@@ -5,6 +5,7 @@ import profilePhoto from "../../assets/images/profile.png";
 import { StationProvider } from "../../contexts/stationContext";
 import { useQuery } from "@tanstack/react-query";
 import { getAllStations, getProfileApi } from "../../services";
+import { useEffect } from "react";
 const ProfileData = () => {
   const { data } = useQuery({
     queryKey: ["profile"],
@@ -33,7 +34,9 @@ export function Home() {
     queryKey: ["stations"],
     queryFn: () => getAllStations(),
   });
-  console.log(stations, "stations data points");
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
   return (
     <div>
       <ProfileData />
