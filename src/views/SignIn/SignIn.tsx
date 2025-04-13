@@ -10,8 +10,11 @@ import { loginApi } from "../../services";
 const ovalJsx = () => {
   return (
     <AnimatePresence mode="wait">
-      <div dir="ltr" className="fixed top-[-18%] right-[-120%]">
-        <Oval width={780} height={520} />
+      <div className="fixed top-[-10%] right-[-60%] sm:right-[-50%] md:right-[-40%] lg:right-[-30%]">
+        <Oval
+          width="clamp(200px, 50vw, 500px)"
+          height="clamp(150px, 30vw, 350px)"
+        />
       </div>
     </AnimatePresence>
   );
@@ -38,6 +41,7 @@ export function SignIn() {
       icon: <FingerPrintIcon />,
     },
   ];
+
   const handleLogin = async (e: FieldValues) => {
     try {
       const res = await loginApi(e);
@@ -52,31 +56,36 @@ export function SignIn() {
     }
     localStorage.setItem("hasVisited", "true");
   };
+
   return (
-    <>
+    <div className="h-screen w-full flex flex-col items-center overflow-hidden">
       {ovalJsx()}
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -50 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex flex-col"
+        className="z-10 flex flex-col w-full max-w-md px-4 pt-4 pb-4 min-h-0 max-h-full"
       >
-        <div className="z-[100] pt-8">
+        <div className="w-full pb-6 sm:pb-8">
           <Header showBackButton={false} isLoggedIn={false} />
         </div>
-        <div className="pt-16 z-50">
+        <div className="flex flex-col items-center flex-1 min-h-0 overflow-hidden">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
-            className="flex flex-col items-center gap-8"
+            className="flex flex-col items-center gap-4 w-full flex-shrink-0"
           >
-            <img src={LoginImage} alt="Login-page" />
-            <LoginTextIcon />
+            <img
+              src={LoginImage}
+              alt="Login-page"
+              className="w-[50%] max-w-[200px] sm:max-w-[240px] h-auto"
+            />
+            <LoginTextIcon className="w-[25%] max-w-[120px] sm:max-w-[140px] md:max-w-[160px] h-auto" />
           </motion.div>
 
-          <div className="my-6 px-10 space-y-2">
+          <div className="my-2 w-full space-y-1 flex-shrink">
             <Form
               submitText="ورود"
               onSubmit={handleLogin}
@@ -86,6 +95,7 @@ export function SignIn() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.6 }}
+              className="text-center"
             >
               <Button
                 variant="link"
@@ -97,15 +107,15 @@ export function SignIn() {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.7 }}
-            className="mt-6 flex justify-center items-center"
+            className="flex justify-center items-center gap-2 flex-shrink-0 mt-2"
           >
-            <p className="text-black">ثبت نام نکرده‌اید؟</p>
+            <p className="text-black text-xs sm:text-sm">ثبت نام نکرده‌اید؟</p>
             <Button
               onClick={() => navigate("/sign-up")}
-              className="text-[#EEC124]"
+              className="text-[#EEC124] text-xs sm:text-sm"
               variant="link"
             >
               ایجاد حساب کاربری
@@ -113,6 +123,6 @@ export function SignIn() {
           </motion.div>
         </div>
       </motion.div>
-    </>
+    </div>
   );
 }

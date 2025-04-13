@@ -1,6 +1,10 @@
 import { SVGPropTypes } from "../../types";
 
-export function LoginTextIcon({ width, height }: SVGPropTypes) {
+export function LoginTextIcon({
+  width,
+  height,
+  className,
+}: SVGPropTypes & { className: string }) {
   return (
     <svg
       width={width || "100"}
@@ -8,6 +12,7 @@ export function LoginTextIcon({ width, height }: SVGPropTypes) {
       viewBox="0 0 100 51"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
     >
       <g filter="url(#filter0_d_820_1087)">
         <path
