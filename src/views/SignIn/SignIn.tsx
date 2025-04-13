@@ -60,12 +60,12 @@ export function SignIn() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className="flex min-h-screen flex-col"
+        className="flex h-screen flex-col"
       >
         <div className="z-[100] pt-8">
           <Header showBackButton={false} isLoggedIn={false} />
         </div>
-        <div className="mt-16 z-50">
+        <div className="pt-16 z-50">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
