@@ -48,7 +48,7 @@ export function Intro() {
       "bottom-[300px]",
       "bottom-[-60px]",
       "bottom-[-20px]",
-      "bottom-[290px]",
+      "bottom-[300px]",
       "bottom-[290px]",
     ];
 
@@ -62,7 +62,11 @@ export function Intro() {
           exit="exit"
           className={`absolute ${positions[step]} flex w-full justify-center`}
         >
-          <img src={images[step]} alt="Intro Image" />
+          <img
+            src={images[step]}
+            alt="Intro Image"
+            className={`${images[step].endsWith(".png") ? "h-[200px]" : ""}`}
+          />
         </motion.div>
       </AnimatePresence>
     );
@@ -219,7 +223,7 @@ export function Intro() {
               <div className="px-8 pt-30">
                 {contentJsx()}
                 <div className="my-2 flex items-center justify-between pt-2">
-                  <Stepper totalSteps={4} activeStep={step} />
+                  <Stepper totalSteps={5} activeStep={step} />
                   <motion.div
                     whileTap={{ scale: 0.95 }}
                     transition={{ duration: 0.1 }}
