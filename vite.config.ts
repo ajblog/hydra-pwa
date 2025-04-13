@@ -13,9 +13,9 @@ export default defineConfig({
         name: "Hydra",
         short_name: "Hydra",
         description: "Your smart assistant on the seas",
-        theme_color: "#ffffff",
-        display: "standalone", // important
-
+        display: "standalone",
+        background_color: "transparent", // this helps
+        theme_color: "transparent", // important!
         icons: [
           {
             src: "/assets/192.png",
