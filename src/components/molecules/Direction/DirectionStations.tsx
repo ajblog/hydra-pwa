@@ -47,7 +47,6 @@ const DirectionStations = ({
   });
 
   const { setSelectedStationContext } = useStationContext();
-  const [dashCounts, setDashCounts] = useState<number[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeStationIndex, setActiveStationIndex] = useState<number>(0);
   const [isSelected, setIsSelected] = useState("موج");
@@ -88,44 +87,6 @@ const DirectionStations = ({
     }
   }, [activeStationIndex, setSelectedStationContext, routesData]);
 
-  useEffect(() => {
-    if (!containerRef.current || !routesData) return;
-
-    const containerWidth = containerRef.current.offsetWidth;
-    const totalStations = routesData.route.length;
-    const gaps = totalStations - 1;
-
-    // Fixed dot width based on your conditional logic
-    const dotWidth = totalStations < 6 ? 20 : 16; // w-5 (20px) or w-4 (16px)
-    const dashWidth = 2; // Fixed dash width
-    const minGapBetweenDots = 10; // Minimum space between dots to avoid crowding
-
-    // Calculate total width taken by dots
-    const totalDotWidth = totalStations * dotWidth;
-
-    // Calculate available width for dashes and gaps
-    const availableWidthForGaps = containerWidth - totalDotWidth;
-
-    // Calculate maximum number of dashes per gap
-    const maxDashesPerGap = Math.floor(
-      (availableWidthForGaps / gaps - minGapBetweenDots) / dashWidth
-    );
-
-    // Ensure at least 1 dash, but cap to prevent overflow
-    const dashesPerGap = Math.max(1, maxDashesPerGap);
-
-    // Set dash counts for each gap
-    setDashCounts(Array(gaps).fill(dashesPerGap));
-
-    console.log({
-      containerWidth,
-      totalDotWidth,
-      availableWidthForGaps,
-      maxDashesPerGap,
-      dashesPerGap,
-    });
-  }, [routesData, isLoading]);
-
   const selectedDayDetail = stationDetail?.weather_data![0].days.filter(
     (item: any) => item.day_name === selectedDay
   );
@@ -141,25 +102,23 @@ const DirectionStations = ({
       />
     );
 
-  console.log(dashCounts, "dasheeeees");
-
   return (
     <>
       <div
         ref={containerRef}
-        className="flex items-center w-full my-5 pt-3 overflow-hidden"
+        className="flex justify-between items-center w-full my-5 pt-3"
       >
         {routesData.route.map((station: StationsTypes, index: number) => (
           <React.Fragment key={`dot-${index}`}>
             {/* Dot */}
             <div
-              className="flex flex-col items-center cursor-pointer shrink-0"
+              className="flex flex-col items-center cursor-pointer shrink-0 z-10"
               onClick={() => setActiveStationIndex(index)}
             >
               <div
                 className={`${
                   routesData.route.length < 6 ? "w-5 h-5" : "w-4 h-4"
-                } border border-black rounded-full flex items-center justify-center`}
+                } border border-black rounded-full flex items-center justify-center bg-white`}
               >
                 <div
                   className={`${
@@ -178,18 +137,15 @@ const DirectionStations = ({
               )}
             </div>
 
-            {/* Dashes */}
+            {/* Dashed Line */}
             {index < routesData.route.length - 1 && (
-              <div className="flex items-center gap-[3px] min-w-[10px]">
-                {Array.from({ length: dashCounts[index] || 0 }).map(
-                  (_, dashIndex) => (
-                    <div
-                      key={`dash-${index}-${dashIndex}`}
-                      className="w-[2px] h-0.5 bg-gray-400"
-                    />
-                  )
-                )}
-              </div>
+              <div
+                className="flex-grow h-[2px]"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(to right, #9ca3af 0px, #9ca3af 1px, transparent 1px, transparent 3px)",
+                }}
+              />
             )}
           </React.Fragment>
         ))}
@@ -220,7 +176,6 @@ const DirectionStations = ({
             />
           ))}
         </div>
-
         <div className="flex items-center gap-1 w-full mt-7">
           {stationDetail?.weather_data[0].days.map(
             (item: any, index: number) => (
@@ -230,16 +185,16 @@ const DirectionStations = ({
                   isSelected === "موج"
                     ? item.weather_info[0].wave.hmax + "m"
                     : isSelected === "باد"
-                      ? item.weather_info[0].wind.wind_speed + "m/s"
-                      : item.weather_info[0].temperature.temperature + "°c"
+                    ? item.weather_info[0].wind.wind_speed + "m/s"
+                    : item.weather_info[0].temperature.temperature + "°c"
                 }
                 title={item.day_name}
                 icon={
                   isSelected === "موج"
                     ? wave
                     : isSelected === "باد"
-                      ? wind
-                      : temp
+                    ? wind
+                    : temp
                 }
                 isSelected={selectedDay === item.day_name}
                 setSelectedDay={setSelectedDay}
@@ -256,8 +211,8 @@ const DirectionStations = ({
               isSelected === "موج"
                 ? "wave"
                 : isSelected === "باد"
-                  ? "wind"
-                  : "temperature"
+                ? "wind"
+                : "temperature"
             }
             chartData={selectedDayDetail?.[0].weather_info}
           />
