@@ -14,8 +14,11 @@ import Intro1 from "../../assets/images/Intro-1.png";
 import Intro2 from "../../assets/images/Intro-2.gif";
 import Intro3 from "../../assets/images/Intro-3.gif";
 import Intro4 from "../../assets/images/Intro-4.png";
-import intro5 from '../../assets/images/Login-People.png'
+import intro5 from "../../assets/images/Login-People.png";
 
+interface Navigator {
+  standalone?: boolean;
+}
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
@@ -43,7 +46,7 @@ export function Intro() {
   };
 
   const imageJsx = () => {
-    const images = [Intro1, Intro2, Intro3, Intro4 , intro5];
+    const images = [Intro1, Intro2, Intro3, Intro4, intro5];
     const positions = [
       "bottom-[300px]",
       "bottom-[-60px]",
@@ -80,6 +83,19 @@ export function Intro() {
     };
 
     window.addEventListener("beforeinstallprompt", handler);
+
+    // Fallback for iOS
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isIOS =
+      /iphone|ipad|ipod/.test(userAgent) &&
+      !(navigator as Navigator & { standalone?: boolean }).standalone &&
+      !userAgent.includes("crios");
+
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    if (isIOS && isSafari) {
+      setIsInstallable(true);
+    }
 
     return () => window.removeEventListener("beforeinstallprompt", handler);
   }, []);
@@ -118,8 +134,8 @@ export function Intro() {
       </>,
       <div className="flex flex-col gap-7">
         <p className="text-base font-bold">
-          <span className="text-[#F59C1D]">نصب وب اپلیکیشن هیدرا</span> تحربه
-          بهتری برای شما در سفر های دریایی فراهم میکند
+          <span className="text-[#F59C1D]">نصب وب اپلیکیشن هیدرا</span> تجربه
+          بهتری برای شما در سفر های دریایی فراهم می‌کند
         </p>
         {isInstallable && (
           <Button
@@ -135,6 +151,10 @@ export function Intro() {
                 }
                 setDeferredPrompt(null);
                 setIsInstallable(false);
+              } else {
+                alert(
+                  "برای نصب در iOS، روی دکمه اشتراک‌گذاری (share) کلیک کرده و گزینه 'Add to Home Screen' را انتخاب کنید."
+                );
               }
             }}
           >
@@ -159,30 +179,27 @@ export function Intro() {
     );
   };
 
-  const ovalJsx = () => {
-    return (
-      <AnimatePresence mode="wait">
-        <motion.div key={step} initial="hidden" animate="visible" exit="exit">
-          {step < 2 ? (
-            <div dir="ltr" className="fixed top-[-20%] right-[-110%]">
-              <Oval width={780} height={480} />
-            </div>
-          ) : (
-            <div
-              dir="ltr"
-              className="fixed top-[55%] left-1/2 translate-x-[-50%] translate-y-[-50%]"
-            >
-              <Oval width={600} height={480} />
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-    );
-  };
+  const ovalJsx = () => (
+    <AnimatePresence mode="wait">
+      <motion.div key={step} initial="hidden" animate="visible" exit="exit">
+        {step < 2 ? (
+          <div dir="ltr" className="fixed top-[-20%] right-[-110%]">
+            <Oval width={780} height={480} />
+          </div>
+        ) : (
+          <div
+            dir="ltr"
+            className="fixed top-[55%] left-1/2 translate-x-[-50%] translate-y-[-50%]"
+          >
+            <Oval width={600} height={480} />
+          </div>
+        )}
+      </motion.div>
+    </AnimatePresence>
+  );
 
   const titleJsx = () => {
-    const contents = ["", "شروع سفر", "قابلیت‌ها", "تیمِ ما" , 'هیدرا'];
-
+    const contents = ["", "شروع سفر", "قابلیت‌ها", "تیمِ ما", "هیدرا"];
     return (
       <AnimatePresence mode="wait">
         <motion.div
@@ -232,8 +249,7 @@ export function Intro() {
                     <Button
                       onClick={() => {
                         if (step === 4) {
-                          localStorage.setItem("hasVisited", "true"); // Mark that the user has visited
-
+                          localStorage.setItem("hasVisited", "true");
                           navigate("/sign-in");
                         }
                         setStep((prev) => prev + 1);
