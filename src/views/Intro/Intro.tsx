@@ -14,9 +14,18 @@ import Intro1 from "../../assets/images/Intro-1.png";
 import Intro2 from "../../assets/images/Intro-2.gif";
 import Intro3 from "../../assets/images/Intro-3.gif";
 import Intro4 from "../../assets/images/Intro-4.png";
+import intro5 from '../../assets/images/Login-People.png'
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+}
 
 export function Intro() {
   const [step, setStep] = useState<number>(0);
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null);
+  const [isInstallable, setIsInstallable] = useState(false);
   const hasVisited: boolean =
     localStorage.getItem("hasVisited") === "true" ? true : false;
   const navigate = useNavigate();
@@ -34,11 +43,12 @@ export function Intro() {
   };
 
   const imageJsx = () => {
-    const images = [Intro1, Intro2, Intro3, Intro4];
+    const images = [Intro1, Intro2, Intro3, Intro4 , intro5];
     const positions = [
       "bottom-[300px]",
       "bottom-[-60px]",
       "bottom-[-20px]",
+      "bottom-[290px]",
       "bottom-[290px]",
     ];
 
@@ -57,6 +67,18 @@ export function Intro() {
       </AnimatePresence>
     );
   };
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault(); // Prevent auto-prompt
+      setDeferredPrompt(e);
+      setIsInstallable(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handler);
+
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
 
   const contentJsx = () => {
     const contents = [
@@ -90,6 +112,32 @@ export function Intro() {
           جــوی و دریـایی، ایمنــی و کارایــی سفرهای شما را افزایش دهند.
         </p>
       </>,
+      <div className="flex flex-col gap-7">
+        <p className="text-base font-bold">
+          <span className="text-[#F59C1D]">نصب وب اپلیکیشن هیدرا</span> تحربه
+          بهتری برای شما در سفر های دریایی فراهم میکند
+        </p>
+        {isInstallable && (
+          <Button
+            className="px-4 py-2 border border-indigo-600 bg-white text-indigo-600 rounded-full shadow-md text-lg m-auto w-[40%] transition"
+            onClick={async () => {
+              if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === "accepted") {
+                  console.log("✨ PWA installed!");
+                } else {
+                  console.log("🫠 User dismissed install.");
+                }
+                setDeferredPrompt(null);
+                setIsInstallable(false);
+              }
+            }}
+          >
+            نصب
+          </Button>
+        )}
+      </div>,
     ];
 
     return (
@@ -129,7 +177,7 @@ export function Intro() {
   };
 
   const titleJsx = () => {
-    const contents = ["", "شروع سفر", "قابلیت‌ها", "تیمِ ما"];
+    const contents = ["", "شروع سفر", "قابلیت‌ها", "تیمِ ما" , 'هیدرا'];
 
     return (
       <AnimatePresence mode="wait">
@@ -179,7 +227,7 @@ export function Intro() {
                   >
                     <Button
                       onClick={() => {
-                        if (step === 3) {
+                        if (step === 4) {
                           localStorage.setItem("hasVisited", "true"); // Mark that the user has visited
 
                           navigate("/sign-in");

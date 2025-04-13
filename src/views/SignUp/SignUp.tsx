@@ -10,8 +10,6 @@ import {
 } from "../../assets";
 import {
   Button,
-  Drawer,
-  DrawerContent,
   Form,
   showErrorToast,
   SuccessLoginPage,
@@ -141,7 +139,7 @@ export const SignUp = () => {
     return <SuccessLoginPage title=" ثبت نام با موفقیت انجام شد" />;
   return (
     <div>
-      <div className="pr-10 pt-10 flex flex-col justify-between h-full">
+      <div className="pr-10 pt-10 flex flex-col justify-between">
         <div
           className="relative z-[200] pointer-events-auto"
           onClick={(e) => {
@@ -169,46 +167,44 @@ export const SignUp = () => {
         initial={{ opacity: 0.5, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.7 }}
-        className={`absolute  h-full right-0 w-full rounded-full bg-[#5b55edE6] -z-[10] ${focusedElement ? "top-[100%]" : "top-[200px]"}`}
+        className={`absolute h-[calc(100%-200px)] right-0 w-full rounded-full bg-[#5b55edE6] -z-[10] ${focusedElement ? "top-[100%]" : "top-[200px]"}`}
       ></motion.div>
-      <Drawer dismissible={false} open={true}>
-        <DrawerContent className="flex max-h-[80vh] flex-col justify-between pt-8 px-8 pointer-events-auto overflow-visible transition-all duration-1000 ease-out">
-          <img
-            src={signupPeople}
-            alt="signup-sign"
-            className={`absolute top-[-146px] z-[60] w-fit transition-all duration-1000 ${focusedElement ? "-left-[100%]" : "left-[3%]"}`}
-          />
+      <div className="bg-white fixed inset-x-0 bottom-0 rounded-t-4xl flex max-h-[80vh] flex-col justify-between pt-8 px-8 pointer-events-auto overflow-visible transition-all duration-1000 ease-out">
+        <img
+          src={signupPeople}
+          alt="signup-sign"
+          className={`absolute top-[-146px] z-[60] w-fit transition-all duration-1000 ${focusedElement ? "-left-[100%]" : "left-[3%]"}`}
+        />
 
-          <Form
-            fields={signUpFields}
-            onSubmit={(e) => handleSubmit(e)}
-            hideButton={!focusedElement}
-            buttonTheme="default"
-            inputTheme="dark"
-            submitText="ثبت نام"
-            className="overflow-y-auto"
-            customLink={
-              focusedElement && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.7 }}
-                  className="flex justify-center items-center col-span-full"
+        <Form
+          fields={signUpFields}
+          onSubmit={(e) => handleSubmit(e)}
+          hideButton={!focusedElement}
+          buttonTheme="default"
+          inputTheme="dark"
+          submitText="ثبت نام"
+          className="overflow-y-auto"
+          customLink={
+            focusedElement && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.7 }}
+                className="flex justify-center items-center col-span-full"
+              >
+                <p className="text-black text-sm">قبلا ثبت نام کرده اید؟</p>
+                <Button
+                  onClick={() => navigate("/sign-in")}
+                  className="font-bold text-black text-sm"
+                  variant="link"
                 >
-                  <p className="text-black text-sm">قبلا ثبت نام کرده اید؟</p>
-                  <Button
-                    onClick={() => navigate("/sign-in")}
-                    className="font-bold text-black text-sm"
-                    variant="link"
-                  >
-                    وارد شوید.
-                  </Button>
-                </motion.div>
-              )
-            }
-          />
-        </DrawerContent>
-      </Drawer>
+                  وارد شوید.
+                </Button>
+              </motion.div>
+            )
+          }
+        />
+      </div>
     </div>
   );
 };
