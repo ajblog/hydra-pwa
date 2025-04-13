@@ -248,8 +248,9 @@ export function Intro() {
                   >
                     <Button
                       onClick={() => {
-                        if (step === 4) {
+                        if (step === 3)
                           localStorage.setItem("hasVisited", "true");
+                        if (step === 4) {
                           navigate("/sign-in");
                         }
                         setStep((prev) => prev + 1);
