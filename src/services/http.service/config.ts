@@ -42,20 +42,17 @@ axiosInstance.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      originalRequest.url !== "/auth/login/refresh/" // Prevent infinite loop
+      originalRequest.url !== "/auth/login/refresh/"
     ) {
-      originalRequest._retry = true; // Mark as retried
+      originalRequest._retry = true;
 
       try {
         const refreshToken = getCookie("refresh_token");
         if (!refreshToken || isTokenExpired(refreshToken)) {
-          console.error("Refresh token missing or expired");
-          // Optionally redirect to login
           window.location.reload();
           return Promise.reject(error);
         }
 
-        // Make a fetch request to refresh tokens
         const response = await fetch(`${BASE_URL}/auth/login/refresh/`, {
           method: "POST",
           headers: {
@@ -71,46 +68,40 @@ axiosInstance.interceptors.response.use(
         const data = await response.json();
         const { access, refresh } = data;
 
-        // Set new tokens in cookies
-        setCookie("access_token", access, {
-          minutes: 15, // 15 minutes expiry for access token
-        });
+        setCookie("access_token", access, { minutes: 15 });
+        setCookie("refresh_token", refresh, { days: 7 });
 
-        setCookie("refresh_token", refresh, {
-          days: 7, // Assuming refresh token lasts longer, e.g., 7 days
-        });
-
-        // Update Authorization header for the original request
         originalRequest.headers = originalRequest.headers || {};
         originalRequest.headers["Authorization"] = `Bearer ${access}`;
 
-        // Retry the original request
         return axiosInstance(originalRequest);
       } catch (refreshError) {
         console.error("Token refresh failed:", refreshError);
-        // Optionally redirect to login
         return Promise.reject(refreshError);
       }
     }
 
-    // Handle other errors
-    if (error.response) {
-      console.error("API Error:", error.response.data);
+    // 🌐 Network or CORS error
+    if (!error.response) {
+      if (error.code === "ERR_NETWORK") {
+        showErrorToast("اتصال اینترنت خود را بررسی کنید.");
+      } else {
+        showErrorToast("ارتباط با سرور برقرار نشد. لطفاً دوباره تلاش کنید.");
+      }
+    } else {
       switch (error.response.status) {
         case 403:
           console.error("Forbidden - insufficient permissions");
           break;
         case 429:
-          showErrorToast('"لطفاً چند لحظه صبر کنید."');
+          showErrorToast("لطفاً چند لحظه صبر کنید.");
           break;
         case 500:
-          console.error("Server error - try again later");
+          showErrorToast("خطای سرور! لطفاً بعداً امتحان کنید.");
           break;
         default:
-          console.error("An unknown error occurred");
+          showErrorToast("مشکلی پیش آمده. لطفاً دوباره تلاش کنید.");
       }
-    } else {
-      console.error("Network error or no response");
     }
 
     return Promise.reject(error);

@@ -102,7 +102,7 @@ const Profile = () => {
       <motion.div
         initial={{ y: -200 }}
         animate={{ y: 0 }}
-        className="bg-gradient-to-b from-[#4b10c9] to-[#5b55ed] rounded-b-[40px] p-7 flex flex-col items-center mb-5"
+        className="bg-gradient-to-b from-[#4b10c9] to-[#5b55ed] rounded-b-[40px] p-7 pb-0 pt-5 flex flex-col items-center mb-5"
       >
         <div className="flex items-center justify-between w-full">
           <LogoIcon />
@@ -116,13 +116,13 @@ const Profile = () => {
           transition={{ duration: 0.8, delay: 0.3, ease: "easeIn" }}
           src={profilePhoto}
           alt="profile photo"
-          className="translate-y-[-32px] h-[180px] w-40"
+          className="translate-y-[-50px] h-[180px] w-40"
         />
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeIn" }}
-          className="flex items-center gap-2 translate-y-[-32px]"
+          className="flex items-center gap-2 translate-y-[-50px]"
         >
           <User2 color="white" />
           <h1 className="text-3xl text-white font-bold">
@@ -133,7 +133,7 @@ const Profile = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.9, ease: "easeIn" }}
-          className="translate-y-[-20px]"
+          className="translate-y-[-42px]"
         >
           <a
             href="/reset-password"
@@ -144,7 +144,7 @@ const Profile = () => {
         </motion.div>
       </motion.div>
       <Form
-        className="bg-white"
+        className="bg-white pt-2 pb-4"
         fields={profileFields}
         onSubmit={(e) => console.log(e)}
         inputTheme="dark"
@@ -153,7 +153,7 @@ const Profile = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.5 }}
-            className="flex items-center justify-center w-full gap-5 mt-6 col-span-full"
+            className="flex items-center justify-center w-full gap-5 mt-3 col-span-full"
           >
             <Button
               type="submit"
