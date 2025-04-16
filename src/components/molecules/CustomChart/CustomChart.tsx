@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
@@ -23,6 +23,7 @@ export function CustomChart({ chartData, type }: Props) {
       color: "hsl(var(--chart-1))",
     },
   } satisfies ChartConfig;
+
   // Format the data based on the selected type
   const formattedData = chartData.map((item, index) => {
     const time = `${index.toString().padStart(2, "0")}:00`;
@@ -39,67 +40,88 @@ export function CustomChart({ chartData, type }: Props) {
     }
   });
 
-  // Limit XAxis to max 5 ticks
+  // Compute the full chart width based on data length
+  const chartWidth = Math.max(330, formattedData.length * 45);
+
+  // Define a fixed width for the YAxis column – it should match your YAxis width prop (45)
+  const yAxisWidth = 50;
 
   return (
     <ChartContainer config={chartConfig}>
-      <AreaChart
-        accessibilityLayer
-        data={formattedData}
-        margin={{ left: 0, right: 18 }}
-      >
-        <CartesianGrid vertical={false} />
+      <div className="flex">
+        {/* Scrollable Chart Column */}
+        <div style={{ overflowX: "auto", width: "100%" }}>
+          <div style={{ width: chartWidth }}>
+            <BarChart data={formattedData} width={chartWidth} height={200}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="time"
+                tickLine={true}
+                tickMargin={10}
+                axisLine={true}
+                tickFormatter={(value) => value.slice(0, 5)}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="dashed" />}
+              />
+              <Bar dataKey="desktop" fill="#4b10c9" radius={4} barSize={15} />
+            </BarChart>
+          </div>
+        </div>
 
-        <XAxis
-          dataKey="time"
-          allowDataOverflow={false} // default, but good to be explicit
-          type="category"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 5)}
-        />
-
-        <YAxis
-          label={{
-            value:
-              type === "temperature" ? "°c" : type === "wave" ? "متر" : "m/s",
-            angle: -90,
-            position: "insideLeft",
+        {/* Fixed YAxis Column */}
+        <div
+          style={{
+            width: yAxisWidth,
+            position: "relative",
+            color: "black",
           }}
-          domain={["dataMin - 1", "dataMax + 1"]}
-          axisLine={false}
-          tickLine={false}
-          tickMargin={8}
-          width={40}
-        />
-
-        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-
-        <defs>
-          <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="5%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={0.8}
+        >
+          <svg
+            width={yAxisWidth}
+            height={170}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              zIndex: 1,
+            }}
+          >
+            {/* Draw a vertical line at the right edge of Y-axis container */}
+            <line
+              x1={yAxisWidth - 1}
+              y1=""
+              x2={yAxisWidth - 1}
+              y2="220"
+              stroke="#777"
+              strokeWidth="1"
             />
-            <stop
-              offset="95%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={0.1}
+          </svg>
+          <BarChart width={yAxisWidth} height={200} data={formattedData}>
+            <YAxis
+              // Keep the label on the YAxis (if you want it visible)
+              label={{
+                value:
+                  type === "temperature"
+                    ? "°c"
+                    : type === "wave"
+                      ? "متر"
+                      : "m/s",
+                angle: -90,
+                position: "insideLeft",
+              }}
+              domain={["dataMin - 1", "dataMax + 1"]}
+              dataKey={"desktop"}
+              axisLine={true}
+              tickLine={true}
+              tickMargin={28}
+              width={yAxisWidth}
+              tickFormatter={(value) => value.toString().slice(0, 4)}
             />
-          </linearGradient>
-        </defs>
-
-        <Area
-          dataKey="desktop"
-          type="natural"
-          fill="url(#fillDesktop)"
-          fillOpacity={0.4}
-          stroke="var(--color-desktop)"
-          stackId="a"
-        />
-      </AreaChart>
+          </BarChart>
+        </div>
+      </div>
     </ChartContainer>
   );
 }
