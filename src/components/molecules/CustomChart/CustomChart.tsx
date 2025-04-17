@@ -8,6 +8,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../../atoms";
+import { useEffect, useRef } from "react";
 
 type ChartType = "wave" | "wind" | "temperature";
 
@@ -20,10 +21,30 @@ export function CustomChart({ chartData, type }: Props) {
   const chartConfig = {
     desktop: {
       label: type, // can change dynamically
-      color: "hsl(var(--chart-1))",
+      color: "#4b10c9",
     },
   } satisfies ChartConfig;
-  // Format the data based on the selected type
+
+  const scrollContainerRef = useRef<HTMLDivElement>(null); // <-- add ref
+
+  useEffect(() => {
+    const handleScrollToStart = () => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "start",
+        });
+      }
+    };
+
+    handleScrollToStart();
+  }, [chartData]);
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = -1000; // Scroll to the start of the chart
+    }
+  }, [chartData]);
   const formattedData = chartData.map((item, index) => {
     const time = `${index.toString().padStart(2, "0")}:00`;
 
@@ -39,67 +60,94 @@ export function CustomChart({ chartData, type }: Props) {
     }
   });
 
-  // Limit XAxis to max 5 ticks
+  // Compute the full chart width based on data length
+  const chartWidth = Math.max(330, formattedData.length * 45);
+
+  // Define a fixed width for the YAxis column – it should match your YAxis width prop (45)
+  const yAxisWidth = 50;
 
   return (
     <ChartContainer config={chartConfig}>
-      <AreaChart
-        accessibilityLayer
-        data={formattedData}
-        margin={{ left: 0, right: 18 }}
-      >
-        <CartesianGrid vertical={false} />
+      <div className="flex">
+        {/* Scrollable Chart Column */}
+        <div
+          ref={scrollContainerRef}
+          style={{ overflowX: "auto", width: "100%" }}
+        >
+          <div style={{ width: chartWidth }}>
+            <AreaChart data={formattedData} width={chartWidth} height={200}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="time"
+                tickLine={true}
+                tickMargin={10}
+                axisLine={true}
+                interval={0}
+                padding={{ left: 15, right: 5 }}
+                tickFormatter={(value) => value.slice(0, 5)}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={<ChartTooltipContent indicator="dashed" />}
+              />
+              <defs>
+                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-desktop)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-desktop)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
+              <Area
+                dataKey="desktop"
+                type="natural"
+                fill="#4b10c9"
+                fillOpacity={0.4}
+                stroke="var(--color-desktop)"
+                stackId="a"
+              />
+            </AreaChart>
+          </div>
+        </div>
 
-        <XAxis
-          dataKey="time"
-          allowDataOverflow={false} // default, but good to be explicit
-          type="category"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 5)}
-        />
-
-        <YAxis
-          label={{
-            value:
-              type === "temperature" ? "°c" : type === "wave" ? "متر" : "m/s",
-            angle: -90,
-            position: "insideLeft",
+        {/* Fixed YAxis Column */}
+        <div
+          style={{
+            width: yAxisWidth,
+            position: "relative",
+            color: "black",
           }}
-          domain={["dataMin - 1", "dataMax + 1"]}
-          axisLine={false}
-          tickLine={false}
-          tickMargin={8}
-          width={40}
-        />
-
-        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-
-        <defs>
-          <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="5%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={0.8}
+        >
+          <AreaChart data={formattedData} width={55} height={170}>
+            <YAxis
+              // Keep the label on the YAxis (if you want it visible)
+              label={{
+                value:
+                  type === "temperature"
+                    ? "°c"
+                    : type === "wave"
+                      ? "متر"
+                      : "m/s",
+                angle: -90,
+                position: "insideLeft",
+              }}
+              domain={["dataMin - 1", "dataMax + 1"]}
+              dataKey={"desktop"}
+              axisLine={true}
+              tickLine={true}
+              tickMargin={28}
+              width={yAxisWidth}
+              tickFormatter={(value) => value.toString().slice(0, 4)}
             />
-            <stop
-              offset="95%"
-              stopColor="var(--color-desktop)"
-              stopOpacity={0.1}
-            />
-          </linearGradient>
-        </defs>
-
-        <Area
-          dataKey="desktop"
-          type="natural"
-          fill="url(#fillDesktop)"
-          fillOpacity={0.4}
-          stroke="var(--color-desktop)"
-          stackId="a"
-        />
-      </AreaChart>
+          </AreaChart>
+        </div>
+      </div>
     </ChartContainer>
   );
 }
