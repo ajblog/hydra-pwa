@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "../../atoms";
+import { useEffect, useRef } from "react";
 
 type ChartType = "wave" | "wind" | "temperature";
 
@@ -20,11 +21,30 @@ export function CustomChart({ chartData, type }: Props) {
   const chartConfig = {
     desktop: {
       label: type, // can change dynamically
-      color: "hsl(var(--chart-1))",
+      color: "#4b10c9",
     },
   } satisfies ChartConfig;
 
-  // Format the data based on the selected type
+  const scrollContainerRef = useRef<HTMLDivElement>(null); // <-- add ref
+
+  useEffect(() => {
+    const handleScrollToStart = () => {
+      if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "start",
+        });
+      }
+    };
+
+    handleScrollToStart();
+  }, [chartData]);
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = -1000; // Scroll to the start of the chart
+    }
+  }, [chartData]);
   const formattedData = chartData.map((item, index) => {
     const time = `${index.toString().padStart(2, "0")}:00`;
 
@@ -50,23 +70,49 @@ export function CustomChart({ chartData, type }: Props) {
     <ChartContainer config={chartConfig}>
       <div className="flex">
         {/* Scrollable Chart Column */}
-        <div style={{ overflowX: "auto", width: "100%" }}>
+        <div
+          ref={scrollContainerRef}
+          style={{ overflowX: "auto", width: "100%" }}
+        >
           <div style={{ width: chartWidth }}>
-            <BarChart data={formattedData} width={chartWidth} height={200}>
+            <AreaChart data={formattedData} width={chartWidth} height={200}>
               <CartesianGrid vertical={false} />
               <XAxis
                 dataKey="time"
                 tickLine={true}
                 tickMargin={10}
                 axisLine={true}
+                interval={0}
+                padding={{ left: 15, right: 5 }}
                 tickFormatter={(value) => value.slice(0, 5)}
               />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent indicator="dashed" />}
               />
-              <Bar dataKey="desktop" fill="#4b10c9" radius={4} barSize={15} />
-            </BarChart>
+              <defs>
+                <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
+                  <stop
+                    offset="5%"
+                    stopColor="var(--color-desktop)"
+                    stopOpacity={0.8}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor="var(--color-desktop)"
+                    stopOpacity={0.1}
+                  />
+                </linearGradient>
+              </defs>
+              <Area
+                dataKey="desktop"
+                type="natural"
+                fill="#4b10c9"
+                fillOpacity={0.4}
+                stroke="var(--color-desktop)"
+                stackId="a"
+              />
+            </AreaChart>
           </div>
         </div>
 
@@ -78,27 +124,7 @@ export function CustomChart({ chartData, type }: Props) {
             color: "black",
           }}
         >
-          <svg
-            width={yAxisWidth}
-            height={170}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              zIndex: 1,
-            }}
-          >
-            {/* Draw a vertical line at the right edge of Y-axis container */}
-            <line
-              x1={yAxisWidth - 1}
-              y1=""
-              x2={yAxisWidth - 1}
-              y2="220"
-              stroke="#777"
-              strokeWidth="1"
-            />
-          </svg>
-          <BarChart width={yAxisWidth} height={200} data={formattedData}>
+          <AreaChart data={formattedData} width={55} height={170}>
             <YAxis
               // Keep the label on the YAxis (if you want it visible)
               label={{
@@ -119,7 +145,7 @@ export function CustomChart({ chartData, type }: Props) {
               width={yAxisWidth}
               tickFormatter={(value) => value.toString().slice(0, 4)}
             />
-          </BarChart>
+          </AreaChart>
         </div>
       </div>
     </ChartContainer>
