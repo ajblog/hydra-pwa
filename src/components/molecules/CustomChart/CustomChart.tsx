@@ -83,7 +83,7 @@ export function CustomChart({ chartData, type }: Props) {
                 tickMargin={10}
                 axisLine={true}
                 interval={0}
-                padding={{ left: 15, right: 5 }}
+                padding={{ left: 15, right: 15 }}
                 tickFormatter={(value) => value.slice(0, 5)}
               />
               <ChartTooltip
