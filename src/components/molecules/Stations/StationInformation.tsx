@@ -2,7 +2,7 @@
 import { ChevronLeft } from "lucide-react";
 import { StationInformationPropTypes } from "./station.type";
 import { Tab, WeatherInfoCard } from "../../atoms";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import wave from "../../../assets/images/wave-icon.png";
 import temp from "../../../assets/images/temp-Icon.png";
 import wind from "../../../assets/images/Wind-Icon.png";
@@ -18,32 +18,32 @@ const StationInformation = ({
   setStep,
 }: StationInformationPropTypes) => {
   const [isSelected, setIsSelected] = useState("موج");
-  const [selectedDay, setSelectedDay] = useState("شنبه");
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   const query = useQueryClient();
   const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
     "stations",
   ]);
-  const selectedStationName = stationsInfo?.filter(
+  const selectedStationName = stationsInfo?.find(
     (item) => item.display_name === selectedStation
   );
+
   const { data, isLoading } = useQuery({
     queryKey: ["station-detail", selectedStation],
+    enabled: !!selectedStationName, // only fetch if station is available
     queryFn: () =>
-      getSingleStationDetails({ station_name: selectedStationName![0].name }),
+      getSingleStationDetails({ station_name: selectedStationName!.name }),
   });
 
-  const selectedDayDetail = data?.weather_data![0].days.filter(
-    (item: any) => item.day_name === selectedDay
-  );
+  // ✅ Set default selected day when data loads
+  useEffect(() => {
+    if (data?.weather_data?.[0]?.days?.length) {
+      setSelectedDay(data.weather_data[0].days[0].day_name);
+    }
+  }, [data]);
 
-  // useEffect(() => {
-  //   return () => {
-  //     setSelectedDay(data?.weather_data![0].days[0].day_name);
-  //   };
-  // }, []);
-
-  if (isLoading)
+  // Guard if data still loading
+  if (isLoading || !data) {
     return (
       <div className="flex my-4 items-center justify-center">
         <img
@@ -52,9 +52,15 @@ const StationInformation = ({
           width={160}
           height={350}
           className="w-[160px] h-[360px] m-auto"
-        />{" "}
+        />
       </div>
     );
+  }
+
+  const selectedDayDetail = data.weather_data[0].days.find(
+    (item: any) => item.day_name === selectedDay
+  );
+
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between border-b-[4px] border-b-[#EAEAEA] pb-5">
@@ -63,6 +69,7 @@ const StationInformation = ({
         </span>
         <ChevronLeft onClick={() => setStep("selection")} color="#A6A6A6" />
       </div>
+
       <div className="flex items-center justify-center px-5 gap-9 mt-3.5">
         {["موج", "باد", "دما"].map((item, index) => (
           <Tab
@@ -73,16 +80,17 @@ const StationInformation = ({
           />
         ))}
       </div>
+
       <div className="flex items-center gap-1 w-full mt-7">
-        {data?.weather_data![0].days.map((item: any, index: number) => (
+        {data.weather_data[0].days.map((item: any, index: number) => (
           <WeatherInfoCard
             key={index}
             data={
               isSelected === "موج"
-                ? item.weather_info[0].wave.hmax + "m"
+                ? `${item.weather_info[0]?.wave?.hmax ?? "-"}m`
                 : isSelected === "باد"
-                  ? item.weather_info[0].wind.wind_speed + "m/s"
-                  : item.weather_info[0].temperature.temperature + "°c"
+                  ? `${item.weather_info[0]?.wind?.wind_speed ?? "-"}m/s`
+                  : `${item.weather_info[0]?.temperature?.temperature ?? "-"}°c`
             }
             title={item.day_name}
             icon={
@@ -93,17 +101,24 @@ const StationInformation = ({
           />
         ))}
       </div>
+
       <div className="mt-4">
-        <CustomChart
-          chartData={selectedDayDetail[0].weather_info}
-          type={
-            isSelected === "موج"
-              ? "wave"
-              : isSelected === "باد"
-                ? "wind"
-                : "temperature"
-          }
-        />
+        {selectedDayDetail ? (
+          <CustomChart
+            chartData={selectedDayDetail.weather_info}
+            type={
+              isSelected === "موج"
+                ? "wave"
+                : isSelected === "باد"
+                  ? "wind"
+                  : "temperature"
+            }
+          />
+        ) : (
+          <div className="text-center text-gray-500">
+            داده‌ای برای این روز موجود نیست.
+          </div>
+        )}
       </div>
     </div>
   );
