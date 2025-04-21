@@ -50,7 +50,7 @@ const DirectionStations = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeStationIndex, setActiveStationIndex] = useState<number>(0);
   const [isSelected, setIsSelected] = useState("موج");
-  const [selectedDay, setSelectedDay] = useState("شنبه");
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   const getNextStation = (direction: "left" | "right") => {
     const currentIndex = activeStationIndex;
@@ -86,6 +86,13 @@ const DirectionStations = ({
       );
     }
   }, [activeStationIndex, setSelectedStationContext, routesData]);
+
+  // ✅ Set default selected day when data loads
+  useEffect(() => {
+    if (stationDetail?.weather_data?.[0]?.days?.length) {
+      setSelectedDay(stationDetail.weather_data[0].days[0].day_name);
+    }
+  }, [stationDetail]);
 
   const selectedDayDetail = stationDetail?.weather_data![0].days.filter(
     (item: any) => item.day_name === selectedDay
@@ -185,16 +192,16 @@ const DirectionStations = ({
                   isSelected === "موج"
                     ? item.weather_info[0].wave.hmax + "m"
                     : isSelected === "باد"
-                    ? item.weather_info[0].wind.wind_speed + "m/s"
-                    : item.weather_info[0].temperature.temperature + "°c"
+                      ? item.weather_info[0].wind.wind_speed + "m/s"
+                      : item.weather_info[0].temperature.temperature + "°c"
                 }
                 title={item.day_name}
                 icon={
                   isSelected === "موج"
                     ? wave
                     : isSelected === "باد"
-                    ? wind
-                    : temp
+                      ? wind
+                      : temp
                 }
                 isSelected={selectedDay === item.day_name}
                 setSelectedDay={setSelectedDay}
@@ -211,8 +218,8 @@ const DirectionStations = ({
               isSelected === "موج"
                 ? "wave"
                 : isSelected === "باد"
-                ? "wind"
-                : "temperature"
+                  ? "wind"
+                  : "temperature"
             }
             chartData={selectedDayDetail?.[0].weather_info}
           />
