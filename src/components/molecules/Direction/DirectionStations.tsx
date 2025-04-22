@@ -71,6 +71,21 @@ const DirectionStations = ({
     setActiveStationIndex(newIndex);
   };
 
+  const shouldShowLabel = (index: number, totalStations: number): boolean => {
+    if (totalStations <= 7) return true;
+
+    // Always show origin and destination
+    if (index === 0 || index === totalStations - 1) return true;
+
+    const middleCount = totalStations - 2;
+
+    const spacing = Math.ceil(
+      middleCount / Math.min(Math.floor(totalStations / 2), 6)
+    );
+
+    return (index - 1) % spacing === 0;
+  }; // this function calculates labels based on the stations count dynamiclly
+
   const { data: stationDetail, isLoading } = useQuery({
     queryKey: ["station-detail", routesData, activeStationIndex],
     queryFn: () =>
@@ -113,7 +128,7 @@ const DirectionStations = ({
     <>
       <div
         ref={containerRef}
-        className="flex justify-between items-center w-full my-5 pt-3"
+        className="flex justify-between items-start w-full my-5 pt-3"
       >
         {routesData.route.map((station: StationsTypes, index: number) => (
           <React.Fragment key={`dot-${index}`}>
@@ -137,17 +152,23 @@ const DirectionStations = ({
                   }`}
                 />
               </div>
-              {routesData.route.length < 7 && (
-                <div className="mt-2 text-[10px] text-gray-700 text-center w-max">
+              <div className="mt-2 text-[10px] text-gray-700 text-center w-max h-[1.25rem]">
+                <span
+                  className={
+                    shouldShowLabel(index, routesData.route.length)
+                      ? ""
+                      : "invisible"
+                  }
+                >
                   {station.display_name}
-                </div>
-              )}
+                </span>
+              </div>
             </div>
 
             {/* Dashed Line */}
             {index < routesData.route.length - 1 && (
               <div
-                className="flex-grow h-[2px]"
+                className="flex-grow h-[2px] mt-4 -translate-y-2"
                 style={{
                   backgroundImage:
                     "repeating-linear-gradient(to right, #9ca3af 0px, #9ca3af 1px, transparent 1px, transparent 3px)",
