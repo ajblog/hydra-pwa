@@ -61,8 +61,8 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
     { id: number; name: string; display_name: string; coords: LatLngTuple }[]
   >([]);
 
-  const center: LatLngExpression = [27.10664, 51.271204]; // Persian Gulf
-  const zoom = 7;
+  const center: LatLngExpression = [27.10664, 52.271204]; // Persian Gulf
+  const zoom = 6;
 
   const handleMarkerClick = (station: string) => {
     setSelectedStationContext(station);
