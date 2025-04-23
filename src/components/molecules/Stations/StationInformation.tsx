@@ -80,26 +80,28 @@ const StationInformation = ({
           />
         ))}
       </div>
-
       <div className="flex items-center gap-1 w-full mt-7">
-        {data.weather_data[0].days.map((item: any, index: number) => (
-          <WeatherInfoCard
-            key={index}
-            data={
-              isSelected === "موج"
-                ? `${item.weather_info[0]?.wave?.hmax ?? "-"}m`
-                : isSelected === "باد"
-                  ? `${item.weather_info[0]?.wind?.wind_speed ?? "-"}m/s`
-                  : `${item.weather_info[0]?.temperature?.temperature ?? "-"}°c`
-            }
-            title={item.day_name}
-            icon={
-              isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp
-            }
-            isSelected={selectedDay === item.day_name}
-            setSelectedDay={setSelectedDay}
-          />
-        ))}
+        {data.weather_data[0].days
+          .slice()
+          .reverse()
+          .map((item: any, index: number) => (
+            <WeatherInfoCard
+              key={index}
+              data={
+                isSelected === "موج"
+                  ? `${item.weather_info[0]?.wave?.hmax ?? "-"}m`
+                  : isSelected === "باد"
+                    ? `${item.weather_info[0]?.wind?.wind_speed ?? "-"}m/s`
+                    : `${item.weather_info[0]?.temperature?.temperature ?? "-"}°c`
+              }
+              title={item.day_name}
+              icon={
+                isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp
+              }
+              isSelected={selectedDay === item.day_name}
+              setSelectedDay={setSelectedDay}
+            />
+          ))}
       </div>
 
       <div className="mt-4">

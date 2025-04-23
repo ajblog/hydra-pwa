@@ -7,6 +7,7 @@ import { StationsTypes } from "../../../types";
 
 const StationSelection = ({
   selectedStation,
+  selectedDirectionStation,
   setSelectedStation,
   setStationType,
   title,
@@ -33,6 +34,7 @@ const StationSelection = ({
             className={`flex items-center space-x-2 py-4 px-3 border-b-[4px] border-b-[#EAEAEA] ${index % 2 ? "" : "pl-0"} `}
           >
             <RadioGroupItem
+              disabled={item.display_name === selectedDirectionStation}
               onClick={(e) => {
                 setSelectedStation(e.currentTarget.value);
                 setSelectedStationContext(e.currentTarget.value);
@@ -42,7 +44,7 @@ const StationSelection = ({
               id={index.toString()}
             />
             <label
-              className={`w-full text-sm py-1 ${index % 2 ? "" : "border-l-[4px] border-l-[#EAEAEA]"}`}
+              className={`w-full text-sm py-1 ${index % 2 ? "" : "border-l-[4px] border-l-[#EAEAEA]"} ${item.display_name === selectedDirectionStation ? "text-[#ccc]" : ""}`}
               htmlFor={index.toString()}
             >
               ایستگاه {item.display_name}

@@ -66,6 +66,15 @@ export function CustomChart({ chartData, type }: Props) {
   // Define a fixed width for the YAxis column – it should match your YAxis width prop (45)
   const yAxisWidth = 50;
 
+  const min = Math.floor(Math.min(...formattedData.map((d) => d.desktop)) - 1);
+  const max = Math.ceil(Math.max(...formattedData.map((d) => d.desktop)) + 1);
+  const interval = 1;
+
+  const ticks = Array.from(
+    { length: Math.floor((max - min) / interval) + 1 },
+    (_, i) => min + i * interval
+  );
+
   return (
     <ChartContainer config={chartConfig}>
       <div className="flex">
@@ -86,6 +95,8 @@ export function CustomChart({ chartData, type }: Props) {
                 padding={{ left: 15, right: 15 }}
                 tickFormatter={(value) => value.slice(0, 5)}
               />
+              {/* ✨ Hidden YAxis just to align the grid lines */}
+              <YAxis domain={[min, max]} ticks={ticks} hide={true} />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent indicator="dashed" />}
@@ -93,12 +104,12 @@ export function CustomChart({ chartData, type }: Props) {
               <defs>
                 <linearGradient id="fillDesktop" x1="0" y1="0" x2="0" y2="1">
                   <stop
-                    offset="5%"
+                    offset="0%"
                     stopColor="var(--color-desktop)"
                     stopOpacity={0.8}
                   />
                   <stop
-                    offset="95%"
+                    offset="100%"
                     stopColor="var(--color-desktop)"
                     stopOpacity={0.1}
                   />
@@ -107,20 +118,23 @@ export function CustomChart({ chartData, type }: Props) {
               <Area
                 dataKey="desktop"
                 type="natural"
-                fill="#4b10c9"
-                fillOpacity={0.4}
+                fill="url(#fillDesktop)"
                 stroke="var(--color-desktop)"
-                stackId="a"
+                strokeWidth={2}
+                fillOpacity={1}
               />
             </AreaChart>
           </div>
         </div>
 
-        {/* Fixed YAxis Column */}
+        {/* Sticky YAxis Column */}
         <div
           style={{
             width: yAxisWidth,
-            position: "relative",
+            position: "sticky",
+            left: 0,
+            backgroundColor: "white",
+            zIndex: 1,
             color: "black",
           }}
         >
@@ -137,7 +151,8 @@ export function CustomChart({ chartData, type }: Props) {
                 angle: -90,
                 position: "insideLeft",
               }}
-              domain={["dataMin - 1", "dataMax + 1"]}
+              domain={[formattedData[0]?.desktop || min, max]}
+              ticks={ticks}
               dataKey={"desktop"}
               axisLine={true}
               tickLine={true}
