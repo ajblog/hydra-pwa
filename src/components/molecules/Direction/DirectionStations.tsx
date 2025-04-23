@@ -74,14 +74,17 @@ const DirectionStations = ({
   const shouldShowLabel = (index: number, totalStations: number): boolean => {
     if (totalStations <= 7) return true;
 
-    // Always show origin and destination
-    if (index === 0 || index === totalStations - 1) return true;
+    const isEven = totalStations % 2 === 0;
 
-    const middleCount = totalStations - 2;
+    // Hide origin and destination always
+    if (index === 0 || index === totalStations - 1) return false;
 
-    const spacing = Math.ceil(
-      middleCount / Math.min(Math.floor(totalStations / 2), 6)
-    );
+    // Extra rule: for even counts, always show second and second-last
+    if (isEven && (index === 1 || index === totalStations - 2)) return true;
+
+    const middleStations = totalStations - 2;
+    const visibleCount = Math.max(2, Math.floor(middleStations / 1.5));
+    const spacing = Math.ceil(middleStations / visibleCount);
 
     return (index - 1) % spacing === 0;
   }; // this function calculates labels based on the stations count dynamiclly
@@ -134,7 +137,7 @@ const DirectionStations = ({
           <React.Fragment key={`dot-${index}`}>
             {/* Dot */}
             <div
-              className="flex flex-col items-center cursor-pointer shrink-0 z-10"
+              className="flex flex-col items-center cursor-pointer shrink-0 z-10  w-[1.5rem]"
               onClick={() => setActiveStationIndex(index)}
             >
               <div
@@ -152,7 +155,7 @@ const DirectionStations = ({
                   }`}
                 />
               </div>
-              <div className="mt-2 text-[10px] text-gray-700 text-center w-max h-[1.25rem]">
+              <div className="mt-2 text-[10px] text-gray-700 text-center w-full whitespace-nowrap h-[1.25rem]">
                 <span
                   className={
                     shouldShowLabel(index, routesData.route.length)
