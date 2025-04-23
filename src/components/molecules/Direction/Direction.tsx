@@ -48,6 +48,7 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
       <StationSelection
         title="ایستگاه مبدا موردنظر خود را از لیست زیر انتخاب کنید."
         selectedStation={originStation}
+      selectedDirectionStation={destinationStation}
         setSelectedStation={setOriginStation}
         setStationType={setStationType}
       />
@@ -57,6 +58,7 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
       <StationSelection
         title="ایستگاه مقصد موردنظر خود را از لیست زیر انتخاب کنید."
         selectedStation={destinationStation}
+        selectedDirectionStation={originStation}
         setSelectedStation={setDestinationStation}
         setStationType={setStationType}
       />
