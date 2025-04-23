@@ -1,10 +1,11 @@
 import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { LatLngExpression, LatLngTuple } from "leaflet";
 import L from "leaflet";
 import loadingWheel from "../../assets/images/loading.gif";
 import { useStationContext } from "../../contexts/stationContext";
 import { StationsTypes } from "../../types";
+import { LocateFixed } from "lucide-react";
 
 const customIcon = new L.DivIcon({
   html: `<div class="w-4 h-4 rounded-full border-[2px] border-red-500 flex items-center justify-center">
@@ -14,6 +15,41 @@ const customIcon = new L.DivIcon({
   iconSize: [24, 24],
   iconAnchor: [12, 12],
 });
+
+const LocateMe = ({
+  setUserLocation,
+}: {
+  setUserLocation: React.Dispatch<SetStateAction<LatLngTuple | null>>;
+}) => {
+  return (
+    <button
+      onClick={() => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const coords: LatLngTuple = [
+                position.coords.latitude,
+                position.coords.longitude,
+              ];
+              setUserLocation(coords);
+            },
+            (err) => {
+              console.error("💀 Location access denied:", err.message);
+            },
+            {
+              enableHighAccuracy: true,
+            }
+          );
+        } else {
+          alert("Your browser doesn't support geolocation.");
+        }
+      }}
+      className="absolute bottom-32 right-4 z-[600] bg-[#5b55ed] p-4 rounded-full shadow-2xl transition"
+    >
+      <LocateFixed color="white" />
+    </button>
+  );
+};
 
 const selectedIcon = new L.DivIcon({
   html: `
@@ -32,29 +68,34 @@ const selectedIcon = new L.DivIcon({
   iconAnchor: [20, 20],
 });
 
-const RecenterMap = ({ coords }: { coords: LatLngTuple }) => {
+const RecenterMap = ({
+  coords,
+  zoomLevel,
+}: {
+  coords: LatLngTuple;
+  zoomLevel?: number;
+}) => {
   const map = useMap();
 
   useEffect(() => {
     if (coords) {
-      // Convert latlng to pixel point
       const targetPoint = map.project(coords, map.getZoom());
-      // Offset it upward (e.g. 100px)
       const offsetY = 200;
       const offsetPoint = L.point(targetPoint.x, targetPoint.y + offsetY);
       const offsetLatLng = map.unproject(offsetPoint, map.getZoom());
 
-      map.setView(offsetLatLng, map.getZoom(), {
+      map.setView(offsetLatLng, zoomLevel ?? map.getZoom(), {
         animate: true,
       });
     }
-  }, [coords, map]);
+  }, [coords, zoomLevel, map]);
 
   return null;
 };
 
 const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
   const [loading, setLoading] = useState(true);
+  const [userLocation, setUserLocation] = useState<LatLngTuple | null>(null);
   const { selectedStationContext, setSelectedStationContext } =
     useStationContext();
   const [stationsInfo, setStationsInfo] = useState<
@@ -81,6 +122,8 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
 
     fetchStations();
   }, [data]);
+
+  console.log(userLocation, "userLocation");
 
   return (
     <div className="relative w-screen h-screen">
@@ -127,6 +170,8 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
             }
           ></Marker>
         ))}
+        <LocateMe setUserLocation={setUserLocation} />
+        {userLocation && <RecenterMap coords={userLocation} zoomLevel={14} />}
       </MapContainer>
     </div>
   );
