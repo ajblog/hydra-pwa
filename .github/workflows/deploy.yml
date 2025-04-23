@@ -23,6 +23,7 @@ jobs:
       - name: Deploy via SSH
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            export PATH=/root/.nvm/versions/node/v18.20.5/bin:$PATH
             cd ${{ secrets.PROJECT_PATH }}
             pm2 stop hydra-app
             pnpm install
