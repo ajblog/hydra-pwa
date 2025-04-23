@@ -18,7 +18,9 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
   >(null);
 
   const [directionStep, setDirectionStep] = useState<"selection" | "overview">(
-    "selection"
+    sessionStorage.getItem("origin") && sessionStorage.getItem("destination")
+      ? "overview"
+      : "selection"
   );
 
   const query = useQueryClient();
@@ -43,14 +45,24 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
     setHideButtons(!shouldShowButtons);
   }, [directionStep, stationType, setHideButtons]);
 
+  useEffect(() => {
+    if (sessionStorage.getItem("origin")) {
+      setOriginStation(sessionStorage.getItem("origin") || "");
+    }
+    if (sessionStorage.getItem("destination")) {
+      setDestinationStation(sessionStorage.getItem("destination") || "");
+    }
+  }, []);
+
   if (stationType === "origin") {
     return (
       <StationSelection
         title="ایستگاه مبدا موردنظر خود را از لیست زیر انتخاب کنید."
         selectedStation={originStation}
-      selectedDirectionStation={destinationStation}
+        selectedDirectionStation={destinationStation}
         setSelectedStation={setOriginStation}
         setStationType={setStationType}
+        stationType={stationType}
       />
     );
   } else if (stationType === "destination") {
@@ -61,6 +73,7 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
         selectedDirectionStation={originStation}
         setSelectedStation={setDestinationStation}
         setStationType={setStationType}
+        stationType={stationType}
       />
     );
   }

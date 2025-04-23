@@ -11,6 +11,7 @@ const StationSelection = ({
   setSelectedStation,
   setStationType,
   title,
+  stationType,
 }: StationSelectionPropTypes) => {
   const { setSelectedStationContext } = useStationContext();
 
@@ -18,6 +19,7 @@ const StationSelection = ({
   const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
     "stations",
   ]);
+
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between">
@@ -39,6 +41,11 @@ const StationSelection = ({
                 setSelectedStation(e.currentTarget.value);
                 setSelectedStationContext(e.currentTarget.value);
                 setStationType(null);
+                if (stationType === "destination") {
+                  sessionStorage.setItem(stationType, e.currentTarget.value);
+                } else if (stationType === "origin") {
+                  sessionStorage.setItem(stationType, e.currentTarget.value);
+                }
               }}
               value={item.display_name}
               id={index.toString()}
