@@ -46,11 +46,25 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
   }, [directionStep, stationType, setHideButtons]);
 
   useEffect(() => {
-    if (sessionStorage.getItem("origin")) {
-      setOriginStation(sessionStorage.getItem("origin") || "");
+    const originRaw = sessionStorage.getItem("origin");
+    const destinationRaw = sessionStorage.getItem("destination");
+
+    if (originRaw) {
+      try {
+        const parsedOrigin = JSON.parse(originRaw);
+        setOriginStation(parsedOrigin.display_name || "");
+      } catch (err) {
+        console.error("Failed to parse origin:", err);
+      }
     }
-    if (sessionStorage.getItem("destination")) {
-      setDestinationStation(sessionStorage.getItem("destination") || "");
+
+    if (destinationRaw) {
+      try {
+        const parsedDestination = JSON.parse(destinationRaw);
+        setDestinationStation(parsedDestination.display_name || "");
+      } catch (err) {
+        console.error("Failed to parse destination:", err);
+      }
     }
   }, []);
 

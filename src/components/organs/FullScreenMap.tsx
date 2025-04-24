@@ -1,4 +1,10 @@
-import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  Polyline,
+  TileLayer,
+  useMap,
+} from "react-leaflet";
 import { SetStateAction, useEffect, useState } from "react";
 import { LatLngExpression, LatLngTuple } from "leaflet";
 import L from "leaflet";
@@ -6,6 +12,8 @@ import loadingWheel from "../../assets/images/loading.gif";
 import { useStationContext } from "../../contexts/stationContext";
 import { StationsTypes } from "../../types";
 import { LocateFixed } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { getRoutesInformation } from "../../services";
 
 const customIcon = new L.DivIcon({
   html: `<div class="w-4 h-4 rounded-full border-[2px] border-red-500 flex items-center justify-center">
@@ -95,12 +103,21 @@ const RecenterMap = ({
 
 const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
   const [loading, setLoading] = useState(true);
+    // const [dashOffset, setDashOffset] = useState(0);
   const [userLocation, setUserLocation] = useState<LatLngTuple | null>(null);
   const { selectedStationContext, setSelectedStationContext } =
     useStationContext();
   const [stationsInfo, setStationsInfo] = useState<
     { id: number; name: string; display_name: string; coords: LatLngTuple }[]
   >([]);
+  const [originStation, setOriginStation] = useState<{
+    name: string;
+    display_name: string;
+  } | null>(null);
+  const [destinationStation, setDestinationStation] = useState<{
+    name: string;
+    display_name: string;
+  } | null>(null);
 
   const center: LatLngExpression = [27.10664, 52.271204]; // Persian Gulf
   const zoom = 6;
@@ -123,7 +140,54 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
     fetchStations();
   }, [data]);
 
-  console.log(userLocation, "userLocation");
+  useEffect(() => {
+    const updateStations = () => {
+      const origin = sessionStorage.getItem("origin");
+      const destination = sessionStorage.getItem("destination");
+
+      setOriginStation(origin ? JSON.parse(origin) : null);
+      setDestinationStation(destination ? JSON.parse(destination) : null);
+    };
+
+    updateStations();
+
+    window.addEventListener("originChange", updateStations);
+    window.addEventListener("destinationChange", updateStations);
+
+    return () => {
+      window.removeEventListener("originChange", updateStations);
+      window.removeEventListener("destinationChange", updateStations);
+    };
+  }, []);
+
+  const { data: routeData } = useQuery({
+    queryKey: ["routes", originStation?.name, destinationStation?.name], // smart key
+    enabled: !!originStation && !!destinationStation, // only run when both exist
+    queryFn: () =>
+      getRoutesInformation({
+        start: originStation!.name,
+        end: destinationStation!.name,
+      }),
+  });
+
+
+  const coordinates =
+    routeData?.route.map(
+      (station: { lat: number; lon: number }) => [station.lat , station.lon] as LatLngTuple
+    ) ?? [];
+
+
+
+
+  // useEffect(() => {
+  //   let offset = 0;
+  //   const interval = setInterval(() => {
+  //     offset -= 1;
+  //     setDashOffset(offset);
+  //   }, 60); // Adjust speed here
+
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <div className="relative w-screen h-screen">
@@ -170,6 +234,18 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
             }
           ></Marker>
         ))}
+        {coordinates && (
+          <Polyline
+            positions={coordinates}
+            pathOptions={{
+              color: "#5b55ed",
+              weight: 4,
+              dashArray: "6 12", // Dashed line pattern (10px dash, 10px gap)
+              // dashOffset: `${dashOffset}`,
+            }}
+          />
+        )}
+
         <LocateMe setUserLocation={setUserLocation} />
         {userLocation && <RecenterMap coords={userLocation} zoomLevel={14} />}
       </MapContainer>

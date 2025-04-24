@@ -38,18 +38,21 @@ const StationSelection = ({
             <RadioGroupItem
               disabled={item.display_name === selectedDirectionStation}
               onClick={(e) => {
-                setSelectedStation(e.currentTarget.value);
-                setSelectedStationContext(e.currentTarget.value);
-                setStationType(null);
-                if (stationType === "destination") {
-                  sessionStorage.setItem(stationType, e.currentTarget.value);
-                } else if (stationType === "origin") {
-                  sessionStorage.setItem(stationType, e.currentTarget.value);
+                const value = e.currentTarget.value;
+                setSelectedStation(value);
+                setSelectedStationContext(value);
+                if (stationType === "destination" || stationType === "origin") {
+                  const selectedStation = JSON.stringify(item);
+                  sessionStorage.setItem(stationType, selectedStation);
+                  const customEventName = `${stationType}Change`;
+                  window.dispatchEvent(new Event(customEventName));
                 }
+                setStationType(null);
               }}
               value={item.display_name}
               id={index.toString()}
             />
+
             <label
               className={`w-full text-sm py-1 ${index % 2 ? "" : "border-l-[4px] border-l-[#EAEAEA]"} ${item.display_name === selectedDirectionStation ? "text-[#ccc]" : ""}`}
               htmlFor={index.toString()}
