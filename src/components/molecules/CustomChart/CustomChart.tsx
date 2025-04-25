@@ -103,7 +103,13 @@ export function CustomChart({ chartData, type, startDateTime }: Props) {
                 tickFormatter={(value) => value.slice(0, 5)}
               />
               {/* ✨ Hidden YAxis just to align the grid lines */}
-              <YAxis domain={[min, max]} ticks={ticks} hide={true} />
+              <YAxis
+                domain={[min, max]}
+                ticks={ticks}
+                hide={true}
+                scale="linear" 
+                reversed={false}
+              />
               <ChartTooltip
                 cursor={false}
                 content={<ChartTooltipContent indicator="dashed" />}

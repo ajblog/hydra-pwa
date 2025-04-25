@@ -161,7 +161,6 @@ const Profile = () => {
               className="w-full py-6 text-base font-bold"
               onClick={handleSubmit(
                 async (data) => {
-                  console.log(data);
                   if ("phonenumber" in data) {
                     data.phonenumber = `+98${data.phonenumber}`;
                   }

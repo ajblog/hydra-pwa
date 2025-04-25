@@ -109,7 +109,6 @@ const ResetPassword = () => {
                   variant={"secondary"}
                   onClick={handleSubmit(
                     async (data) => {
-                      console.log(data);
                       try {
                         await changePasswordApi(data);
                         setIsSuccess(true);
