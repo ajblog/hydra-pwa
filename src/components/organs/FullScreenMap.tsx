@@ -152,7 +152,7 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
           />
         )}
 
-        <LocateMe setUserLocation={setUserLocation} />
+        {/* <LocateMe setUserLocation={setUserLocation} /> */}
         {userLocation && <RecenterMap coords={userLocation} zoomLevel={14} />}
       </MapContainer>
     </div>
