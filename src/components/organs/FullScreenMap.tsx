@@ -1,109 +1,16 @@
-import {
-  MapContainer,
-  Marker,
-  Polyline,
-  TileLayer,
-  useMap,
-} from "react-leaflet";
-import { SetStateAction, useEffect, useState } from "react";
+import { MapContainer, Marker, Polyline, TileLayer } from "react-leaflet";
+import { useEffect, useState } from "react";
 import { LatLngExpression, LatLngTuple } from "leaflet";
-import L from "leaflet";
 import loadingWheel from "../../assets/images/loading.gif";
 import { useStationContext } from "../../contexts/stationContext";
 import { StationsTypes } from "../../types";
-import { LocateFixed } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getRoutesInformation } from "../../services";
-
-const customIcon = new L.DivIcon({
-  html: `<div class="w-4 h-4 rounded-full border-[2px] border-red-500 flex items-center justify-center">
-           <div class="w-2 h-2 rounded-full bg-red-500"></div>
-         </div>`,
-  className: "bg-transparent",
-  iconSize: [24, 24],
-  iconAnchor: [12, 12],
-});
-
-const LocateMe = ({
-  setUserLocation,
-}: {
-  setUserLocation: React.Dispatch<SetStateAction<LatLngTuple | null>>;
-}) => {
-  return (
-    <button
-      onClick={() => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const coords: LatLngTuple = [
-                position.coords.latitude,
-                position.coords.longitude,
-              ];
-              setUserLocation(coords);
-            },
-            (err) => {
-              console.error("💀 Location access denied:", err.message);
-            },
-            {
-              enableHighAccuracy: true,
-            }
-          );
-        } else {
-          alert("Your browser doesn't support geolocation.");
-        }
-      }}
-      className="absolute bottom-32 right-4 z-[600] bg-[#5b55ed] p-4 rounded-full shadow-2xl transition"
-    >
-      <LocateFixed color="white" />
-    </button>
-  );
-};
-
-const selectedIcon = new L.DivIcon({
-  html: `
-    <div class="relative w-8 h-8 flex items-center justify-center">
-      <!-- Outer ripple layers -->
-      <div class="absolute w-full h-full rounded-full border-2 border-red-500 animate-ping"></div>
-      <div class="absolute w-full h-full rounded-full border-2 border-red-500 animate-ping [animation-delay:200ms]"></div>
-      <div class="absolute w-full h-full rounded-full border-2 border-red-500 animate-ping [animation-delay:400ms]"></div>
-
-      <!-- Inner dot -->
-      <div class="w-4 h-4 rounded-full bg-red-500 z-10"></div>
-    </div>
-  `,
-  className: "bg-transparent",
-  iconSize: [40, 40],
-  iconAnchor: [20, 20],
-});
-
-const RecenterMap = ({
-  coords,
-  zoomLevel,
-}: {
-  coords: LatLngTuple;
-  zoomLevel?: number;
-}) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (coords) {
-      const targetPoint = map.project(coords, map.getZoom());
-      const offsetY = 200;
-      const offsetPoint = L.point(targetPoint.x, targetPoint.y + offsetY);
-      const offsetLatLng = map.unproject(offsetPoint, map.getZoom());
-
-      map.setView(offsetLatLng, zoomLevel ?? map.getZoom(), {
-        animate: true,
-      });
-    }
-  }, [coords, zoomLevel, map]);
-
-  return null;
-};
+import { customIcon, LocateMe, RecenterMap, selectedIcon } from "../molecules";
 
 const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
   const [loading, setLoading] = useState(true);
-    // const [dashOffset, setDashOffset] = useState(0);
+  const [dashOffset, setDashOffset] = useState(0);
   const [userLocation, setUserLocation] = useState<LatLngTuple | null>(null);
   const { selectedStationContext, setSelectedStationContext } =
     useStationContext();
@@ -128,7 +35,7 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
 
   useEffect(() => {
     const fetchStations = async () => {
-      const mapped = data.map((station, index) => ({
+      const mapped = data?.map((station, index) => ({
         id: index + 1,
         name: station.name,
         display_name: station.display_name,
@@ -170,24 +77,21 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
       }),
   });
 
-
   const coordinates =
     routeData?.route.map(
-      (station: { lat: number; lon: number }) => [station.lat , station.lon] as LatLngTuple
+      (station: { lat: number; lon: number }) =>
+        [station.lat, station.lon] as LatLngTuple
     ) ?? [];
 
+  useEffect(() => {
+    let offset = 0;
+    const interval = setInterval(() => {
+      offset -= 1;
+      setDashOffset(offset);
+    }, 60); // Adjust speed here
 
-
-
-  // useEffect(() => {
-  //   let offset = 0;
-  //   const interval = setInterval(() => {
-  //     offset -= 1;
-  //     setDashOffset(offset);
-  //   }, 60); // Adjust speed here
-
-  //   return () => clearInterval(interval);
-  // }, []);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="relative w-screen h-screen">
@@ -220,7 +124,7 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
             }
           />
         )}
-        {stationsInfo.map((loc) => (
+        {stationsInfo?.map((loc) => (
           <Marker
             eventHandlers={{
               click: () => handleMarkerClick(loc.display_name), // Handle click event
@@ -240,8 +144,8 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
             pathOptions={{
               color: "#5b55ed",
               weight: 4,
-              dashArray: "6 12", // Dashed line pattern (10px dash, 10px gap)
-              // dashOffset: `${dashOffset}`,
+              dashArray: "6 12",
+              dashOffset: `${dashOffset}`,
             }}
           />
         )}

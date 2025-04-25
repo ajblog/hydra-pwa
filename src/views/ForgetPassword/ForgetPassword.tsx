@@ -63,8 +63,6 @@ const ForgetPassword = () => {
   const [step, setStep] = useState<"email" | "reset">("email");
   const navigate = useNavigate();
 
-  console.log(step);
-
   const backStepHandler = () => {
     if (step === "reset") setStep("email");
     else navigate("/sign-in");

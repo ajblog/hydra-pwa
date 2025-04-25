@@ -15,6 +15,7 @@ import {
   getSingleStationDetails,
 } from "../../../services";
 import { StationsTypes } from "../../../types";
+import { roundToPreviousHour } from "../../../utils";
 
 const DirectionStations = ({
   destinationStation,
@@ -112,9 +113,21 @@ const DirectionStations = ({
     }
   }, [stationDetail]);
 
-  const selectedDayDetail = stationDetail?.weather_data![0].days.filter(
-    (item: any) => item.day_name === selectedDay
-  );
+    // Find selected day details
+    const selectedDayDetail = stationDetail?.weather_data[0].days.find(
+      (item: { day_name: string }) => item.day_name === selectedDay
+    );
+  
+    // Calculate selectedDayIndex
+    const selectedDayIndex = stationDetail?.weather_data[0].days.findIndex(
+      (item: { day_name: string }) => item.day_name === selectedDay
+    );
+  
+    const roundedStartDateTime = selectedDayDetail
+      ? roundToPreviousHour(stationDetail?.weather_data[0].start_date_time)
+      : undefined;
+
+  
 
   if (isLoading || routeIsLoading || isFetching)
     return (
@@ -246,7 +259,8 @@ const DirectionStations = ({
                   ? "wind"
                   : "temperature"
             }
-            chartData={selectedDayDetail?.[0].weather_info}
+            chartData={selectedDayDetail?.weather_info}
+            startDateTime={selectedDayIndex === 0 ? roundedStartDateTime || "" : ""}
           />
         </div>
       ) : (

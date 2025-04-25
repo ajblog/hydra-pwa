@@ -14,9 +14,23 @@ const DirectionOverview = ({
   setDirectionStep,
 }: DirectionOverviewPropTypes) => {
   const [showMore, setShowMore] = useState(false);
+
   const handleSwitchStations = () => {
-    setDestinationStation(originStation);
-    setOriginStation(destinationStation);
+    // Get the current origin and destination from sessionStorage
+    const originFromStorage = sessionStorage.getItem("origin");
+    const destinationFromStorage = sessionStorage.getItem("destination");
+
+    // If both are available, swap them in sessionStorage
+    if (originFromStorage && destinationFromStorage) {
+      sessionStorage.setItem("origin", destinationFromStorage);
+      sessionStorage.setItem("destination", originFromStorage);
+      setDestinationStation(originStation);
+      setOriginStation(destinationStation);
+
+      // Optionally, you can dispatch events here if you need to notify other parts of your app
+      window.dispatchEvent(new Event("originChange"));
+      window.dispatchEvent(new Event("destinationChange"));
+    }
   };
 
   return (

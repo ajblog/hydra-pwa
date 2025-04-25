@@ -11,7 +11,6 @@ const ProfileData = () => {
     queryKey: ["profile"],
     queryFn: () => getProfileApi(),
   });
-  console.log(data);
   return (
     <motion.div
       initial={{ x: 250 }}

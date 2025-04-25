@@ -11,3 +11,4 @@ export * from "./CustomChart/CustomChart";
 export * from "./Direction/Direction";
 export * from "./Direction/DirectionOverview";
 export * from "./Navigation/StationSelection";
+export * from "./MapAssets";

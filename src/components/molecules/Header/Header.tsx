@@ -15,7 +15,6 @@ export function Header({
         </div>
         <div
           onClick={() => {
-            console.log("working");
             onBackButton?.();
           }}
           className={`z-[100] ${!showBackButton ? "hidden" : "block"} pointer-events-auto`}
