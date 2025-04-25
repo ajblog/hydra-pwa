@@ -11,6 +11,7 @@ const StationSelection = ({
   setSelectedStation,
   setStationType,
   title,
+  stationType,
 }: StationSelectionPropTypes) => {
   const { setSelectedStationContext } = useStationContext();
 
@@ -18,6 +19,7 @@ const StationSelection = ({
   const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
     "stations",
   ]);
+
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between">
@@ -36,13 +38,21 @@ const StationSelection = ({
             <RadioGroupItem
               disabled={item.display_name === selectedDirectionStation}
               onClick={(e) => {
-                setSelectedStation(e.currentTarget.value);
-                setSelectedStationContext(e.currentTarget.value);
+                const value = e.currentTarget.value;
+                setSelectedStation(value);
+                setSelectedStationContext(value);
+                if (stationType === "destination" || stationType === "origin") {
+                  const selectedStation = JSON.stringify(item);
+                  sessionStorage.setItem(stationType, selectedStation);
+                  const customEventName = `${stationType}Change`;
+                  window.dispatchEvent(new Event(customEventName));
+                }
                 setStationType(null);
               }}
               value={item.display_name}
               id={index.toString()}
             />
+
             <label
               className={`w-full text-sm py-1 ${index % 2 ? "" : "border-l-[4px] border-l-[#EAEAEA]"} ${item.display_name === selectedDirectionStation ? "text-[#ccc]" : ""}`}
               htmlFor={index.toString()}

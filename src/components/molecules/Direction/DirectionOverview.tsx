@@ -4,9 +4,6 @@ import { DirectionOverviewPropTypes } from "./Direction.type";
 import { SwitchIcon } from "../../../assets";
 import { DirectionStations } from "./DirectionStations";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getRoutesInformation } from "../../../services";
-import { StationsTypes } from "../../../types";
 
 const DirectionOverview = ({
   setStationType,
@@ -18,30 +15,10 @@ const DirectionOverview = ({
 }: DirectionOverviewPropTypes) => {
   const [showMore, setShowMore] = useState(false);
   const handleSwitchStations = () => {
-    console.log("switiching");
     setDestinationStation(originStation);
     setOriginStation(destinationStation);
   };
-  const query = useQueryClient();
-  const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
-    "stations",
-  ]);
-  const originStationName = stationsInfo?.filter(
-    (item) => item.display_name === originStation
-  );
-  const destinationStationName = stationsInfo?.filter(
-    (item) => item.display_name === destinationStation
-  );
-  const { data } = useQuery({
-    queryKey: ["routes"],
-    queryFn: () =>
-      getRoutesInformation({
-        start: originStationName![0].name,
-        end: destinationStationName![0].name,
-      }),
-  });
 
-  console.log(data, "routes");
   return (
     <div className="flex flex-col ">
       <ChevronLeft

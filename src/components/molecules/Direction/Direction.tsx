@@ -18,7 +18,9 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
   >(null);
 
   const [directionStep, setDirectionStep] = useState<"selection" | "overview">(
-    "selection"
+    sessionStorage.getItem("origin") && sessionStorage.getItem("destination")
+      ? "overview"
+      : "selection"
   );
 
   const query = useQueryClient();
@@ -43,14 +45,38 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
     setHideButtons(!shouldShowButtons);
   }, [directionStep, stationType, setHideButtons]);
 
+  useEffect(() => {
+    const originRaw = sessionStorage.getItem("origin");
+    const destinationRaw = sessionStorage.getItem("destination");
+
+    if (originRaw) {
+      try {
+        const parsedOrigin = JSON.parse(originRaw);
+        setOriginStation(parsedOrigin.display_name || "");
+      } catch (err) {
+        console.error("Failed to parse origin:", err);
+      }
+    }
+
+    if (destinationRaw) {
+      try {
+        const parsedDestination = JSON.parse(destinationRaw);
+        setDestinationStation(parsedDestination.display_name || "");
+      } catch (err) {
+        console.error("Failed to parse destination:", err);
+      }
+    }
+  }, []);
+
   if (stationType === "origin") {
     return (
       <StationSelection
         title="ایستگاه مبدا موردنظر خود را از لیست زیر انتخاب کنید."
         selectedStation={originStation}
-      selectedDirectionStation={destinationStation}
+        selectedDirectionStation={destinationStation}
         setSelectedStation={setOriginStation}
         setStationType={setStationType}
+        stationType={stationType}
       />
     );
   } else if (stationType === "destination") {
@@ -61,6 +87,7 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
         selectedDirectionStation={originStation}
         setSelectedStation={setDestinationStation}
         setStationType={setStationType}
+        stationType={stationType}
       />
     );
   }
