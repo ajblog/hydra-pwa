@@ -124,6 +124,8 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
             }
           />
         )}
+
+        {userLocation && <Marker position={userLocation}></Marker>}
         {stationsInfo?.map((loc) => (
           <Marker
             eventHandlers={{
