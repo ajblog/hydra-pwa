@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChevronLeft } from "lucide-react";
 import { StationInformationPropTypes } from "./station.type";
 import { Tab, WeatherInfoCard } from "../../atoms";
@@ -12,6 +11,7 @@ import { CustomChart } from "../CustomChart/CustomChart";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSingleStationDetails } from "../../../services";
 import { StationsTypes } from "../../../types";
+import { roundToPreviousHour } from "../../../utils";
 
 const StationInformation = ({
   selectedStation,
@@ -57,10 +57,19 @@ const StationInformation = ({
     );
   }
 
+  // Find selected day details
   const selectedDayDetail = data.weather_data[0].days.find(
-    (item: any) => item.day_name === selectedDay
+    (item: { day_name: string }) => item.day_name === selectedDay
   );
 
+  // Calculate selectedDayIndex
+  const selectedDayIndex = data.weather_data[0].days.findIndex(
+    (item: { day_name: string }) => item.day_name === selectedDay
+  );
+
+  const roundedStartDateTime = selectedDayDetail
+    ? roundToPreviousHour(data.weather_data[0].start_date_time)
+    : undefined;
   return (
     <div className="mt-3">
       <div className="flex items-center justify-between border-b-[4px] border-b-[#EAEAEA] pb-5">
@@ -84,28 +93,44 @@ const StationInformation = ({
         {data.weather_data[0].days
           .slice()
           .reverse()
-          .map((item: any, index: number) => (
-            <WeatherInfoCard
-              key={index}
-              data={
-                isSelected === "موج"
-                  ? `${item.weather_info[0]?.wave?.hmax ?? "-"}m`
-                  : isSelected === "باد"
-                    ? `${item.weather_info[0]?.wind?.wind_speed ?? "-"}m/s`
-                    : `${item.weather_info[0]?.temperature?.temperature ?? "-"}°c`
-              }
-              title={item.day_name}
-              icon={
-                isSelected === "موج" ? wave : isSelected === "باد" ? wind : temp
-              }
-              isSelected={selectedDay === item.day_name}
-              setSelectedDay={setSelectedDay}
-            />
-          ))}
+          .map(
+            (
+              item: {
+                day_name: string;
+                weather_info: {
+                  wave?: { hmax?: number };
+                  wind?: { wind_speed?: number };
+                  temperature?: { temperature?: number };
+                }[];
+              },
+              index: number
+            ) => (
+              <WeatherInfoCard
+                key={index}
+                data={
+                  isSelected === "موج"
+                    ? `${item.weather_info[0]?.wave?.hmax ?? "-"}m`
+                    : isSelected === "باد"
+                      ? `${item.weather_info[0]?.wind?.wind_speed ?? "-"}m/s`
+                      : `${item.weather_info[0]?.temperature?.temperature ?? "-"}°c`
+                }
+                title={item.day_name}
+                icon={
+                  isSelected === "موج"
+                    ? wave
+                    : isSelected === "باد"
+                      ? wind
+                      : temp
+                }
+                isSelected={selectedDay === item.day_name}
+                setSelectedDay={setSelectedDay}
+              />
+            )
+          )}
       </div>
 
       <div className="mt-4">
-        {selectedDayDetail ? (
+        {selectedDayDetail && roundedStartDateTime ? (
           <CustomChart
             chartData={selectedDayDetail.weather_info}
             type={
@@ -115,6 +140,7 @@ const StationInformation = ({
                   ? "wind"
                   : "temperature"
             }
+            startDateTime={selectedDayIndex === 0 ? roundedStartDateTime : ""} 
           />
         ) : (
           <div className="text-center text-gray-500">

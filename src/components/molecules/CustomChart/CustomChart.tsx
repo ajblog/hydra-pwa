@@ -15,9 +15,10 @@ type ChartType = "wave" | "wind" | "temperature";
 interface Props {
   chartData: any[];
   type: ChartType;
+  startDateTime: string;
 }
 
-export function CustomChart({ chartData, type }: Props) {
+export function CustomChart({ chartData, type, startDateTime }: Props) {
   const chartConfig = {
     desktop: {
       label: type, // can change dynamically
@@ -46,7 +47,13 @@ export function CustomChart({ chartData, type }: Props) {
     }
   }, [chartData]);
   const formattedData = chartData.map((item, index) => {
-    const time = `${index.toString().padStart(2, "0")}:00`;
+    let time = `${index.toString().padStart(2, "0")}:00`;
+
+    if (startDateTime) {
+      const start = new Date(startDateTime);
+      const t = new Date(start.getTime() + index * 60 * 60 * 1000);
+      time = t.toTimeString().slice(0, 5); // "HH:MM"
+    }
 
     switch (type) {
       case "wave":
