@@ -6,12 +6,12 @@ import { useStationContext } from "../../contexts/stationContext";
 import { StationsTypes } from "../../types";
 import { useQuery } from "@tanstack/react-query";
 import { getRoutesInformation } from "../../services";
-import { customIcon, LocateMe, RecenterMap, selectedIcon } from "../molecules";
+import { customIcon, RecenterMap, selectedIcon } from "../molecules";
 
 const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
   const [loading, setLoading] = useState(true);
   const [dashOffset, setDashOffset] = useState(0);
-  const [userLocation, setUserLocation] = useState<LatLngTuple | null>(null);
+  // const [userLocation, setUserLocation] = useState<LatLngTuple | null>(null);
   const { selectedStationContext, setSelectedStationContext } =
     useStationContext();
   const [stationsInfo, setStationsInfo] = useState<
@@ -125,7 +125,7 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
           />
         )}
 
-        {userLocation && <Marker position={userLocation}></Marker>}
+        {/* {userLocation && <Marker position={userLocation}></Marker>} */}
         {stationsInfo?.map((loc) => (
           <Marker
             eventHandlers={{
@@ -153,7 +153,7 @@ const FullScreenMap = ({ data }: { data: StationsTypes[] }) => {
         )}
 
         {/* <LocateMe setUserLocation={setUserLocation} /> */}
-        {userLocation && <RecenterMap coords={userLocation} zoomLevel={14} />}
+        {/* {userLocation && <RecenterMap coords={userLocation} zoomLevel={14} />} */}
       </MapContainer>
     </div>
   );
