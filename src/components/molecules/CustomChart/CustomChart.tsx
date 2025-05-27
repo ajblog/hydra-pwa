@@ -107,7 +107,7 @@ export function CustomChart({ chartData, type, startDateTime }: Props) {
                 domain={[min, max]}
                 ticks={ticks}
                 hide={true}
-                scale="linear" 
+                scale="linear"
                 reversed={false}
               />
               <ChartTooltip
@@ -157,10 +157,10 @@ export function CustomChart({ chartData, type, startDateTime }: Props) {
               label={{
                 value:
                   type === "temperature"
-                    ? "°c"
+                    ? "T(c)"
                     : type === "wave"
-                      ? "متر"
-                      : "m/s",
+                    ? "H(m)"
+                    : "WS(m/s)",
                 angle: -90,
                 position: "insideLeft",
               }}
