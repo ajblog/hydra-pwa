@@ -12,3 +12,5 @@ export * from "./Direction/Direction";
 export * from "./Direction/DirectionOverview";
 export * from "./Navigation/StationSelection";
 export * from "./MapAssets";
+export * from "./WeatherCard/WeatherCard";
+export * from "./DaySection/DaySection";

@@ -1,12 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { ChevronDownCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
-import { Tab, WeatherInfoCard } from "../../atoms";
-import wave from "../../../assets/images/wave-icon.png";
-import temp from "../../../assets/images/temp-Icon.png";
-import wind from "../../../assets/images/Wind-Icon.png";
 import loadingWheel from "../../../assets/images/loading.gif";
-import { CustomChart } from "../CustomChart/CustomChart";
 import { DirectionStationsPropTypes } from "./Direction.type";
 import { useStationContext } from "../../../contexts/stationContext";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -16,12 +11,11 @@ import {
 } from "../../../services";
 import { StationsTypes } from "../../../types";
 import { roundToPreviousHour } from "../../../utils";
+import { AllInOneChart } from "../../organs";
 
 const DirectionStations = ({
   destinationStation,
   originStation,
-  showMore,
-  setShowMore,
 }: DirectionStationsPropTypes) => {
   const query = useQueryClient();
   const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
@@ -50,8 +44,6 @@ const DirectionStations = ({
   const { setSelectedStationContext } = useStationContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeStationIndex, setActiveStationIndex] = useState<number>(0);
-  const [isSelected, setIsSelected] = useState("موج");
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
 
   const getNextStation = (direction: "left" | "right") => {
     const currentIndex = activeStationIndex;
@@ -105,29 +97,6 @@ const DirectionStations = ({
       );
     }
   }, [activeStationIndex, setSelectedStationContext, routesData]);
-
-  // ✅ Set default selected day when data loads
-  useEffect(() => {
-    if (stationDetail?.weather_data?.[0]?.days?.length) {
-      setSelectedDay(stationDetail.weather_data[0].days[0].day_name);
-    }
-  }, [stationDetail]);
-
-    // Find selected day details
-    const selectedDayDetail = stationDetail?.weather_data[0].days.find(
-      (item: { day_name: string }) => item.day_name === selectedDay
-    );
-  
-    // Calculate selectedDayIndex
-    const selectedDayIndex = stationDetail?.weather_data[0].days.findIndex(
-      (item: { day_name: string }) => item.day_name === selectedDay
-    );
-  
-    const roundedStartDateTime = selectedDayDetail
-      ? roundToPreviousHour(stationDetail?.weather_data[0].start_date_time)
-      : undefined;
-
-  
 
   if (isLoading || routeIsLoading || isFetching)
     return (
@@ -209,69 +178,14 @@ const DirectionStations = ({
         />
       </div>
 
-      <div>
-        <div className="flex items-center justify-center px-5 gap-9 mt-3.5">
-          {["موج", "باد", "دما"].map((item, index) => (
-            <Tab
-              setIsSelected={setIsSelected}
-              isSelected={isSelected === item}
-              key={index}
-              title={item}
-            />
-          ))}
-        </div>
-        <div className="flex items-center gap-1 w-full mt-7">
-          {stationDetail.weather_data[0].days
-            .slice()
-            .reverse()
-            .map((item: any, index: number) => (
-              <WeatherInfoCard
-                key={index}
-                data={
-                  isSelected === "موج"
-                    ? `${item.weather_info[0]?.wave?.hmax ?? "-"}m`
-                    : isSelected === "باد"
-                      ? `${item.weather_info[0]?.wind?.wind_speed ?? "-"}m/s`
-                      : `${item.weather_info[0]?.temperature?.temperature ?? "-"}°c`
-                }
-                title={item.day_name}
-                icon={
-                  isSelected === "موج"
-                    ? wave
-                    : isSelected === "باد"
-                      ? wind
-                      : temp
-                }
-                isSelected={selectedDay === item.day_name}
-                setSelectedDay={setSelectedDay}
-              />
-            ))}
-        </div>
+      <div className="mt-4">
+        <AllInOneChart
+          data={stationDetail.weather_data[0].days}
+          startTime={
+            roundToPreviousHour(stationDetail.weather_data[0].start_date_time)!
+          }
+        />
       </div>
-
-      {showMore ? (
-        <div className="mt-4">
-          <CustomChart
-            type={
-              isSelected === "موج"
-                ? "wave"
-                : isSelected === "باد"
-                  ? "wind"
-                  : "temperature"
-            }
-            chartData={selectedDayDetail?.weather_info}
-            startDateTime={selectedDayIndex === 0 ? roundedStartDateTime || "" : ""}
-          />
-        </div>
-      ) : (
-        <div
-          className="flex items-center gap-1 justify-center mt-3"
-          onClick={() => setShowMore(true)}
-        >
-          <span>بیشتر...</span>
-          <ChevronDownCircle color="purple" />
-        </div>
-      )}
     </>
   );
 };
