@@ -27,6 +27,10 @@ body {
   -ms-overflow-style: none;
 }
 
+.ltr {
+  direction: ltr;
+}
+
 /* Hide scrollbar for Chrome, Safari and Edge */
 ::-webkit-scrollbar {
   display: none;
