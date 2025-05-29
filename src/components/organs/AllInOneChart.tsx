@@ -8,16 +8,16 @@ const chartParameters = [
     icon: "",
   },
   {
-    name: "دما",
-    icon: "°C",
+    name: "T",
+    icon: "(c)",
   },
   {
-    name: "سرعت باد",
-    icon: "m/s",
+    name: "WS",
+    icon: "(m/s)",
   },
   {
-    name: "ارتفاع موج",
-    icon: "m",
+    name: "H",
+    icon: "(m)",
   },
 ];
 
