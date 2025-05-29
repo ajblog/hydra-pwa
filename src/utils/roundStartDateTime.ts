@@ -1,13 +1,13 @@
-export const roundToPreviousHour = (dateTime: string) => {
-  const date = new Date(dateTime); // Create a Date object from the string
+export const roundToPreviousHour = (dateTime: string): string => {
+  const date = new Date(dateTime);
+
+  // Round down to the previous full hour
+  date.setMinutes(0);
+  date.setSeconds(0);
+  date.setMilliseconds(0);
+
+  const hours = date.getHours();
   const minutes = date.getMinutes();
 
-  if (minutes >= 30) {
-    // If minutes are 30 or more, round down to the previous hour
-    date.setHours(date.getHours()); // Decrease the hour by 1
-    date.setMinutes(0); // Set minutes to 0
-  }
-
-  // Return the rounded date in the same format (ISO string)
-  return date.toISOString();
+  return `${hours}:${minutes.toString().padStart(2, "0")}`;
 };

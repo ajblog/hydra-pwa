@@ -10,7 +10,8 @@ const NavigationDrawer = () => {
     "STATION" | "ROUTE" | null
   >(null);
   const [hideButtons, setHideButtons] = useState(false);
-  const { selectedStationContext , setSelectedStationContext } = useStationContext();
+  const { selectedStationContext, setSelectedStationContext } =
+    useStationContext();
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -25,19 +26,19 @@ const NavigationDrawer = () => {
         !drawerRef.current.contains(e.target as Node)
       ) {
         setNavigationType(null);
-        setSelectedStationContext('');
+        setSelectedStationContext("");
         setHideButtons(false); // optional: show buttons again on close
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [navigationType , setSelectedStationContext]);
+  }, [navigationType, setSelectedStationContext]);
 
   return (
     <>
       <motion.div
-      ref={drawerRef}
+        ref={drawerRef}
         initial={{ y: 200 }}
         animate={{ y: 0 }}
         transition={{ bounce: 0.6, duration: 0.5, ease: "easeIn" }}
