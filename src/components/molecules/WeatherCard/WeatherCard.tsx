@@ -44,16 +44,17 @@ function WeatherCard({
 
   return (
     <div
-      className={`bg-white pt-0.5 h-full relative overflow-hidden cursor-pointer transition-all ${
-        isSelected ? " z-[40000]  rounded-lg" : ""
+      className={`bg-white py-0.5 h-full relative overflow-visible cursor-pointer transition-all ${
+        isSelected ? "rounded-lg outline-2 outline-[#4b10c9] z-50" : "z-40"
       }`}
       onClick={onClick}
     >
       <div className="relative z-10">
         <h3 className="text-xs p-1 font-semibold  bg-none z-[3000]">
+          {/* {hour < 10 ? `0${hour}` : hour}:00 */}
           {hour}:00
         </h3>
-        <p className="p-1 pt-2.5 text-center pb-40 bg-white">
+        <p className="p-1 pt-2.5 text-center pb-20 bg-none">
           {data.temperature.temperature}
         </p>
         <p

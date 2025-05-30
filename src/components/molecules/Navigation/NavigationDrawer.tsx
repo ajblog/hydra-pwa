@@ -42,7 +42,7 @@ const NavigationDrawer = () => {
         initial={{ y: 200 }}
         animate={{ y: 0 }}
         transition={{ bounce: 0.6, duration: 0.5, ease: "easeIn" }}
-        className="bg-white rounded-t-[40px] shadow-[0_-4px_4px_0_rgba(0,0,0,0.25)] py-8 px-4 z-[4000] absolute bottom-0 w-full"
+        className="bg-white rounded-t-[40px] overflow-y-visible shadow-[0_-4px_4px_0_rgba(0,0,0,0.25)] py-8 px-4 z-[4000] absolute bottom-0 w-full"
       >
         {!hideButtons && (
           <div className=" flex items-center justify-center gap-5 px-4">

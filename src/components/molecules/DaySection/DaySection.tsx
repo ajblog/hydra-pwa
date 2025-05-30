@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
 import { WeatherCard } from "../WeatherCard/WeatherCard";
 
 function DaySection({
@@ -7,25 +6,28 @@ function DaySection({
   isFirstDay,
   startTime,
   nextDay,
+  selectedCardId,
+  setSelectedCardId,
+  dayIndex
 }: {
   day: any;
   isFirstDay: boolean;
   startTime: number;
+  selectedCardId: string | null;
+  setSelectedCardId: (id: string) => void;
+  dayIndex: number;
   nextDay?: any;
 }) {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
   return (
-    <div className="relative ltr w-full">
+    <div className="relative ltr">
       {/* Sticky day name on the left */}
-      <div className="w-full sticky left-0 top-0 right-0">
-        <h2 className="z-30 font-bold text-left mb-4 py-1 px-2 border-r border-gray-300">
-          {day.day_name}
-        </h2>
-      </div>
-      <div className="flex ltr">
+      <h2 className="z-30 sticky left-0 w-full bg-white font-bold text-left mb-2.5 py-1 px-2 border-r border-gray-300">
+        {day.day_name}
+      </h2>
+      <div className="flex ltr overflow-visible pb-0.5">
         {day.weather_info.map((info: any, index: number) => {
           const hour = isFirstDay ? startTime + index : index;
+          const uniqueId = `${dayIndex}-${index}`;
 
           // Check if nextData is inside current day or next day's first hour
           let nextData;
@@ -43,8 +45,8 @@ function DaySection({
               hour={hour}
               data={info}
               nextData={nextData}
-              isSelected={selectedIndex === index}
-              onClick={() => setSelectedIndex(index)}
+              isSelected={selectedCardId === uniqueId}
+              onClick={() => setSelectedCardId(uniqueId)}
             />
           );
         })}
