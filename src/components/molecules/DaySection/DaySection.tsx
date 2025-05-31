@@ -8,7 +8,7 @@ function DaySection({
   nextDay,
   selectedCardId,
   setSelectedCardId,
-  dayIndex
+  dayIndex,
 }: {
   day: any;
   isFirstDay: boolean;
@@ -19,11 +19,13 @@ function DaySection({
   nextDay?: any;
 }) {
   return (
-    <div className="relative ltr">
+    <div className="relative ltr ">
       {/* Sticky day name on the left */}
-      <h2 className="z-30 sticky left-0 w-full bg-white font-bold text-left mb-2.5 py-1 px-2 border-r border-gray-300">
-        {day.day_name}
-      </h2>
+      <div className="ltr">
+        <h2 className="z-30 w-fit sticky left-0  ltr bg-white font-bold text-left mb-2.5 py-1 px-2 border-r border-gray-300">
+          {day.day_name}
+        </h2>
+      </div>
       <div className="flex ltr overflow-visible pb-0.5">
         {day.weather_info.map((info: any, index: number) => {
           const hour = isFirstDay ? startTime + index : index;

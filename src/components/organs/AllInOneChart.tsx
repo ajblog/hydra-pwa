@@ -65,7 +65,7 @@ const AllInOneChart = ({
               chartData={temperatures || []}
             />
           </div>
-          <div className="flex flex-row-reverse overflow-x-scroll z-20">
+          <div className="flex flex-row-reverse overflow-x-scroll z-20 px-1">
             {data.map((day: any, index: number) => (
               <DaySection
                 key={index}

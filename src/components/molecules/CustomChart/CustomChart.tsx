@@ -1,4 +1,5 @@
 import { Area, AreaChart } from "recharts";
+import { Tooltip } from "recharts";
 
 interface ChartDataItem {
   temperature?: { temperature: number };
@@ -21,13 +22,10 @@ export function CustomChart({ chartData, startDateTime }: Props) {
     };
   });
 
-  const chartWidth = chartData.length * 40;
+  const chartWidth = chartData.length * 42.65;
 
   return (
-    <div
-      className="w-full h-full overflow-hidden"
-      style={{ zIndex: 10, pointerEvents: "none" }}
-    >
+    <div className="w-full h-full overflow-hidden" style={{ zIndex: 10 }}>
       <div
         style={{ width: "100%", height: "160px" }}
         className="z-10 absolute bottom-0"
@@ -36,7 +34,7 @@ export function CustomChart({ chartData, startDateTime }: Props) {
           data={formattedData}
           width={chartWidth}
           height={140}
-          margin={{ top: 0, right: 0, left: 30, bottom: 0 }}
+          margin={{ top: 0, right: 5, left: 0, bottom: 0 }}
         >
           <defs>
             <linearGradient id="fillTemp" x1="0" y1="0" x2="0" y2="1">
@@ -52,6 +50,16 @@ export function CustomChart({ chartData, startDateTime }: Props) {
             stroke="#5B55ED"
             strokeWidth={0}
             fillOpacity={0.3}
+          />
+          <Tooltip
+            formatter={(_, __, { payload }) => {
+              if (!payload || !payload.value) return "";
+              if (typeof payload.value.temperature === "number") {
+                return [`${payload.value.temperature}°C`, "Temperature"];
+              }
+              return "";
+            }}
+            labelFormatter={(label) => `Time: ${label}`}
           />
         </AreaChart>
       </div>
