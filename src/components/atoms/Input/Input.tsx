@@ -12,7 +12,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className="relative flex items-center w-full">
         {icon && (
           <span
-            className={`absolute right-3 text-muted-foreground  ${theme === "dark" ? "bg-white"  : ""}`}
+            className={`absolute right-3 text-muted-foreground  ${
+              theme === "dark" ? "bg-white" : ""
+            }`}
           >
             {icon}
           </span>
@@ -24,8 +26,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             theme === "dark"
               ? "border-[#7D7D7D] placeholder:text-[#7D7D7D]"
               : theme === "light"
-                ? "border-[#DBDBDB] placeholder:text-[#DBDBDB] "
-                : "border-none bg-white placeholder:text-[#434343]",
+              ? "border-[#DBDBDB] placeholder:text-[#DBDBDB] text-white"
+              : "border-none bg-white placeholder:text-[#434343]",
             className
           )}
           ref={ref}

@@ -1,31 +1,69 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useRef } from "react";
 import { WeatherCard } from "../WeatherCard/WeatherCard";
+import { DaySectionPropTypes } from "./DaySection.tyes";
 
 function DaySection({
   day,
   isFirstDay,
   startTime,
   nextDay,
-}: {
-  day: any;
-  isFirstDay: boolean;
-  startTime: number;
-  nextDay?: any;
-}) {
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  selectedCardId,
+  setSelectedCardId,
+  setVisibleDay,
+  scrollContainerRef,
+  dayIndex,
+  previousDay,
+}: DaySectionPropTypes) {
+  const dayRef = useRef<HTMLHeadingElement | null>(null);
+
+  useEffect(() => {
+    function handleScroll() {
+      if (!dayRef.current || !scrollContainerRef.current) return;
+
+      const rect = dayRef.current.getBoundingClientRect();
+      const containerRect = scrollContainerRef.current.getBoundingClientRect();
+
+      const leftDistance = rect.left - containerRect.left;
+
+      if (leftDistance <= 0) {
+        console.log(day.day_name);
+        setVisibleDay(day.day_name);
+      } else if (leftDistance >= 0 && leftDistance < 80) {
+        setVisibleDay("");
+      }
+
+      if (previousDay && leftDistance > 80 && leftDistance < 300) {
+        setVisibleDay(previousDay.day_name);
+      }
+    }
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      container.addEventListener("scroll", handleScroll, { passive: true });
+      handleScroll();
+    }
+
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [day.day_name, previousDay, scrollContainerRef, setVisibleDay]);
 
   return (
-    <div className="relative ltr w-full">
-      {/* Sticky day name on the left */}
-      <div className="w-full sticky left-0 top-0 right-0">
-        <h2 className="z-30 font-bold text-left mb-4 py-1 px-2 border-r border-gray-300">
-          {day.day_name}
-        </h2>
-      </div>
-      <div className="flex ltr">
+    <div className=" ltr  w-full">
+      <h2
+        ref={dayRef}
+        style={{ minWidth: 80 }}
+        className="z-30 w-fit sticky left-0 bottom-0 ltr text-gray-700 bg-white font-bold text-center mb-2.5 py-1 px-2 border-r border-gray-300"
+      >
+        {day.day_name}
+      </h2>
+      <div className="flex ltr overflow-visible pb-0.5">
         {day.weather_info.map((info: any, index: number) => {
           const hour = isFirstDay ? startTime + index : index;
+          const uniqueId = `${dayIndex}-${index}`;
 
           // Check if nextData is inside current day or next day's first hour
           let nextData;
@@ -43,8 +81,8 @@ function DaySection({
               hour={hour}
               data={info}
               nextData={nextData}
-              isSelected={selectedIndex === index}
-              onClick={() => setSelectedIndex(index)}
+              isSelected={selectedCardId === uniqueId}
+              onClick={() => setSelectedCardId(uniqueId)}
             />
           );
         })}
