@@ -21,8 +21,7 @@ export function CustomChart({ chartData, startDateTime }: Props) {
     };
   });
 
-  const chartWidth = chartData.length * 42.65;
-
+  const chartWidth = chartData.length * 43.1;
   return (
     <div
       className="w-full h-full overflow-hidden"
@@ -36,7 +35,7 @@ export function CustomChart({ chartData, startDateTime }: Props) {
           data={formattedData}
           width={chartWidth}
           height={140}
-          margin={{ top: 0, right: 5, left: 0, bottom: 0 }}
+          margin={{ top: 0, right: 40, left: 0, bottom: 0 }}
         >
           <defs>
             <linearGradient id="fillTemp" x1="0" y1="0" x2="0" y2="1">

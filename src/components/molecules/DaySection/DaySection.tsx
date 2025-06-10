@@ -5,8 +5,6 @@ import { DaySectionPropTypes } from "./DaySection.tyes";
 
 function DaySection({
   day,
-  isFirstDay,
-  startTime,
   nextDay,
   selectedCardId,
   setSelectedCardId,
@@ -26,15 +24,14 @@ function DaySection({
 
       const leftDistance = rect.left - containerRect.left;
 
-      if (leftDistance <= 0) {
-        console.log(day.day_name);
-        setVisibleDay(day.day_name);
-      } else if (leftDistance >= 0 && leftDistance < 80) {
-        setVisibleDay("");
+      if (leftDistance <= 15) {
+        setVisibleDay({ day: day.day_name, date: day.date });
+      } else if (leftDistance >= 15 && leftDistance < 80) {
+        setVisibleDay(null);
       }
 
-      if (previousDay && leftDistance > 80 && leftDistance < 300) {
-        setVisibleDay(previousDay.day_name);
+      if (previousDay && leftDistance > 80 && leftDistance < 100) {
+        setVisibleDay({ day: previousDay.day_name, date: previousDay.date });
       }
     }
 
@@ -49,20 +46,26 @@ function DaySection({
         container.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [day.day_name, previousDay, scrollContainerRef, setVisibleDay]);
+  }, [day.date, day.day_name, previousDay, scrollContainerRef, setVisibleDay]);
+
+  function formatPersianDate(input: string) {
+    const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+    const converted = input.replace(/-/g, "/");
+    return converted.replace(/\d/g, (d) => persianDigits[+d]);
+  }
 
   return (
     <div className=" ltr  w-full">
-      <h2
+      <div
         ref={dayRef}
-        style={{ minWidth: 80 }}
-        className="z-30 w-fit sticky left-0 bottom-0 ltr text-gray-700 bg-white font-bold text-center mb-2.5 py-1 px-2 border-r border-gray-300"
+        className="z-30 w-fit sticky left-0 bottom-0 ltr text-gray-700 bg-white text-xs font-bold text-center mb-2.5 py-1 px-0.5 border-l border-gray-300 flex flex-col gap-1"
       >
-        {day.day_name}
-      </h2>
+        <h2 style={{ minWidth: 60 }}>{day.day_name}</h2>
+        <span>{formatPersianDate(day.date)}</span>
+      </div>
       <div className="flex ltr overflow-visible pb-0.5">
         {day.weather_info.map((info: any, index: number) => {
-          const hour = isFirstDay ? startTime + index : index;
+          const hour = info.time;
           const uniqueId = `${dayIndex}-${index}`;
 
           // Check if nextData is inside current day or next day's first hour
