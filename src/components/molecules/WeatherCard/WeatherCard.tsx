@@ -51,8 +51,7 @@ function WeatherCard({
     >
       <div className="relative z-10">
         <h3 className="text-xs p-1 font-semibold  bg-none z-[3000]">
-          {hour < 10 ? `0${hour}` : hour}:00
-          {/* {hour}:00 */}
+          {hour < 10 ? `0${hour}` : hour}
         </h3>
         <p className="p-1 pt-2.5 text-center pb-20 bg-none">
           {data.temperature.temperature}

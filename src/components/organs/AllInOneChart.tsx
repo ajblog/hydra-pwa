@@ -32,23 +32,31 @@ const AllInOneChart = ({
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
-  const [visibleDay, setVisibleDay] = useState<string | null>(null);
+  const [visibleDay, setVisibleDay] = useState<Record<string, string> | null>(
+    null
+  );
 
   const temperatures = data.flatMap((day: any) =>
     day.weather_info.map((info: any) => info.temperature.temperature)
   );
+  function formatPersianDate(input: string) {
+    const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+    const converted = input.replace(/-/g, "/");
+    return converted.replace(/\d/g, (d) => persianDigits[+d]);
+  }
   return (
     <div className="relative w-full h-full overflow-hidden">
       <div
-        className="z-40 absolute -left-1 text-center text-gray-700 h-fit top-0 ltr bg-white font-bold mb-2.5 py-1 px-2 border-r border-gray-300"
+        className="z-40 absolute -left-1 text-center text-gray-700 h-fit top-0 text-xs flex flex-col gap-1 ltr bg-white font-bold mb-2.5 py-1 px-2 border-r border-gray-300"
         style={{
           minWidth: 80,
-          opacity: visibleDay && visibleDay.length > 0 ? 1 : 0,
+          opacity: visibleDay && visibleDay.day ? 1 : 0,
           transition: "opacity 0.4s",
-          pointerEvents: visibleDay && visibleDay.length > 0 ? "auto" : "none", // optional: disables interaction when hidden
+          pointerEvents: visibleDay && visibleDay.day ? "auto" : "none", // optional: disables interaction when hidden
         }}
       >
-        {visibleDay}
+        <h2>{visibleDay?.day}</h2>
+        <span>{visibleDay?.date && formatPersianDate(visibleDay?.date)}</span>
       </div>
 
       <div
@@ -92,17 +100,11 @@ const AllInOneChart = ({
                 day={day}
                 nextDay={data[index + 1]}
                 previousDay={data[index - 1]}
-                isFirstDay={index === 0}
                 selectedCardId={selectedCardId}
                 setSelectedCardId={setSelectedCardId}
                 setVisibleDay={setVisibleDay}
                 dayIndex={index}
                 scrollContainerRef={scrollContainerRef}
-                startTime={
-                  startTime.split(":")[0]
-                    ? parseInt(startTime.split(":")[0])
-                    : 0
-                }
               />
             ))}
           </div>
