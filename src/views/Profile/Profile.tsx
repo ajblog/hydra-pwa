@@ -158,7 +158,7 @@ const Profile = () => {
       <Form
         className="bg-white pt-2 pb-4"
         fields={profileFields}
-        onSubmit={(e: unknown) => {}}
+        onSubmit={() => {}}
         inputTheme="dark"
         customButtons={({ handleSubmit, formState: { errors } }) => (
           <motion.div
