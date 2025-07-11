@@ -1,4 +1,5 @@
 import React, { SetStateAction } from "react";
+import { TimeUnitEnum, WaveUnitEnum, WindUnitEnum } from "../../../types";
 
 interface StationInformationPropTypes {
   selectedStation: string;
@@ -9,4 +10,10 @@ interface StationsPropTypes {
   setHideButtons: React.Dispatch<SetStateAction<boolean>>;
 }
 
-export type { StationInformationPropTypes, StationsPropTypes };
+interface UnitTypes {
+  waveUnit: WaveUnitEnum;
+  timeUnit: TimeUnitEnum;
+  windUnit: WindUnitEnum;
+}
+
+export type { StationInformationPropTypes, StationsPropTypes, UnitTypes };
