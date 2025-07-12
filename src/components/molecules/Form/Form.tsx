@@ -16,6 +16,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
   customButtons,
   className,
   customLink,
+  disabled,
 }: FormProps<T>) {
   const {
     register,
@@ -71,7 +72,9 @@ export const Form = React.memo(function Form<T extends FieldValues>({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 * index }}
-            className={`relative ${field.column === "half" ? "col-span-1" : "col-span-full"}`}
+            className={`relative ${
+              field.column === "half" ? "col-span-1" : "col-span-full"
+            }`}
           >
             {field.name === "phonenumber" ? (
               <div className="relative">
@@ -123,8 +126,8 @@ export const Form = React.memo(function Form<T extends FieldValues>({
                   field.type === "password" && visiblePasswords[field.name]
                     ? "text"
                     : field.type === "onlyNumber"
-                      ? "text"
-                      : field.type
+                    ? "text"
+                    : field.type
                 }
                 placeholder={field.placeholder}
                 defaultValue={field.defaultValue}
@@ -180,6 +183,7 @@ export const Form = React.memo(function Form<T extends FieldValues>({
               size="lg"
               variant={buttonTheme}
               className="w-full"
+              disabled={disabled}
             >
               {submitText}
             </Button>

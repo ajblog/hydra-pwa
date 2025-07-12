@@ -21,6 +21,7 @@ interface FormProps<T extends FieldValues> {
   className?: string;
   onSubmit: (data: T) => void;
   submitText?: string;
+  disabled?: boolean;
   hideButton?: boolean;
   inputTheme?: "dark" | "light" | "white";
   buttonTheme?:

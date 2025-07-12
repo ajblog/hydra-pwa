@@ -1,4 +1,6 @@
 import { Area, AreaChart } from "recharts";
+import { useTimeUnit } from "../../../services";
+import { TimeUnitEnum } from "../../../types";
 
 interface ChartDataItem {
   temperature?: { temperature: number };
@@ -10,6 +12,7 @@ interface Props {
 }
 
 export function CustomChart({ chartData, startDateTime }: Props) {
+  const timeUnit = useTimeUnit();
   const formattedData = chartData.map((item, index) => {
     const start = new Date(startDateTime);
     const t = new Date(start.getTime() + index * 60 * 60 * 1000);
@@ -35,7 +38,11 @@ export function CustomChart({ chartData, startDateTime }: Props) {
           data={formattedData}
           width={chartWidth}
           height={140}
-          margin={{ top: 0, right: 40, left: 0, bottom: 0 }}
+          margin={
+            timeUnit === TimeUnitEnum.LOCAL
+              ? { top: 0, right: 35, left: 0, bottom: 0 }
+              : { top: 0, right: 5, left: 30, bottom: 0 }
+          }
         >
           <defs>
             <linearGradient id="fillTemp" x1="0" y1="0" x2="0" y2="1">

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { setCookie } from "../../utils";
 import { FieldValues } from "react-hook-form";
 import { loginApi } from "../../services";
+import { useState } from "react";
 
 const ovalJsx = () => {
   return (
@@ -22,6 +23,7 @@ const ovalJsx = () => {
 
 export function SignIn() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const signInFields = [
     {
       name: "username",
@@ -43,6 +45,7 @@ export function SignIn() {
   ];
 
   const handleLogin = async (e: FieldValues) => {
+    setIsLoading(true);
     try {
       const res = await loginApi(e);
       if (res) {
@@ -54,6 +57,8 @@ export function SignIn() {
     } catch (error) {
       console.log(error);
       showErrorToast("رمزعبور یا نام کاربری اشتباه است");
+    } finally {
+      setIsLoading(false);
     }
     localStorage.setItem("hasVisited", "true");
   };
@@ -88,9 +93,10 @@ export function SignIn() {
 
           <div className="my-2 w-full space-y-1 flex-shrink">
             <Form
-              submitText="ورود"
+              submitText={isLoading ? "در حال ورود" : "ورود"}
               onSubmit={handleLogin}
               fields={signInFields}
+              disabled={isLoading}
             />
             <motion.div
               initial={{ opacity: 0 }}

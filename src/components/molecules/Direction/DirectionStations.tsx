@@ -84,7 +84,7 @@ const DirectionStations = ({
   }; // this function calculates labels based on the stations count dynamiclly
 
   const { data: stationDetail, isLoading } = useQuery({
-    queryKey: ["station-detail", routesData, activeStationIndex],
+    queryKey: ["station-detail", routesData, activeStationIndex, units],
     queryFn: () =>
       getSingleStationDetails({
         station_name: routesData.route[activeStationIndex].name,
