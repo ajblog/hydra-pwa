@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import loadingWheel from "../../../assets/images/loading.gif";
@@ -12,6 +11,7 @@ import {
 import { StationsTypes } from "../../../types";
 import { roundToPreviousHour } from "../../../utils";
 import { AllInOneChart } from "../../organs";
+import { usePersistentUnitPreferences } from "../../../services/hooks/usePersistentUnitPreferences";
 
 const DirectionStations = ({
   destinationStation,
@@ -44,6 +44,7 @@ const DirectionStations = ({
   const { setSelectedStationContext } = useStationContext();
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeStationIndex, setActiveStationIndex] = useState<number>(0);
+  const [units, setUnits] = usePersistentUnitPreferences();
 
   const getNextStation = (direction: "left" | "right") => {
     const currentIndex = activeStationIndex;
@@ -87,6 +88,9 @@ const DirectionStations = ({
     queryFn: () =>
       getSingleStationDetails({
         station_name: routesData.route[activeStationIndex].name,
+        wave_unit: units.waveUnit,
+        wind_unit: units.windUnit,
+        time_unit: units.timeUnit,
       }),
   });
 
@@ -180,6 +184,8 @@ const DirectionStations = ({
 
       <div className="mt-4">
         <AllInOneChart
+          setUnits={setUnits}
+          units={units}
           data={stationDetail.weather_data[0].days}
           startTime={
             roundToPreviousHour(stationDetail.weather_data[0].start_date_time)!

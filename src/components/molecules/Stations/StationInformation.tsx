@@ -3,15 +3,17 @@ import { StationInformationPropTypes } from "./station.type";
 import loadingGif from "../../../assets/images/loading.gif";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSingleStationDetails } from "../../../services";
-import { StationsTypes } from "../../../types";
 import { roundToPreviousHour } from "../../../utils";
 import { AllInOneChart } from "../../organs";
+import { usePersistentUnitPreferences } from "../../../services/hooks/usePersistentUnitPreferences";
+import { StationsTypes } from "../../../types";
 
 const StationInformation = ({
   selectedStation,
   setStep,
 }: StationInformationPropTypes) => {
   const query = useQueryClient();
+  const [units, setUnits] = usePersistentUnitPreferences();
   const stationsInfo: StationsTypes[] | undefined = query.getQueryData([
     "stations",
   ]);
@@ -20,10 +22,15 @@ const StationInformation = ({
   );
 
   const { data, isLoading } = useQuery({
-    queryKey: ["station-detail", selectedStation],
+    queryKey: ["station-detail", selectedStation, units],
     enabled: !!selectedStationName, // only fetch if station is available
     queryFn: () =>
-      getSingleStationDetails({ station_name: selectedStationName!.name }),
+      getSingleStationDetails({
+        station_name: selectedStationName!.name,
+        wave_unit: units.waveUnit,
+        wind_unit: units.windUnit,
+        time_unit: units.timeUnit,
+      }),
   });
 
   if (isLoading || !data) {
@@ -51,6 +58,8 @@ const StationInformation = ({
       <div className="mt-4">
         <AllInOneChart
           data={data.weather_data[0].days}
+          units={units}
+          setUnits={setUnits}
           startTime={roundToPreviousHour(data.weather_data[0].start_date_time)!}
         />
       </div>
