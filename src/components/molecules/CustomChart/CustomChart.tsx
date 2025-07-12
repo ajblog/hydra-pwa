@@ -1,6 +1,6 @@
 import { Area, AreaChart } from "recharts";
-import { useTimeUnit } from "../../../services";
 import { TimeUnitEnum } from "../../../types";
+import { useStationUnits } from "../../../services";
 
 interface ChartDataItem {
   temperature?: { temperature: number };
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export function CustomChart({ chartData, startDateTime }: Props) {
-  const timeUnit = useTimeUnit();
+  const { timeUnit } = useStationUnits("timeUnit");
   const formattedData = chartData.map((item, index) => {
     const start = new Date(startDateTime);
     const t = new Date(start.getTime() + index * 60 * 60 * 1000);
@@ -25,6 +25,7 @@ export function CustomChart({ chartData, startDateTime }: Props) {
   });
 
   const chartWidth = chartData.length * 43.1;
+  console.log(timeUnit);
   return (
     <div
       className="w-full h-full overflow-hidden"
