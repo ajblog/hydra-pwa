@@ -7,7 +7,7 @@ const chartParameters = [
   { name: "زمان", key: "timeUnit" },
   { name: "دما", key: null },
   { name: "WS", key: "windUnit" },
-  { name: "H", key: "waveUnit" },
+  { name: "HS", key: "waveUnit" },
 ];
 
 const AllInOneChart = ({
