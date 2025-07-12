@@ -37,7 +37,7 @@ export function Home() {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, []);
   return (
-    <div>
+    <div className="max-h-screen">
       <ProfileData />
       <EasyAccess />
       <StationProvider>

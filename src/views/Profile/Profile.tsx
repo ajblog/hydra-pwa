@@ -110,7 +110,7 @@ const Profile = () => {
     return <SuccessLoginPage title="اطلاعات با موفقیت ویرایش شد." />;
 
   return (
-    <div className="bg-white h-screen">
+    <div className="bg-white min-h-screen h-full">
       <motion.div
         initial={{ y: -200 }}
         animate={{ y: 0 }}
