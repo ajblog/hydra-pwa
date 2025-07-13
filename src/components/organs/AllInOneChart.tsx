@@ -8,6 +8,7 @@ const chartParameters = [
   { name: "دما", key: null },
   { name: "WS", key: "windUnit" },
   { name: "HS", key: "waveUnit" },
+  { name: "Wind dir", key: null },
 ];
 
 const AllInOneChart = ({
@@ -80,7 +81,7 @@ const AllInOneChart = ({
             return (
               <div
                 key={index}
-                className={`flex flex-col items-start justify-start px-1 pb-1 pt-3 gap-0.5 ${
+                className={`flex flex-col items-start justify-start px-1 pb-0.5 pt-3 gap-0.5 ${
                   index === 1 ? "pb-20 pt-2" : ""
                 }`}
               >
@@ -132,7 +133,7 @@ const AllInOneChart = ({
         </div>
 
         <div className="flex flex-col relative">
-          <div className="absolute bottom-6 bg-white z-30">
+          <div className="absolute bottom-16 bg-white z-30">
             <CustomChart startDateTime={startTime} chartData={temperatures} />
           </div>
           <div className="flex flex-row-reverse overflow-x-scroll z-20 px-1">
