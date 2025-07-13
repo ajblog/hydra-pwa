@@ -1,6 +1,11 @@
-import { waveHeightColors, windSpeedColors } from "../../../constants";
+import {
+  directionToDegrees,
+  waveHeightColors,
+  windSpeedColors,
+} from "../../../constants";
 import { useStationUnits } from "../../../services";
 import { WaveUnitEnum, WindUnitEnum } from "../../../types";
+import { ArrowIcon } from "../../../assets";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function WeatherCard({
@@ -52,6 +57,23 @@ function WeatherCard({
     : currentWaveColor;
   const waveGradient = `linear-gradient(to right, ${currentWaveColor}, ${nextWaveColor})`;
 
+  function WindArrow({ direction }: { direction: string }) {
+    const baseDegree = directionToDegrees[direction];
+    const rotation = (baseDegree + 180) % 360;
+    if (!rotation)
+      return (
+        <div className="text-purple-300 w-4 h-4 text-center" text-center>
+          -
+        </div>
+      );
+    else
+      return (
+        <div className=" transform" style={{ rotate: `${rotation}deg` }}>
+          <ArrowIcon className="text-purple-300 w-4 h-4" />
+        </div>
+      );
+  }
+
   return (
     <div
       className={`bg-white py-0.5 h-full relative overflow-visible cursor-pointer transition-all ${
@@ -73,10 +95,13 @@ function WeatherCard({
           {data.wind.wind_speed}
         </p>
         <p
-          className="p-1 pt-2.5 pb-2 text-xs text-center"
+          className="p-1 pt-2.5 pb-2 text-[10px] text-center"
           style={{ background: waveGradient }}
         >
           {data.wave.hs}
+        </p>
+        <p className="p-1 pt-3 pb-2 flex items-center justify-center bg-gray-100">
+          <WindArrow direction={data.wind.wind_direction} />
         </p>
       </div>
     </div>

@@ -11,3 +11,4 @@ export * from "./PasswordIcon";
 export * from "./PhoneIcon";
 export * from "./MenuIcon";
 export * from "./SwitchIcon";
+export * from "./ArrowIcon";
