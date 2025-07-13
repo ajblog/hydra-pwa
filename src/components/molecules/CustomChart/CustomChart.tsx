@@ -1,6 +1,8 @@
 import { Area, AreaChart } from "recharts";
 import { TimeUnitEnum } from "../../../types";
 import { useStationUnits } from "../../../services";
+import { tempColorRanges } from "../../../constants";
+import { useMemo } from "react";
 
 interface ChartDataItem {
   temperature?: { temperature: number };
@@ -13,19 +15,43 @@ interface Props {
 
 export function CustomChart({ chartData, startDateTime }: Props) {
   const { timeUnit } = useStationUnits("timeUnit");
-  const formattedData = chartData.map((item, index) => {
-    const start = new Date(startDateTime);
-    const t = new Date(start.getTime() + index * 60 * 60 * 1000);
-    const time = t.toTimeString().slice(0, 5);
+  const formattedData = useMemo(() => {
+    return chartData.map((temp, index) => {
+      const start = new Date(startDateTime);
+      const t = new Date(start.getTime() + index * 60 * 60 * 1000);
+      const time = t.toTimeString().slice(0, 5);
 
-    return {
-      time,
-      value: item ?? 0,
-    };
-  });
+      return {
+        time,
+        value: temp ?? 0,
+      };
+    });
+  }, [chartData, startDateTime]);
 
   const chartWidth = chartData.length * 43.1;
-  console.log(timeUnit);
+
+  const generateTempGradientStops = () => {
+    const total = chartData.length - 1;
+
+    return chartData.map((temp, index) => {
+      const colorEntry =
+        tempColorRanges.find((range) => temp <= range.max) ??
+        tempColorRanges[tempColorRanges.length - 1];
+
+      const color = `rgb(${colorEntry.rgb.join(",")})`;
+      const offset = (index / total) * 100;
+
+      return (
+        <stop
+          key={index}
+          offset={`${offset}%`}
+          stopColor={color}
+          stopOpacity={1}
+        />
+      );
+    });
+  };
+
   return (
     <div
       className="w-full h-full overflow-hidden"
@@ -46,10 +72,25 @@ export function CustomChart({ chartData, startDateTime }: Props) {
           }
         >
           <defs>
-            <linearGradient id="fillTemp" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#5B55ED" stopOpacity={0.9} />
-              <stop offset="100%" stopColor="#5B55ED" stopOpacity={0.05} />
+            <linearGradient id="fillTemp" x1="0" y1="0" x2="1" y2="0">
+              {generateTempGradientStops()}
             </linearGradient>
+
+            {/* Vertical opacity mask */}
+            <linearGradient id="opacityMask" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="white" stopOpacity="1" />
+              <stop offset="100%" stopColor="white" stopOpacity="0" />
+            </linearGradient>
+
+            <mask id="fadeMask">
+              <rect
+                x="0"
+                y="0"
+                width="100%"
+                height="75%"
+                fill="url(#opacityMask)"
+              />
+            </mask>
           </defs>
 
           <Area
@@ -58,7 +99,8 @@ export function CustomChart({ chartData, startDateTime }: Props) {
             fill="url(#fillTemp)"
             stroke="#5B55ED"
             strokeWidth={0}
-            fillOpacity={0.3}
+            fillOpacity={1}
+            mask="url(#fadeMask)"
           />
         </AreaChart>
       </div>
