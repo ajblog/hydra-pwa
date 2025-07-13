@@ -4,12 +4,8 @@ import { useStationUnits } from "../../../services";
 import { tempColorRanges } from "../../../constants";
 import { useMemo } from "react";
 
-interface ChartDataItem {
-  temperature?: { temperature: number };
-}
-
 interface Props {
-  chartData: ChartDataItem[];
+  chartData: number[];
   startDateTime: string | number | Date;
 }
 
@@ -97,7 +93,6 @@ export function CustomChart({ chartData, startDateTime }: Props) {
             dataKey="value"
             type="monotone"
             fill="url(#fillTemp)"
-            stroke="#5B55ED"
             strokeWidth={0}
             fillOpacity={1}
             mask="url(#fadeMask)"
