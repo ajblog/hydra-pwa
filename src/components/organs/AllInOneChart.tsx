@@ -82,7 +82,7 @@ const AllInOneChart = ({
               <div
                 key={index}
                 className={`flex flex-col items-start justify-start px-1 pb-0.5 pt-3 gap-0.5 ${
-                  index === 1 ? "pb-20 pt-2" : ""
+                  index === 1 ? "pb-14 pt-2" : ""
                 }`}
               >
                 <div className="flex items-center gap-0.5">
@@ -133,7 +133,7 @@ const AllInOneChart = ({
         </div>
 
         <div className="flex flex-col relative">
-          <div className="absolute bottom-16 bg-white z-30">
+          <div className="absolute bottom-10 bg-white z-10">
             <CustomChart startDateTime={startTime} chartData={temperatures} />
           </div>
           <div className="flex flex-row-reverse overflow-x-scroll z-20 px-1">

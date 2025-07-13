@@ -27,7 +27,7 @@ import { TimeUnitEnum, WaveUnitEnum, WindUnitEnum } from "../../types";
 import { usePersistentUnitPreferences } from "../../services/hooks/usePersistentUnitPreferences";
 
 const darkSelectClass =
-  "flex h-12 w-full rounded-full border border-[#7D7D7D] bg-white px-3 py-1.5 text-base text-black text-center shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 md:text-sm appearance-none focus-visible:outline-none focus-visible:border-[#7D7D7D]";
+  "flex h-12 w-full rounded-full border border-[#7D7D7D] bg-white px-3 py-1.5 pr-6 text-base text-black text-center shadow-sm transition-colors disabled:cursor-not-allowed disabled:opacity-50 md:text-sm appearance-none focus-visible:outline-none focus-visible:border-[#7D7D7D]";
 
 const Profile = () => {
   const navigate = useNavigate();

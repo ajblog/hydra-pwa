@@ -6,17 +6,20 @@ import { StationProvider } from "../../contexts/stationContext";
 import { useQuery } from "@tanstack/react-query";
 import { getAllStations, getProfileApi } from "../../services";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 const ProfileData = () => {
   const { data } = useQuery({
     queryKey: ["profile"],
     queryFn: () => getProfileApi(),
   });
+  const navigate = useNavigate();
   return (
     <motion.div
       initial={{ x: 250 }}
       animate={{ x: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className="bg-white px-6 py-1 flex items-center gap-4 rounded-l-full absolute top-[2%] right-0 z-[4000]"
+      onClick={() => navigate("/profile")}
     >
       <img
         src={profilePhoto}
