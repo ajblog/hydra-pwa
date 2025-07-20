@@ -1,5 +1,3 @@
-import React from "react";
-
 const ArrowIcon = ({
   className = "text-purple-300",
 }: {
