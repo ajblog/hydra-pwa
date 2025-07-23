@@ -53,7 +53,7 @@ const NavigationDrawer = () => {
                 navigationType !== "STATION" && "text-white bg-[#A6A6A6]"
               }`}
             >
-              ایستگاه
+              موقعیت
             </Button>
             <Button
               onClick={() => setNavigationType("ROUTE")}

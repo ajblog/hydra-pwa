@@ -8,10 +8,10 @@ import { StationsTypes } from "../../../types";
 
 const Direction = ({ setHideButtons }: StationsPropTypes) => {
   const [originStation, setOriginStation] = useState<string>(
-    "ایستگاه مبدا را انتخاب کنید"
+    "موقعیت مبدا را انتخاب کنید"
   );
   const [destinationStation, setDestinationStation] = useState<string>(
-    "ایستگاه مقصد را انتخاب کنید"
+    "موقعیت مقصد را انتخاب کنید"
   );
   const [stationType, setStationType] = useState<
     "origin" | "destination" | null
@@ -71,7 +71,7 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
   if (stationType === "origin") {
     return (
       <StationSelection
-        title="ایستگاه مبدا موردنظر خود را از لیست زیر انتخاب کنید."
+        title="موقعیت مبدا موردنظر خود را از لیست زیر انتخاب کنید."
         selectedStation={originStation}
         selectedDirectionStation={destinationStation}
         setSelectedStation={setOriginStation}
@@ -82,7 +82,7 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
   } else if (stationType === "destination") {
     return (
       <StationSelection
-        title="ایستگاه مقصد موردنظر خود را از لیست زیر انتخاب کنید."
+        title="موقعیت مقصد موردنظر خود را از لیست زیر انتخاب کنید."
         selectedStation={destinationStation}
         selectedDirectionStation={originStation}
         setSelectedStation={setDestinationStation}
@@ -108,7 +108,7 @@ const Direction = ({ setHideButtons }: StationsPropTypes) => {
   return (
     <div className="mt-3  px-4">
       <span className="text-sm text-[#FFA314] font-bold">
-        ایستگاه های مبدا و مقصد خود را انتخاب کنید:
+        موقعیت های مبدا و مقصد خود را انتخاب کنید:
       </span>
       <div className="flex flex-col gap-4 mt-3">
         <SelectLocationBox

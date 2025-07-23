@@ -1,16 +1,22 @@
 import { Area, AreaChart } from "recharts";
 import { TimeUnitEnum } from "../../../types";
-import { useStationUnits } from "../../../services";
 import { tempColorRanges } from "../../../constants";
 import { useMemo } from "react";
+import { useStationUnits } from "../../../services";
 
 interface Props {
   chartData: number[];
   startDateTime: string | number | Date;
+  color?: "colorful" | string; // optional color flag
 }
 
-export function CustomChart({ chartData, startDateTime }: Props) {
+export function CustomChart({
+  chartData,
+  startDateTime,
+  color = "colorful",
+}: Props) {
   const { timeUnit } = useStationUnits("timeUnit");
+
   const formattedData = useMemo(() => {
     return chartData.map((temp, index) => {
       const start = new Date(startDateTime);
@@ -62,17 +68,24 @@ export function CustomChart({ chartData, startDateTime }: Props) {
           width={chartWidth}
           height={140}
           margin={
-            timeUnit === TimeUnitEnum.LOCAL
+            timeUnit === TimeUnitEnum.IRST
               ? { top: 0, right: 35, left: 0, bottom: 0 }
               : { top: 0, right: 5, left: 30, bottom: 0 }
           }
         >
           <defs>
-            <linearGradient id="fillTemp" x1="0" y1="0" x2="1" y2="0">
-              {generateTempGradientStops()}
-            </linearGradient>
+            {color === "colorful" ? (
+              <linearGradient id="fillTemp" x1="0" y1="0" x2="1" y2="0">
+                {generateTempGradientStops()}
+              </linearGradient>
+            ) : (
+              <linearGradient id="fillTemp" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor={color} stopOpacity={0.8} />
+                <stop offset="100%" stopColor={color} stopOpacity={0.1} />
+              </linearGradient>
+            )}
 
-            {/* Vertical opacity mask */}
+            {/* Vertical fade effect */}
             <linearGradient id="opacityMask" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="white" stopOpacity="1" />
               <stop offset="100%" stopColor="white" stopOpacity="0" />
@@ -89,6 +102,7 @@ export function CustomChart({ chartData, startDateTime }: Props) {
             </mask>
           </defs>
 
+          {/* Fill area */}
           <Area
             dataKey="value"
             type="monotone"
@@ -97,6 +111,17 @@ export function CustomChart({ chartData, startDateTime }: Props) {
             fillOpacity={1}
             mask="url(#fadeMask)"
           />
+
+          {/* Add stroke line only if solid color is passed */}
+          {color !== "colorful" && (
+            <Area
+              dataKey="value"
+              type="monotone"
+              stroke={color}
+              strokeWidth={1}
+              fill="none"
+            />
+          )}
         </AreaChart>
       </div>
     </div>

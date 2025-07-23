@@ -60,18 +60,15 @@ function WeatherCard({
   function WindArrow({ direction }: { direction: string }) {
     const baseDegree = directionToDegrees[direction];
     const rotation = (baseDegree + 180) % 360;
-    if (!rotation)
-      return (
-        <div className="text-purple-300 w-4 h-4 text-center" text-center>
-          -
-        </div>
-      );
-    else
-      return (
-        <div className=" transform" style={{ rotate: `${rotation}deg` }}>
-          <ArrowIcon className="text-purple-300 w-4 h-4" />
-        </div>
-      );
+
+    if (rotation === undefined || rotation === null)
+      return <div className="text-black w-4 h-6 text-center">-</div>;
+
+    return (
+      <div className="transform" style={{ rotate: `${rotation}deg` }}>
+        <ArrowIcon />
+      </div>
+    );
   }
 
   return (
@@ -85,7 +82,7 @@ function WeatherCard({
         <h3 className="text-xs p-1 font-semibold  bg-none z-[3000]">
           {hour < 10 ? `0${hour}` : hour}
         </h3>
-        <p className="p-1 pt-2.5 text-center pb-14 bg-none">
+        <p className="pt-2.5 text-center text-xs pb-16 bg-none">
           {data.temperature.temperature}
         </p>
         <p
@@ -94,14 +91,14 @@ function WeatherCard({
         >
           {data.wind.wind_speed}
         </p>
+        <p className="py-1 flex items-center justify-center bg-gray-100">
+          <WindArrow direction={data.wind.wind_direction} />
+        </p>
         <p
-          className="p-1 pt-2.5 pb-2 text-[10px] text-center"
+          className="pt-2.5 pb-2 text-xs text-center"
           style={{ background: waveGradient }}
         >
           {data.wave.hs}
-        </p>
-        <p className="p-1 pt-3 pb-2 flex items-center justify-center bg-gray-100">
-          <WindArrow direction={data.wind.wind_direction} />
         </p>
       </div>
     </div>

@@ -1,22 +1,19 @@
-const ArrowIcon = ({
-  className = "text-purple-300",
-}: {
-  className?: string;
-}) => {
+export const ArrowIcon = () => {
   return (
     <svg
-      className={className}
-      height="16px"
-      width="16px"
-      viewBox="0 0 155.139 155.139"
+      width="24px"
+      height="24px"
+      viewBox="0 0 24 24"
+      fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <polygon
-        fill="currentColor"
-        points="155.139,77.566 79.18,1.596 79.18,45.978 0,45.978 0,109.155 79.18,109.155 79.18,153.542"
+      <path
+        d="M12 4V20M12 20L8 16M12 20L16 16"
+        stroke="#000000"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       />
     </svg>
   );
 };
-
-export { ArrowIcon };

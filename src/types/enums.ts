@@ -5,16 +5,16 @@ export enum OvalPositionEnum {
 }
 
 export enum WaveUnitEnum {
-  M = 'm',
-  FOOT = 'foot'
+  M = "m",
+  FOOT = "foot",
 }
 
 export enum WindUnitEnum {
-  METERPERSECOND = 'm/s',
-  KNOT = 'knot'
+  METERPERSECOND = "m/s",
+  KNOT = "knot",
 }
 
 export enum TimeUnitEnum {
-  LOCAL ='local',
-  UTC = 'utc'
+  IRST = "IRST",
+  UTC = "UTC",
 }

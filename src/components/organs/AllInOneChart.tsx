@@ -4,11 +4,11 @@ import { SetStateAction, useRef, useState } from "react";
 import { UnitTypes } from "../molecules/Stations/station.type";
 
 const chartParameters = [
-  { name: "زمان", key: "timeUnit" },
-  { name: "دما", key: null },
-  { name: "WS", key: "windUnit" },
-  { name: "HS", key: "waveUnit" },
-  { name: "Wind dir", key: null },
+  { name: "Time", key: "timeUnit" },
+  { name: "Temp", key: null },
+  { name: "WSPD", key: "windUnit" },
+  { name: "WDIR", key: null },
+  { name: "Hs", key: "waveUnit" },
 ];
 
 const AllInOneChart = ({
@@ -32,15 +32,15 @@ const AllInOneChart = ({
     day.weather_info.map((info: any) => info.temperature.temperature)
   );
 
-  const formatPersianDate = (input: string) => {
-    const digits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    return input.replace(/-/g, "/").replace(/\d/g, (d) => digits[+d]);
-  };
+  // const formatPersianDate = (input: string) => {
+  //   const digits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  //   return input.replace(/-/g, "/").replace(/\d/g, (d) => digits[+d]);
+  // };
 
   const getOptions = (key: keyof UnitTypes, value: string) => {
     if (key === "windUnit") return [value, value === "m/s" ? "knot" : "m/s"];
     if (key === "waveUnit") return [value, value === "m" ? "foot" : "m"];
-    if (key === "timeUnit") return [value, value === "local" ? "utc" : "local"];
+    if (key === "timeUnit") return [value, value === "IRST" ? "UTC" : "IRST"];
     return [];
   };
 
@@ -56,7 +56,7 @@ const AllInOneChart = ({
         }}
       >
         <h2>{visibleDay?.day}</h2>
-        <span>{visibleDay?.date && formatPersianDate(visibleDay.date)}</span>
+        <span>{visibleDay?.date && visibleDay.date}</span>
       </div>
 
       <div
@@ -134,7 +134,11 @@ const AllInOneChart = ({
 
         <div className="flex flex-col relative">
           <div className="absolute bottom-10 bg-white z-10">
-            <CustomChart startDateTime={startTime} chartData={temperatures} />
+            <CustomChart
+              startDateTime={startTime}
+              chartData={temperatures}
+              color="#D3D3D3"
+            />
           </div>
           <div className="flex flex-row-reverse overflow-x-scroll z-20 px-1">
             {data.map((day: any, index: number) => (

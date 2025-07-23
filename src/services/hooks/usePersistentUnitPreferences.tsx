@@ -5,14 +5,14 @@ import { TimeUnitEnum, WaveUnitEnum, WindUnitEnum } from "../../types";
 const LOCAL_STORAGE_KEY = "station_unit_preferences";
 
 const defaultUnits: UnitTypes = {
-  timeUnit: TimeUnitEnum.LOCAL,
+  timeUnit: TimeUnitEnum.IRST,
   waveUnit: WaveUnitEnum.M,
   windUnit: WindUnitEnum.METERPERSECOND,
 };
 
 export const usePersistentUnitPreferences = (): [
   UnitTypes,
-  React.Dispatch<React.SetStateAction<UnitTypes>>,
+  React.Dispatch<React.SetStateAction<UnitTypes>>
 ] => {
   const [units, setUnits] = useState<UnitTypes>(() => {
     if (typeof window === "undefined") return defaultUnits;
