@@ -36,7 +36,7 @@ const Stations = ({ setHideButtons }: StationsPropTypes) => {
   return (
     <div className="mt-3">
       <span className="text-sm text-[#FFA314] font-bold">
-        ایستگاه موردنظر خود را از لیست زیر انتخاب کنید.
+        موقعیت موردنظر خود را از لیست زیر انتخاب کنید.
       </span>
       <RadioGroup
         defaultValue={selectedStationContext}
@@ -45,7 +45,9 @@ const Stations = ({ setHideButtons }: StationsPropTypes) => {
         {stationsInfo?.map((item, index) => (
           <div
             key={index}
-            className={`flex items-center space-x-2 py-4 px-3 border-b-[4px] border-b-[#EAEAEA] ${index % 2 ? "" : "pl-0"} `}
+            className={`flex items-center space-x-2 py-4 px-3 border-b-[4px] border-b-[#EAEAEA] ${
+              index % 2 ? "" : "pl-0"
+            } `}
           >
             <RadioGroupItem
               onClick={(e) => {
@@ -56,10 +58,12 @@ const Stations = ({ setHideButtons }: StationsPropTypes) => {
               id={index.toString()}
             />
             <label
-              className={`w-full text-sm py-1 ${index % 2 ? "" : "border-l-[4px] border-l-[#EAEAEA]"}`}
+              className={`w-full text-sm py-1 ${
+                index % 2 ? "" : "border-l-[4px] border-l-[#EAEAEA]"
+              }`}
               htmlFor={index.toString()}
             >
-              ایستگاه {item.display_name}
+              {item.display_name}
             </label>
           </div>
         ))}

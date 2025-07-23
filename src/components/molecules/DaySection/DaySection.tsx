@@ -48,11 +48,11 @@ function DaySection({
     };
   }, [day.date, day.day_name, previousDay, scrollContainerRef, setVisibleDay]);
 
-  function formatPersianDate(input: string) {
-    const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
-    const converted = input.replace(/-/g, "/");
-    return converted.replace(/\d/g, (d) => persianDigits[+d]);
-  }
+  // function formatPersianDate(input: string) {
+  //   const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
+  //   const converted = input.replace(/-/g, "/");
+  //   return converted.replace(/\d/g, (d) => persianDigits[+d]);
+  // }
 
   return (
     <div className=" ltr  w-full">
@@ -61,32 +61,33 @@ function DaySection({
         className="z-30 w-fit sticky left-0 bottom-0 ltr text-gray-700 bg-white text-xs font-bold text-center mb-2.5 py-1 px-0.5 border-l border-gray-300 flex flex-col gap-1"
       >
         <h2 style={{ minWidth: 60 }}>{day.day_name}</h2>
-        <span>{formatPersianDate(day.date)}</span>
+        <span>{day.date}</span>
       </div>
       <div className="flex ltr overflow-visible pb-0.5">
         {day.weather_info.map((info: any, index: number) => {
           const hour = info.time;
           const uniqueId = `${dayIndex}-${index}`;
 
-          // Check if nextData is inside current day or next day's first hour
           let nextData;
           if (index + 1 < day.weather_info.length) {
             nextData = day.weather_info[index + 1];
-          } else if (nextDay && nextDay.weather_info.length > 0) {
-            nextData = nextDay.weather_info[0]; // first hour of next day
-          } else {
-            nextData = undefined; // fallback
+          } else if (nextDay?.weather_info.length) {
+            nextData = nextDay.weather_info[0];
           }
 
           return (
-            <WeatherCard
-              key={index}
-              hour={hour}
-              data={info}
-              nextData={nextData}
-              isSelected={selectedCardId === uniqueId}
-              onClick={() => setSelectedCardId(uniqueId)}
-            />
+            <div key={index} className="relative">
+              {index === 0 && (
+                <div className="absolute left-0 -top-[10px] h-full w-[1px] bg-gray-300 z-50" />
+              )}
+              <WeatherCard
+                hour={hour}
+                data={info}
+                nextData={nextData}
+                isSelected={selectedCardId === uniqueId}
+                onClick={() => setSelectedCardId(uniqueId)}
+              />
+            </div>
           );
         })}
       </div>

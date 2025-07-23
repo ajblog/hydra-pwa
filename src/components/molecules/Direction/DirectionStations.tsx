@@ -174,7 +174,7 @@ const DirectionStations = ({
           onClick={() => handleChevronClick("right")}
         />
         <h4 className="text-[#5B55ED] font-bold text-lg">
-          ایستگاه {routesData.route[activeStationIndex].display_name}
+          موقعیت {routesData.route[activeStationIndex].display_name}
         </h4>
         <ChevronLeft
           color="#A6A6A6"
