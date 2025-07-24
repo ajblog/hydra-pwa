@@ -23,14 +23,15 @@ function DaySection({
       const containerRect = scrollContainerRef.current.getBoundingClientRect();
 
       const leftDistance = rect.left - containerRect.left;
+      console.log("leftDistance :", leftDistance);
 
       if (leftDistance <= 15) {
         setVisibleDay({ day: day.day_name, date: day.date });
-      } else if (leftDistance >= 15 && leftDistance < 80) {
+      } else if (leftDistance >= 15 && leftDistance < 110) {
         setVisibleDay(null);
       }
 
-      if (previousDay && leftDistance > 80 && leftDistance < 100) {
+      if (previousDay && leftDistance > 100 && leftDistance < 120) {
         setVisibleDay({ day: previousDay.day_name, date: previousDay.date });
       }
     }
@@ -58,9 +59,9 @@ function DaySection({
     <div className=" ltr  w-full">
       <div
         ref={dayRef}
-        className="z-30 w-fit sticky left-0 bottom-0 ltr text-gray-700 bg-white text-xs font-bold text-center mb-2.5 py-1 px-0.5 border-l border-gray-300 flex flex-col gap-1"
+        className="z-30 w-fit sticky left-0 bottom-0 ltr text-gray-700 bg-white text-xs font-bold text-center mb-2.5 py-1 px-0.5 ml-1  flex flex-col gap-1"
       >
-        <h2 style={{ minWidth: 60 }}>{day.day_name}</h2>
+        <h2 style={{ minWidth: 80 }}>{day.day_name}</h2>
         <span>{day.date}</span>
       </div>
       <div className="flex ltr overflow-visible pb-0.5">
@@ -78,7 +79,7 @@ function DaySection({
           return (
             <div key={index} className="relative">
               {index === 0 && (
-                <div className="absolute left-0 -top-[10px] h-full w-[1px] bg-gray-300 z-50" />
+                <div className="absolute left-0 top-0 h-[calc(100%+3.5rem)] w-[1px] bg-gray-300 z-50 -translate-y-14" />
               )}
               <WeatherCard
                 hour={hour}
