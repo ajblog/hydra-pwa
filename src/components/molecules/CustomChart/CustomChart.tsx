@@ -69,7 +69,7 @@ export function CustomChart({
           height={140}
           margin={
             timeUnit === TimeUnitEnum.IRST
-              ? { top: 0, right: 35, left: 0, bottom: 0 }
+              ? { top: 0, right: 50, left: 0, bottom: 0 }
               : { top: 0, right: 5, left: 30, bottom: 0 }
           }
         >

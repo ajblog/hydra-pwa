@@ -81,15 +81,11 @@ const AllInOneChart = ({
             return (
               <div
                 key={index}
-                className={`flex flex-col items-start justify-start px-1 pb-0.5 pt-3 gap-0.5 ${
+                className={`flex flex-col items-end justify-start px-1 pb-0.5 pt-3 gap-0.5 ${
                   index === 1 ? "pb-14 pt-2" : ""
                 }`}
               >
-                <div className="flex items-center gap-0.5">
-                  <span className="text-xs whitespace-nowrap text-white">
-                    {item.name}
-                  </span>
-
+                <div className="flex items-center  gap-0.5">
                   {unitKey && (
                     <div className="relative text-xs">
                       <select
@@ -103,7 +99,7 @@ const AllInOneChart = ({
                             key={opt}
                             value={opt}
                           >
-                            {opt}
+                            ( {opt} )
                           </option>
                         ))}
                       </select>
@@ -126,6 +122,9 @@ const AllInOneChart = ({
                       </div>
                     </div>
                   )}
+                  <span className="text-xs text-start w-full whitespace-nowrap text-white">
+                    {item.name}
+                  </span>
                 </div>
               </div>
             );
