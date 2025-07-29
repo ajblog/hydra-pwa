@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CustomChart, DaySection } from "../molecules";
 import { SetStateAction, useRef, useState } from "react";
+import { CustomChart, DaySection } from "../molecules";
 import { UnitTypes } from "../molecules/Stations/station.type";
 
 const chartParameters = [
@@ -44,6 +44,9 @@ const AllInOneChart = ({
     return [];
   };
 
+  const lastDay = data[data.length - 1];
+  const hasShortLastDay = lastDay?.weather_info?.length <= 1;
+
   return (
     <div className="relative w-full h-full overflow-hidden">
       <div
@@ -81,15 +84,11 @@ const AllInOneChart = ({
             return (
               <div
                 key={index}
-                className={`flex flex-col items-start justify-start px-1 pb-0.5 pt-3 gap-0.5 ${
+                className={`flex flex-col items-end justify-start px-1 pb-0.5 pt-3 gap-0.5 ${
                   index === 1 ? "pb-14 pt-2" : ""
                 }`}
               >
-                <div className="flex items-center gap-0.5">
-                  <span className="text-xs whitespace-nowrap text-white">
-                    {item.name}
-                  </span>
-
+                <div className="flex items-center  gap-0.5">
                   {unitKey && (
                     <div className="relative text-xs">
                       <select
@@ -103,7 +102,7 @@ const AllInOneChart = ({
                             key={opt}
                             value={opt}
                           >
-                            {opt}
+                            ( {opt} )
                           </option>
                         ))}
                       </select>
@@ -126,6 +125,9 @@ const AllInOneChart = ({
                       </div>
                     </div>
                   )}
+                  <span className="text-xs text-start w-full whitespace-nowrap text-white">
+                    {item.name}
+                  </span>
                 </div>
               </div>
             );
@@ -137,6 +139,7 @@ const AllInOneChart = ({
             <CustomChart
               startDateTime={startTime}
               chartData={temperatures}
+              hasShortLastDay={hasShortLastDay}
               color="#D3D3D3"
             />
           </div>
