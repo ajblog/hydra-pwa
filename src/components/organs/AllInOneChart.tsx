@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { CustomChart, DaySection } from "../molecules";
 import { SetStateAction, useRef, useState } from "react";
+import { CustomChart, DaySection } from "../molecules";
 import { UnitTypes } from "../molecules/Stations/station.type";
 
 const chartParameters = [
@@ -43,6 +43,9 @@ const AllInOneChart = ({
     if (key === "timeUnit") return [value, value === "IRST" ? "UTC" : "IRST"];
     return [];
   };
+
+  const lastDay = data[data.length - 1];
+  const hasShortLastDay = lastDay?.weather_info?.length <= 1;
 
   return (
     <div className="relative w-full h-full overflow-hidden">
@@ -136,6 +139,7 @@ const AllInOneChart = ({
             <CustomChart
               startDateTime={startTime}
               chartData={temperatures}
+              hasShortLastDay={hasShortLastDay}
               color="#D3D3D3"
             />
           </div>

@@ -1,22 +1,20 @@
-import { Area, AreaChart } from "recharts";
-import { TimeUnitEnum } from "../../../types";
-import { tempColorRanges } from "../../../constants";
 import { useMemo } from "react";
-import { useStationUnits } from "../../../services";
+import { Area, AreaChart } from "recharts";
+import { tempColorRanges } from "../../../constants";
 
 interface Props {
   chartData: number[];
   startDateTime: string | number | Date;
+  hasShortLastDay?: boolean;
   color?: "colorful" | string; // optional color flag
 }
 
 export function CustomChart({
   chartData,
   startDateTime,
+  hasShortLastDay,
   color = "colorful",
 }: Props) {
-  const { timeUnit } = useStationUnits("timeUnit");
-
   const formattedData = useMemo(() => {
     return chartData.map((temp, index) => {
       const start = new Date(startDateTime);
@@ -30,7 +28,13 @@ export function CustomChart({
     });
   }, [chartData, startDateTime]);
 
-  const chartWidth = chartData.length * 43.1;
+  const chartWidth = hasShortLastDay
+    ? (chartData.length + 1) * 43.1
+    : chartData.length * 43.1;
+
+  const chartMargin = hasShortLastDay
+    ? { top: 0, right: 55, left: 30, bottom: 0 }
+    : { top: 0, right: 5, left: 30, bottom: 0 };
 
   const generateTempGradientStops = () => {
     const total = chartData.length - 1;
@@ -67,11 +71,7 @@ export function CustomChart({
           data={formattedData}
           width={chartWidth}
           height={140}
-          margin={
-            timeUnit === TimeUnitEnum.IRST
-              ? { top: 0, right: 50, left: 0, bottom: 0 }
-              : { top: 0, right: 5, left: 30, bottom: 0 }
-          }
+          margin={chartMargin}
         >
           <defs>
             {color === "colorful" ? (
